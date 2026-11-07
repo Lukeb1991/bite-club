@@ -275,7 +275,12 @@ input:focus, select:focus, textarea:focus{outline:none; border-color:var(--ink);
 .gpin.approx{border-style:dashed}
 .gpin.sel{transform:scale(1.3); box-shadow:0 0 0 3px var(--ink), 0 2px 8px rgb(0 0 0 / .4)}
 .gme{width:16px; height:16px; border-radius:50%; background:var(--me); border:3px solid var(--me-ring); box-shadow:0 0 0 7px color-mix(in srgb, var(--me) 25%, transparent)}
-.g-search{width:100%; max-width:100%; display:block}
+.g-row{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px; align-items:center}
+.g-results{display:grid; gap:6px}
+.g-results:empty{display:none}
+.g-result{text-align:left; display:grid; gap:2px; background:var(--surface-2); border:1.5px solid var(--line); border-radius:12px; padding:10px 12px; cursor:pointer; color:var(--ink); font:inherit; width:100%}
+.g-result b{font-weight:750; overflow-wrap:anywhere}
+.g-result span{font-size:13px; color:var(--ink-soft); overflow-wrap:anywhere}
 .map-note{display:block; margin:10px 0 0; font-size:13px; color:var(--ink-soft)}
 button.map-note{background:none; border:0; padding:0; color:var(--tomato); font-weight:700; cursor:pointer; text-decoration:underline}
 .map-card{margin-top:14px}
@@ -864,7 +869,7 @@ function loadGoogle() {
       G.status = ok && !G.authFailed ? "ready" : "failed";
       resolve(G.status === "ready");
       render();
-      if (ctx && ctx.kind === "place") { const mm = $("#pf-minimap"); if (mm && !mm.hidden) renderMini(); if (G.status !== "ready") { const f = $("#pf-search-field"); if (f) f.hidden = true; } }
+      if (ctx && ctx.kind === "place") { const mm = $("#pf-minimap"); if (mm && !mm.hidden) renderMini(); }
     };
     window.__biteClubMaps = () => {
       Promise.all([google.maps.importLibrary("maps"), google.maps.importLibrary("marker")])
@@ -988,30 +993,51 @@ function nearestArea(lat, lng) {
   return best;
 }
 function setRadio(name, v) { const r = sheet.querySelector(`input[name="${name}"][value="${v}"]`); if (r) r.checked = true; }
-function mountPlaceSearch(c) {
-  if (!$("#pf-search")) return;
-  loadGoogle().then(async ok => {
+const G_FIELDS = ["displayName", "formattedAddress", "location", "googleMapsURI", "priceLevel", "primaryType", "types"];
+const G_FIELDS_MIN = ["displayName", "formattedAddress", "location", "googleMapsURI"];
+async function runGoogleSearch() {
+  const c = ctx, input = $("#pf-gq"), out = $("#pf-gresults");
+  if (!input || !out) return;
+  const q = input.value.trim();
+  if (!q) { input.focus(); return; }
+  out.innerHTML = `<p class="hint">Searching Google…</p>`;
+  const ok = await loadGoogle();
+  if (ctx !== c) return;
+  if (!ok) {
+    out.innerHTML = `<p class="form-error">${G.authFailed ? "Google refused the API key. Check the key's website restriction matches this site's address, and that billing is linked." : "Google didn't load. Check you're online, then try again."}</p>`;
+    return;
+  }
+  const request = fields => ({textQuery: q, fields, locationBias: {center: {lat: 53.4808, lng: -2.2426}, radius: 25000}, region: "gb", language: "en-GB", maxResultCount: 6});
+  try {
+    const {Place} = await google.maps.importLibrary("places");
+    let res;
+    try { res = await Place.searchByText(request(G_FIELDS)); }
+    catch (e) { res = await Place.searchByText(request(G_FIELDS_MIN)); }
     if (ctx !== c) return;
-    const field = $("#pf-search-field");
-    if (!ok) { if (field) field.hidden = true; return; }
-    try {
-      const {PlaceAutocompleteElement} = await google.maps.importLibrary("places");
-      if (ctx !== c) return;
-      const el = new PlaceAutocompleteElement({includedRegionCodes: ["gb"], locationBias: {center: {lat: 53.4808, lng: -2.2426}, radius: 25000}});
-      el.className = "g-search";
-      const host = $("#pf-search"); host.innerHTML = ""; host.appendChild(el);
-      el.addEventListener("gmp-select", e => { const pr = e.placePrediction; if (pr) fillFromGoogle(pr.toPlace(), c); });
-      el.addEventListener("gmp-placeselect", e => { if (e.place) fillFromGoogle(e.place, c); });
-    } catch (e) { if (field) field.hidden = true; }
-  });
+    c.gResults = (res && res.places) || [];
+    out.innerHTML = c.gResults.length
+      ? c.gResults.map((p, i) => `<button type="button" class="g-result" data-act="g-pick" data-v="${i}"><b>${esc(p.displayName || "Unnamed place")}</b><span>${esc(p.formattedAddress || "")}</span></button>`).join("")
+      : `<p class="hint">No matches on Google. Try adding the area, e.g. “${esc(q)} Ancoats”.</p>`;
+  } catch (e) {
+    if (ctx !== c) return;
+    const msg = (e && e.message) || String(e || "unknown error");
+    out.innerHTML = `<p class="form-error">Google search failed: ${esc(msg)}</p><p class="hint">If it mentions Places API, check Places API (New) is enabled and ticked on the key.</p>`;
+  }
+}
+function pickGoogleResult(i) {
+  const c = ctx, place = c && c.gResults && c.gResults[i]; if (!place) return;
+  $("#pf-gresults").innerHTML = "";
+  fillFromGoogle(place, c);
 }
 async function fillFromGoogle(place, c) {
   const hint = $("#pf-search-hint");
-  if (hint) hint.textContent = "Fetching details…";
-  try { await place.fetchFields({fields: ["displayName", "formattedAddress", "location", "googleMapsURI", "priceLevel", "primaryType", "types"]}); }
-  catch (e) {
-    try { await place.fetchFields({fields: ["displayName", "formattedAddress", "location", "googleMapsURI"]}); }
-    catch (e2) { if (hint) hint.textContent = "Couldn't fetch that place. Fill it in by hand."; return; }
+  if (!place.location) {
+    if (hint) hint.textContent = "Fetching details…";
+    try { await place.fetchFields({fields: G_FIELDS}); }
+    catch (e) {
+      try { await place.fetchFields({fields: G_FIELDS_MIN}); }
+      catch (e2) { if (hint) hint.textContent = "Couldn't fetch that place. Fill it in by hand."; return; }
+    }
   }
   if (ctx !== c) return;
   if (place.displayName) $("#pf-name").value = place.displayName;
@@ -1178,7 +1204,7 @@ function openPlaceForm(existing) {
   const been = p.status === "been";
   const r = typeof p.rating === "number" ? p.rating : 7;
   const body = `<form id="placeForm" class="form" novalidate>
-    ${googleOn() ? `<div class="field" id="pf-search-field"><span class="label">Find it on Google</span><div id="pf-search"><p class="hint">Loading search…</p></div><p class="hint" id="pf-search-hint">Search fills in the name, pin, Google link, area and price.</p></div>` : ""}
+    ${googleOn() ? `<div class="field" id="pf-search-field"><label for="pf-gq">Find it on Google</label><div class="g-row"><input id="pf-gq" type="search" enterkeyhint="search" placeholder="Name and area, e.g. pizza Ancoats" autocomplete="off"><button type="button" class="btn small" data-act="g-search">Search</button></div><div id="pf-gresults" class="g-results"></div><p class="hint" id="pf-search-hint">Pick a match to fill in the name, pin, Google link, area and price.</p></div>` : ""}
     <div class="field"><label for="pf-name">Name</label><input id="pf-name" type="text" value="${esc(p.name)}" placeholder="e.g. That sourdough place on Oldham St" autocomplete="off"></div>
     <fieldset class="field"><legend>Type</legend><div class="chips wrap">${TYPES.map(t => radioChip("ptype", t.id, t.l, typeSel === t.id, t.c)).join("")}</div></fieldset>
     <fieldset class="field"><legend>Price point</legend><div class="chips wrap">${radioChip("pprice", "", "Not sure", !p.price)}${[1, 2, 3, 4].map(n => radioChip("pprice", String(n), pounds(n), p.price === n)).join("")}</div><p class="hint">£ is cheap eats, ££££ is a proper splurge.</p></fieldset>
@@ -1198,7 +1224,7 @@ function openPlaceForm(existing) {
   </form>`;
   openSheet(existing ? "Edit place" : "Add a place", body, {kind: "place", existing, pin: fixed ? {lat: p.lat, lng: p.lng, source: p.pinSource || "manual"} : null, frame: "centre", address: p.address || ""});
   updatePinStatus();
-  mountPlaceSearch(ctx);
+  if (googleOn()) loadGoogle();
 }
 function formPin() {
   if (!ctx || ctx.kind !== "place") return null;
@@ -1654,6 +1680,8 @@ document.addEventListener("click", e => {
       if (googleReady() && G.map) { G.map.setCenter(VIEWS[v].center); G.map.setZoom(VIEWS[v].zoom); }
       break;
     case "near-me": nearMe(); break;
+    case "g-search": runGoogleSearch(); break;
+    case "g-pick": pickGoogleResult(+v); break;
     case "reset-filters": S.hf = {status: "all", type: "all", area: "all", price: "all", q: ""}; render(); break;
     case "sort": if (kind) { S.rf[kind].sort = v; render(); } break;
     case "style": if (kind) { S.rf[kind].style = v; render(); window.scrollTo({top: 0, behavior: reduceMotion() ? "auto" : "smooth"}); } break;
@@ -1689,6 +1717,7 @@ document.addEventListener("click", e => {
 });
 document.addEventListener("keydown", e => {
   if (e.key === "Escape" && !sheetWrap.hidden) { closeSheet(); return; }
+  if (e.key === "Enter" && e.target.id === "pf-gq") { e.preventDefault(); runGoogleSearch(); return; }
   if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches("[data-pin], g[data-act]")) { e.preventDefault(); e.target.dispatchEvent(new MouseEvent("click", {bubbles: true})); }
 });
 document.addEventListener("input", e => {
