@@ -1,0 +1,1748 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bite Club</title>
+<meta name="description" content="Luke & Gill's food diaries: a Manchester hit list plus sandwich and pizza ratings.">
+<meta name="theme-color" content="#E4EEDA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#14171C" media="(prefers-color-scheme: dark)">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Bite Club">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Shrikhand&display=swap">
+<style>
+/* Layout: phone-first single column (max 760px) on a deli-tile wall; perforated ticket cards with rubber-stamp scores; fixed bottom tab bar + floating Add button; bottom sheets for forms */
+:root{
+  --bg:#E4EEDA; --tile:#D7E3CB; --surface:#FFFDF7; --surface-2:#F2EFE4; --ink:#1C2230; --ink-soft:#596070;
+  --line:#DAD5C5; --track:#E8E3D4;
+  --tomato:#D63A27; --on-tomato:#FFF8F0; --mustard:#F0B23A; --on-mustard:#1C2230; --basil:#2B784A; --on-basil:#FFFFFF;
+  --map-land:#F6F2E6; --map-water:#9DC6DE; --map-road:#E3DAC6; --map-park:#D2E5C2; --map-label:#666C79; --map-dot:#E7E1D1;
+  --t-pizza:#D63A27; --t-sandwich:#D39017; --t-brunch:#D65F8A; --t-burger:#93542E; --t-asian:#0F8E88; --t-italian:#2B784A;
+  --t-plates:#7849AE; --t-bakery:#C66E28; --t-pub:#2E69BE; --t-sweet:#B83D95; --t-other:#697083;
+  --t-english:#5B6B2E; --t-greek:#1E8FC0; --t-takeaway:#4E5BD6; --t-chicken:#E2711D; --t-thai:#6E9A12; --t-sushi:#E0566E;
+  --t-noodles:#9C7A1C; --t-caribbean:#13A35B; --t-mexican:#C8401A; --t-african:#A3522B; --t-fine:#34365C;
+  --shadow:0 1px 0 rgb(28 34 48 / .05), 0 12px 26px -18px rgb(28 34 48 / .55);
+  --me:#1A73E8; --me-ring:#FFFFFF;
+  --radius:16px;
+  --font-display:"Shrikhand","Cooper Black",Georgia,serif;
+  --font-body:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-mono:"DM Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14171C; --tile:#1A1E24; --surface:#20242C; --surface-2:#292E37; --ink:#F2EEE4; --ink-soft:#A7ADB8;
+    --line:#353A45; --track:#393E49;
+    --tomato:#FF6A55; --on-tomato:#1A0E0A; --mustard:#FFC75A; --on-mustard:#1C2230; --basil:#62C389; --on-basil:#0E1A12;
+    --map-land:#1D2129; --map-water:#2A5573; --map-road:#353B46; --map-park:#24362A; --map-label:#9AA1AD; --map-dot:#242930;
+    --t-pizza:#FF6A55; --t-sandwich:#F2B33F; --t-brunch:#F08AAE; --t-burger:#CA8B5F; --t-asian:#36BDB4; --t-italian:#62C389;
+    --t-plates:#A87FDC; --t-bakery:#EE9A52; --t-pub:#70A1EA; --t-sweet:#E277C5; --t-other:#9AA0B0;
+    --t-english:#A6B865; --t-greek:#5DB9E6; --t-takeaway:#8C95F0; --t-chicken:#F59A52; --t-thai:#A5CF4A; --t-sushi:#F58A9C;
+    --t-noodles:#D2AE4A; --t-caribbean:#4CCB86; --t-mexican:#F0724D; --t-african:#D68B5E; --t-fine:#A6AAE0;
+    --shadow:0 1px 0 rgb(0 0 0 / .3), 0 14px 30px -20px rgb(0 0 0 / .9);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14171C; --tile:#1A1E24; --surface:#20242C; --surface-2:#292E37; --ink:#F2EEE4; --ink-soft:#A7ADB8;
+  --line:#353A45; --track:#393E49;
+  --tomato:#FF6A55; --on-tomato:#1A0E0A; --mustard:#FFC75A; --on-mustard:#1C2230; --basil:#62C389; --on-basil:#0E1A12;
+  --map-land:#1D2129; --map-water:#2A5573; --map-road:#353B46; --map-park:#24362A; --map-label:#9AA1AD; --map-dot:#242930;
+  --t-pizza:#FF6A55; --t-sandwich:#F2B33F; --t-brunch:#F08AAE; --t-burger:#CA8B5F; --t-asian:#36BDB4; --t-italian:#62C389;
+  --t-plates:#A87FDC; --t-bakery:#EE9A52; --t-pub:#70A1EA; --t-sweet:#E277C5; --t-other:#9AA0B0;
+  --t-english:#A6B865; --t-greek:#5DB9E6; --t-takeaway:#8C95F0; --t-chicken:#F59A52; --t-thai:#A5CF4A; --t-sushi:#F58A9C;
+  --t-noodles:#D2AE4A; --t-caribbean:#4CCB86; --t-mexican:#F0724D; --t-african:#D68B5E; --t-fine:#A6AAE0;
+  --shadow:0 1px 0 rgb(0 0 0 / .3), 0 14px 30px -20px rgb(0 0 0 / .9);
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+img{max-width:100%}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; color:var(--ink); background-color:var(--bg);
+  background-image:linear-gradient(var(--tile) 1px, transparent 1px), linear-gradient(90deg, var(--tile) 1px, transparent 1px);
+  background-size:44px 22px;
+  font-family:var(--font-body); font-size:15px; line-height:1.45; -webkit-font-smoothing:antialiased;
+  -webkit-tap-highlight-color:transparent;
+}
+body.locked{overflow:hidden}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--mustard); outline-offset:2px}
+.vh{position:absolute!important; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+.mono{font-family:var(--font-mono)}
+.grow{flex:1}
+
+.app{max-width:760px; margin:0 auto; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); padding-block:calc(22px + env(safe-area-inset-top, 0px)) calc(150px + env(safe-area-inset-bottom, 0px))}
+
+/* masthead */
+.masthead{display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:22px}
+.wordmark{font-family:var(--font-display); font-weight:400; font-size:clamp(40px, 11vw, 58px); line-height:.95; margin:0; color:var(--tomato); text-shadow:3px 3px 0 var(--mustard); transform:rotate(-2.5deg); transform-origin:left bottom; white-space:nowrap}
+.tagline{font-family:var(--font-mono); font-size:11.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-soft); margin:12px 0 0}
+.sticker{flex:none; width:68px; height:68px; border-radius:50%; background:var(--mustard); color:var(--on-mustard); border:2px solid var(--ink); display:grid; place-content:center; text-align:center; transform:rotate(11deg); box-shadow:3px 3px 0 var(--ink); font-family:var(--font-mono); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; line-height:1.15}
+.sticker b{font-family:var(--font-display); font-weight:400; font-size:17px; letter-spacing:0; line-height:1.05}
+
+/* view header */
+.view-head{display:flex; align-items:flex-end; justify-content:space-between; gap:10px 12px; flex-wrap:wrap; margin:4px 0 6px}
+.eyebrow{font-family:var(--font-mono); font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin:0 0 4px}
+.view-title{font-family:var(--font-display); font-weight:400; font-size:clamp(28px, 7vw, 36px); margin:0; line-height:1.05; text-wrap:balance}
+.head-actions{display:flex; gap:8px}
+.tally{margin:0 0 14px; font-size:12.5px; color:var(--ink-soft); letter-spacing:.02em; font-variant-numeric:tabular-nums}
+
+/* controls */
+.seg{display:inline-flex; background:var(--surface); border:1.5px solid var(--ink); border-radius:999px; padding:3px; gap:2px; max-width:100%}
+.seg button{border:0; background:transparent; color:var(--ink); font:650 13.5px/1 var(--font-body); padding:8px 14px; border-radius:999px; cursor:pointer; min-height:34px; white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--ink); color:var(--surface)}
+.seg.small button{padding:6px 11px; min-height:30px; font-size:12.5px}
+.filters{display:grid; gap:10px; margin-bottom:14px}
+.seg-row{display:flex; justify-content:space-between; gap:8px; flex-wrap:wrap}
+.chips{display:flex; gap:8px; overflow-x:auto; padding:2px 2px 4px; scrollbar-width:none; -webkit-overflow-scrolling:touch}
+.chips::-webkit-scrollbar{display:none}
+.chips.wrap{flex-wrap:wrap; overflow:visible}
+.chip{flex:none; display:inline-flex; align-items:center; gap:7px; border:1.5px solid var(--line); background:var(--surface); color:var(--ink); border-radius:999px; padding:8px 12px; font:650 13px/1 var(--font-body); cursor:pointer; white-space:nowrap; position:relative}
+.chip .dot{width:9px; height:9px; border-radius:50%; background:var(--tc, var(--ink-soft)); flex:none}
+.chip[aria-pressed="true"], .chip:has(input:checked){border-color:var(--ink); background:var(--ink); color:var(--surface)}
+.chip:has(input:focus-visible){outline:3px solid var(--mustard); outline-offset:2px}
+.chip input{position:absolute; opacity:0; pointer-events:none}
+.filter-row{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px}
+input[type=search], input[type=text], input[type=url], input[type=date], select, textarea{
+  font:500 16px/1.3 var(--font-body); color:var(--ink); background:var(--surface); border:1.5px solid var(--line); border-radius:12px; padding:10px 12px; width:100%; min-width:0; max-width:100%
+}
+select{max-width:48vw; padding-right:8px}
+.form select{max-width:100%}
+textarea{resize:vertical; min-height:68px}
+input:focus, select:focus, textarea:focus{outline:none; border-color:var(--ink); box-shadow:0 0 0 3px color-mix(in srgb, var(--mustard) 55%, transparent)}
+::placeholder{color:color-mix(in srgb, var(--ink-soft) 75%, transparent)}
+.money{position:relative}
+.money span{position:absolute; left:12px; top:50%; transform:translateY(-50%); font-weight:700; color:var(--ink-soft); pointer-events:none}
+.money input{padding-left:26px}
+
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; border:1.5px solid var(--ink); background:var(--surface); color:var(--ink); font:700 14.5px/1 var(--font-body); border-radius:999px; padding:11px 18px; cursor:pointer; min-height:44px; text-decoration:none; white-space:nowrap}
+.btn svg{width:18px; height:18px; flex:none}
+.btn.primary{background:var(--tomato); border-color:var(--tomato); color:var(--on-tomato)}
+.btn.small{min-height:36px; padding:7px 13px; font-size:13px}
+.btn.small svg{width:16px; height:16px}
+.btn:disabled{opacity:.55; cursor:progress}
+.btn.danger{border-color:var(--tomato); color:var(--tomato); background:transparent}
+.btn.danger[data-armed]{background:var(--tomato); color:var(--on-tomato)}
+.icon-btn{display:inline-grid; place-items:center; width:38px; height:38px; border-radius:50%; border:1.5px solid var(--line); background:var(--surface); color:var(--ink); cursor:pointer; flex:none}
+.icon-btn svg{width:18px; height:18px}
+.linkish{background:none; border:0; padding:0; color:var(--tomato); font:700 13px var(--font-body); text-decoration:underline; cursor:pointer}
+.btn-row{display:flex; gap:8px; flex-wrap:wrap}
+
+.pick{display:flex; align-items:center; gap:12px; width:100%; text-align:left; background:var(--mustard); color:var(--on-mustard); border:2px solid var(--ink); border-radius:var(--radius); padding:12px 14px; box-shadow:4px 4px 0 var(--ink); cursor:pointer; margin-bottom:16px; font-size:15px; transition:transform .12s, box-shadow .12s}
+.pick:active{transform:translate(3px,3px); box-shadow:1px 1px 0 var(--ink)}
+.pick svg{width:30px; height:30px; flex:none; transform:rotate(-12deg)}
+.pick b{font-family:var(--font-display); font-weight:400; font-size:19px; margin-right:4px}
+
+.notice{background:var(--surface); border:1.5px solid var(--tomato); border-radius:12px; padding:10px 12px; font-size:14px; margin-bottom:14px}
+.notice p{margin:0}
+
+/* cards */
+.cards{display:grid; gap:14px}
+.place-card{position:relative; overflow:hidden; background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); display:grid; grid-template-columns:minmax(0,1fr) auto; gap:4px 12px; padding:14px 14px 0}
+.pc-main{min-width:0}
+.pc-kicker{margin:0; font:500 11.5px/1.3 var(--font-mono); text-transform:uppercase; letter-spacing:.07em; color:var(--ink-soft); display:flex; align-items:center; gap:6px; flex-wrap:wrap}
+.pc-kicker .dot{width:10px; height:10px; border-radius:50%; background:var(--tc)}
+.pp{letter-spacing:.02em}
+.pp b{font-weight:500; color:var(--ink)}
+.pp i{font-style:normal; opacity:.35}
+.ex-tag{font:700 10px/1 var(--font-body); letter-spacing:.08em; text-transform:uppercase; background:var(--mustard); color:var(--on-mustard); padding:4px 6px; border-radius:6px}
+.pc-name{font:800 19px/1.2 var(--font-body); margin:6px 0 2px; text-wrap:balance; overflow-wrap:anywhere}
+.pc-notes{margin:4px 0 0; color:var(--ink-soft); font-size:14.5px; overflow-wrap:anywhere}
+.pc-verdict{margin:8px 0 0; font-size:14.5px; overflow-wrap:anywhere}
+.pc-verdict .mono{display:block; color:var(--ink-soft); font-size:12px; margin-top:3px; letter-spacing:.02em}
+.pc-actions{grid-column:1/-1; display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:12px; padding:11px 0 13px; border-top:2px dashed var(--line); position:relative}
+.pc-actions::before, .pc-actions::after, .rc-perf::before, .rc-perf::after{content:""; position:absolute; top:-10px; width:18px; height:18px; border-radius:50%; background:var(--bg)}
+.pc-actions::before{left:-23px} .pc-actions::after{right:-23px}
+.chip-link{display:inline-flex; align-items:center; gap:6px; font:650 13.5px/1 var(--font-body); color:var(--ink); text-decoration:none; padding:9px 12px; border-radius:999px; background:var(--surface-2); min-height:36px}
+.chip-link svg{width:16px; height:16px}
+.btn-tick{display:inline-flex; align-items:center; gap:6px; background:var(--basil); color:var(--on-basil); border:0; font:700 13.5px/1 var(--font-body); padding:9px 14px; border-radius:999px; cursor:pointer; min-height:36px}
+.btn-tick svg{width:16px; height:16px}
+
+.stamp{--s:66px; flex:none; width:var(--s); height:var(--s); border-radius:50%; display:grid; place-content:center; text-align:center; color:var(--tomato); border:2.5px solid var(--tomato); box-shadow:inset 0 0 0 3px var(--surface), inset 0 0 0 4.5px var(--tomato); transform:rotate(-9deg); align-self:start}
+.stamp b{font:400 calc(var(--s) * .37)/1 var(--font-display); display:block; font-variant-numeric:tabular-nums}
+.stamp small{font:500 calc(var(--s) * .135)/1 var(--font-mono); text-transform:uppercase; letter-spacing:.08em; margin-top:3px; display:block}
+.stamp.sm{--s:52px}
+.stamp.sm small{display:none}
+
+.rate-card{background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; display:grid; grid-template-columns:minmax(0,1fr)}
+.rc-media{aspect-ratio:16/10; max-width:100%; background:var(--surface-2)}
+.rc-media img{width:100%; height:100%; object-fit:cover; display:block}
+.rc-body{padding:14px 14px 0; min-width:0; display:grid; gap:12px; align-content:start}
+.rc-head{display:flex; gap:12px; justify-content:space-between; align-items:flex-start}
+.rc-titles{min-width:0}
+.rc-meta{margin:0; font-size:11.5px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-soft); display:flex; gap:6px; flex-wrap:wrap; align-items:center; font-variant-numeric:tabular-nums}
+.rank{color:var(--tomato); font-weight:500}
+.rc-titles h3{font:800 19px/1.2 var(--font-body); margin:5px 0 2px; text-wrap:balance; overflow-wrap:anywhere}
+.rc-place{margin:0; font-size:14.5px; color:var(--ink-soft); overflow-wrap:anywhere}
+.rc-place b{color:var(--ink); font-weight:700}
+.style-tag{display:inline-block; margin-top:7px; font:700 11.5px/1 var(--font-body); letter-spacing:.04em; padding:5px 9px; border-radius:999px; border:1.5px solid var(--tomato); color:var(--tomato)}
+.standout{margin:0; background:color-mix(in srgb, var(--mustard) 24%, var(--surface)); border-radius:10px; padding:9px 11px; font-size:14.5px; overflow-wrap:anywhere}
+.standout b{display:block; font:500 10.5px/1.3 var(--font-mono); letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:2px}
+.bars{list-style:none; margin:0; padding:0; display:grid; gap:7px 22px; grid-template-columns:minmax(0,1fr)}
+.bars li{display:grid; grid-template-columns:7.6em minmax(0,1fr) 2.3em; align-items:center; gap:8px; font-size:13.5px}
+.b-t{height:7px; border-radius:99px; background:var(--track); overflow:hidden}
+.b-t i{display:block; height:100%; background:var(--ink); border-radius:99px}
+.bars li.top .b-t i{background:var(--tomato)}
+.bars b{font:500 13px var(--font-mono); text-align:right; font-variant-numeric:tabular-nums}
+.split{margin:0; font-size:12.5px; color:var(--ink-soft); font-variant-numeric:tabular-nums}
+.split b{color:var(--ink); font-weight:500}
+.rc-notes{margin:0; font-size:14.5px; overflow-wrap:anywhere}
+.rc-perf{position:relative; border-top:2px dashed var(--line); display:flex; justify-content:flex-end; gap:8px; padding:10px 0 12px}
+.rc-perf::before{left:-23px} .rc-perf::after{right:-23px}
+@media (min-width:620px){
+  .rate-card.has-photo{grid-template-columns:230px minmax(0,1fr)}
+  .rate-card.has-photo .rc-media{aspect-ratio:auto; height:100%; min-height:220px}
+  .rate-card.has-photo .rc-perf::before{display:none}
+  .bars.two{grid-template-columns:1fr 1fr}
+}
+
+.summary{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); background:var(--ink); color:var(--surface); border-radius:var(--radius); padding:12px 6px; margin-bottom:12px}
+.summary div{display:grid; gap:2px; justify-items:center; text-align:center; padding:0 6px; min-width:0}
+.summary div + div{border-left:1.5px dashed color-mix(in srgb, var(--surface) 35%, transparent)}
+.summary span{font:500 10.5px/1.2 var(--font-mono); letter-spacing:.1em; text-transform:uppercase; opacity:.8}
+.summary b{font:400 24px/1.1 var(--font-display); font-variant-numeric:tabular-nums}
+.champ{display:flex; align-items:center; gap:14px; background:var(--surface); border:2px solid var(--ink); border-radius:var(--radius); padding:12px 14px; margin-bottom:14px; box-shadow:4px 4px 0 var(--mustard)}
+.champ > div:not(.stamp){min-width:0; flex:1}
+.champ p{margin:0}
+.champ .eyebrow{margin:0 0 2px}
+.champ h3{margin:0; font:800 17px/1.25 var(--font-body); overflow-wrap:anywhere}
+.list-tools{display:grid; grid-template-columns:auto minmax(0,1fr); gap:8px; align-items:center; margin-bottom:12px}
+.shelf{display:flex; gap:10px; overflow-x:auto; padding:2px 2px 8px; margin-bottom:6px; scrollbar-width:thin}
+.best{flex:none; width:172px; text-align:left; display:grid; gap:3px; background:var(--surface); border:1.5px solid var(--line); border-radius:14px; padding:10px 12px; cursor:pointer; color:var(--ink); position:relative}
+.best .mono{font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--tomato); padding-right:34px}
+.best b{font:800 14.5px/1.2 var(--font-body); overflow-wrap:anywhere; padding-right:34px}
+.best span:not(.mono){font-size:12.5px; color:var(--ink-soft); overflow-wrap:anywhere}
+.best em{position:absolute; top:22px; right:10px; font:400 19px/1 var(--font-display); font-style:normal; color:var(--tomato)}
+.style-hint{background:var(--surface-2); border-radius:12px; padding:10px 12px; font-size:14px; margin:0; border:1.5px dashed var(--line)}
+.style-hint b{display:block; font:500 11px/1.3 var(--font-mono); letter-spacing:.08em; text-transform:uppercase; color:var(--tomato); margin-bottom:3px}
+
+.empty{background:var(--surface); border:2px dashed var(--line); border-radius:var(--radius); padding:30px 18px; text-align:center; display:grid; justify-items:center; gap:10px}
+.empty > svg{width:58px; height:58px; color:var(--tomato); transform:rotate(-8deg)}
+.empty h3{font-family:var(--font-display); font-weight:400; font-size:23px; margin:0}
+.empty p{margin:0; color:var(--ink-soft); max-width:36ch}
+.loading{display:grid; gap:14px}
+.loading div{height:120px; border-radius:var(--radius); background:linear-gradient(90deg, var(--surface) 0%, var(--surface-2) 50%, var(--surface) 100%); background-size:200% 100%; animation:shimmer 1.4s linear infinite; opacity:.8}
+@keyframes shimmer{to{background-position:-200% 0}}
+.rule{margin:34px 0 0; text-align:center; font:500 11.5px/1.5 var(--font-mono); letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft)}
+
+/* map */
+.map-tools{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px}
+.legend{display:flex; gap:12px; align-items:center; font-size:12px; color:var(--ink-soft); margin:0}
+.legend span{display:inline-flex; align-items:center; gap:5px}
+.lg{width:14px; height:14px; border-radius:50%; background:var(--ink-soft); display:inline-grid; place-items:center; border:2px solid var(--surface); box-shadow:0 0 0 1px var(--line)}
+.lg.hole::after{content:""; width:4px; height:4px; border-radius:50%; background:var(--surface)}
+.lg.tick svg{width:9px; height:9px; color:var(--surface)}
+.map-box{position:relative; width:100%; aspect-ratio:var(--ar); max-height:min(72vh, 680px); background:var(--map-land); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); border:1.5px solid var(--line)}
+.map-box.mini{max-height:320px; cursor:crosshair; box-shadow:none}
+.map-svg{display:block; width:100%; height:100%; touch-action:manipulation; user-select:none; -webkit-user-select:none}
+.m-land{fill:var(--map-land)}
+.m-dot{fill:var(--map-dot)}
+.m-park{fill:var(--map-park)}
+.m-river{fill:none; stroke:var(--map-water); stroke-linecap:round; stroke-linejoin:round; vector-effect:non-scaling-stroke}
+.m-road{fill:none; stroke:var(--map-road); stroke-linecap:round; stroke-linejoin:round; vector-effect:non-scaling-stroke}
+.m-mway{fill:none; stroke:var(--map-road); stroke-dasharray:7 5; vector-effect:non-scaling-stroke}
+.m-label{fill:var(--map-label); font-family:var(--font-body); font-weight:700; paint-order:stroke; stroke:var(--map-land); stroke-linejoin:round}
+.m-label.small{font-family:var(--font-mono); font-weight:500}
+.m-ink{fill:var(--map-label)} .m-inkline{stroke:var(--map-label); fill:none; vector-effect:non-scaling-stroke}
+.m-centre{fill:color-mix(in srgb, var(--tomato) 7%, transparent); stroke:var(--tomato); stroke-width:2px; stroke-dasharray:6 4; vector-effect:non-scaling-stroke}
+.m-centre-g[data-act]{cursor:pointer}
+.m-centre-label{fill:var(--tomato)}
+.m-count{fill:var(--tomato); stroke:var(--surface); stroke-width:2px; vector-effect:non-scaling-stroke}
+.m-count-t{fill:var(--on-tomato); font-family:var(--font-display)}
+.pin{cursor:pointer}
+.pin:focus{outline:none}
+.pin-hit{fill:transparent}
+.pin-dot{stroke:var(--surface); stroke-width:2.2px; vector-effect:non-scaling-stroke}
+.pin-hole{fill:var(--surface)}
+.pin-tick{fill:none; stroke:var(--surface); stroke-linecap:round; stroke-linejoin:round}
+.pin-ring{fill:none; stroke:transparent; stroke-width:2.5px; vector-effect:non-scaling-stroke}
+.pin.sel .pin-ring, .pin:focus-visible .pin-ring{stroke:var(--ink)}
+.gmap-slot, .gmap{width:100%; height:100%}
+.map-loading{display:grid; place-items:center; height:100%; min-height:200px; color:var(--ink-soft); font-size:14px}
+.gpin{width:24px; height:24px; border-radius:50%; background:var(--tc); border:3px solid var(--surface); box-shadow:0 1px 5px rgb(0 0 0 / .35); display:grid; place-items:center; cursor:pointer; transition:transform .15s}
+.gpin:not(.been)::after{content:""; width:6px; height:6px; border-radius:50%; background:var(--surface)}
+.gpin svg{width:13px; height:13px; color:var(--surface)}
+.gpin.approx{border-style:dashed}
+.gpin.sel{transform:scale(1.3); box-shadow:0 0 0 3px var(--ink), 0 2px 8px rgb(0 0 0 / .4)}
+.gme{width:16px; height:16px; border-radius:50%; background:var(--me); border:3px solid var(--me-ring); box-shadow:0 0 0 7px color-mix(in srgb, var(--me) 25%, transparent)}
+.g-search{width:100%; max-width:100%; display:block}
+.map-note{display:block; margin:10px 0 0; font-size:13px; color:var(--ink-soft)}
+button.map-note{background:none; border:0; padding:0; color:var(--tomato); font-weight:700; cursor:pointer; text-decoration:underline}
+.map-card{margin-top:14px}
+.map-hint{margin:14px 0 0; text-align:center; color:var(--ink-soft); font-size:14px}
+
+/* tab bar + fab */
+.tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; background:var(--surface); border-top:1.5px solid var(--line); padding-bottom:env(safe-area-inset-bottom, 0px); padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px))}
+.tabbar-in{max-width:520px; margin:0 auto; display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; padding-block:6px}
+.tab{display:flex; flex-direction:column; align-items:center; gap:3px; padding:7px 4px 6px; border-radius:14px; color:var(--ink-soft); text-decoration:none; font:700 12px/1 var(--font-body)}
+.tab svg{width:25px; height:25px}
+.tab[aria-current="page"]{color:var(--tomato); background:color-mix(in srgb, var(--tomato) 11%, transparent)}
+.fab{position:fixed; z-index:21; right:max(16px, env(safe-area-inset-right, 0px), calc((100vw - 760px) / 2 + 16px)); bottom:calc(78px + env(safe-area-inset-bottom, 0px)); display:inline-flex; align-items:center; gap:8px; background:var(--tomato); color:var(--on-tomato); border:2px solid var(--ink); border-radius:999px; padding:12px 18px 12px 14px; font:800 15px/1 var(--font-body); box-shadow:3px 3px 0 var(--ink); cursor:pointer}
+.fab svg{width:20px; height:20px}
+.fab:active{transform:translate(2px,2px); box-shadow:1px 1px 0 var(--ink)}
+
+/* sheet */
+.sheet-wrap{position:fixed; inset:0; z-index:40; display:flex; align-items:flex-end; justify-content:center}
+.scrim{position:absolute; inset:0; background:rgb(10 12 16 / .5); opacity:0; transition:opacity .22s}
+.sheet{position:relative; width:100%; max-width:640px; max-height:calc(100% - 20px - env(safe-area-inset-top, 0px)); overflow:auto; overscroll-behavior:contain; background:var(--surface); border-radius:22px 22px 0 0; transform:translateY(100%); transition:transform .3s cubic-bezier(.2,.8,.2,1); padding-bottom:env(safe-area-inset-bottom, 0px)}
+.sheet:focus{outline:none}
+.sheet-wrap.open .scrim{opacity:1}
+.sheet-wrap.open .sheet{transform:none}
+.sheet-head{position:sticky; top:0; z-index:3; background:var(--surface); display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px max(18px, env(safe-area-inset-right, 0px)) 12px max(18px, env(safe-area-inset-left, 0px)); border-bottom:1.5px solid var(--line)}
+.sheet-head h2{font-family:var(--font-display); font-weight:400; font-size:23px; margin:0; line-height:1.1}
+.sheet-body{padding:16px max(18px, env(safe-area-inset-right, 0px)) 0 max(18px, env(safe-area-inset-left, 0px))}
+.sheet-foot{position:sticky; bottom:0; z-index:3; background:var(--surface); display:flex; gap:10px; align-items:center; padding:12px 0 14px; border-top:1.5px solid var(--line); margin-top:4px}
+.foot-score{display:flex; align-items:center; gap:10px; min-width:0}
+.foot-score p{margin:0; font:500 11px/1.25 var(--font-mono); text-transform:uppercase; letter-spacing:.08em; color:var(--ink-soft)}
+.foot-score p b{display:block; font:800 15px/1.2 var(--font-body); text-transform:none; letter-spacing:0; color:var(--ink)}
+@media (min-width:700px){
+  .sheet-wrap{align-items:center; padding:24px}
+  .sheet{border-radius:22px; max-height:calc(100% - 48px)}
+}
+.form{display:grid; gap:18px}
+.form.pb{padding-bottom:18px}
+.field{display:grid; gap:7px; border:0; padding:0; margin:0; min-width:0}
+.field > label, .field > legend, .label{font:700 12.5px/1.2 var(--font-body); text-transform:uppercase; letter-spacing:.07em; color:var(--ink-soft); padding:0; margin-bottom:0}
+.field > legend{margin-bottom:7px}
+.hint{font-size:13px; color:var(--ink-soft); margin:0}
+.two-col{display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:14px}
+.pin-row{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
+.scores{display:grid; gap:16px}
+.slider{display:grid; gap:3px}
+.sl-top{display:flex; justify-content:space-between; align-items:baseline; gap:10px}
+.sl-top label{font:750 15px/1.2 var(--font-body)}
+.sl-top output{font:400 22px/1 var(--font-display); color:var(--tomato); min-width:2.2em; text-align:right; font-variant-numeric:tabular-nums}
+.sl-hint{margin:0; font-size:12.5px; color:var(--ink-soft)}
+input[type=range]{-webkit-appearance:none; appearance:none; width:100%; height:30px; background:transparent; margin:2px 0 0; cursor:pointer; --p:50%}
+input[type=range]::-webkit-slider-runnable-track{height:10px; border-radius:99px; background:linear-gradient(to right, var(--tomato) var(--p), var(--track) var(--p))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:26px; height:26px; border-radius:50%; background:var(--surface); border:3px solid var(--ink); margin-top:-8px; box-shadow:0 2px 0 var(--ink)}
+input[type=range]::-moz-range-track{height:10px; border-radius:99px; background:var(--track)}
+input[type=range]::-moz-range-progress{height:10px; border-radius:99px; background:var(--tomato)}
+input[type=range]::-moz-range-thumb{width:20px; height:20px; border-radius:50%; background:var(--surface); border:3px solid var(--ink)}
+input[type=range]:focus{box-shadow:none}
+input[type=range]:focus-visible{outline:3px solid var(--mustard); outline-offset:3px; border-radius:99px}
+.photo-field{display:grid; gap:10px}
+.photo-preview{width:100%; max-width:100%; aspect-ratio:16/10; object-fit:cover; border-radius:12px; display:block; background:var(--surface-2)}
+.form-error{margin:0; color:var(--tomato); font-weight:700; font-size:14px}
+.danger-row{display:flex; justify-content:flex-start; padding-top:4px}
+.check{display:flex; gap:10px; align-items:center; font-size:14.5px; cursor:pointer}
+.check input{width:20px; height:20px; accent-color:var(--tomato)}
+.share-text{font:500 14px/1.45 var(--font-mono); min-height:240px; background:var(--surface-2)}
+.panel{background:var(--surface-2); border-radius:12px; padding:12px; display:grid; gap:10px}
+.panel p{margin:0}
+
+.roulette{display:grid; gap:12px; padding-bottom:18px}
+.roll{font-family:var(--font-display); font-size:clamp(28px, 8.5vw, 42px); line-height:1.1; text-align:center; margin:10px 0 4px; min-height:2.4em; display:grid; place-items:center; color:var(--tomato); text-wrap:balance; overflow-wrap:anywhere}
+.roll.landed{animation:land .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes land{0%{transform:scale(.7) rotate(-6deg)} 100%{transform:none}}
+.center{text-align:center}
+.pick-actions{display:flex; justify-content:center; gap:10px}
+
+.toast{position:fixed; left:50%; bottom:calc(140px + env(safe-area-inset-bottom, 0px)); transform:translate(-50%, 16px); background:var(--ink); color:var(--surface); padding:11px 18px; border-radius:999px; font:650 14px/1.3 var(--font-body); opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:60; max-width:calc(100% - 32px); text-align:center}
+.toast.show{opacity:1; transform:translate(-50%, 0)}
+
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{transition-duration:.01ms!important; animation-duration:.01ms!important; animation-iteration-count:1!important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="masthead">
+    <div>
+      <h1 class="wordmark">Bite Club</h1>
+      <p class="tagline">Luke &amp; Gill's food diaries</p>
+    </div>
+    <div class="sticker" aria-hidden="true"><span>Est.</span><b>2026</b><span>MCR</span></div>
+  </header>
+  <main id="view" aria-live="polite"></main>
+  <p class="rule">The first rule of Bite Club: you always talk about Bite Club.</p>
+</div>
+
+<nav class="tabbar" aria-label="Sections">
+  <div class="tabbar-in">
+    <a class="tab" href="#hitlist" data-tab="hitlist"><span data-icon="pin"></span><span>Hit List</span></a>
+    <a class="tab" href="#sandwiches" data-tab="sandwiches"><span data-icon="sandwich"></span><span>Sandwiches</span></a>
+    <a class="tab" href="#pizza" data-tab="pizza"><span data-icon="pizza"></span><span>Pizza</span></a>
+  </div>
+</nav>
+<button class="fab" id="fab" type="button" data-act="add" hidden></button>
+
+<div class="sheet-wrap" id="sheet" hidden>
+  <div class="scrim" data-act="close"></div>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" tabindex="-1"></div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ============================================================
+   GOOGLE MAPS SETUP (see README.md)
+   Paste your API key between the quotes. Leave it blank to use the drawn map.
+   ============================================================ */
+const GOOGLE_MAPS_API_KEY = "";
+/* Optional: a Map ID from Google Cloud > Map Management. Blank uses Google's demo ID. */
+const GOOGLE_MAPS_MAP_ID = "";
+
+(() => {
+"use strict";
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const mean = a => a.length ? a.reduce((s, v) => s + v, 0) / a.length : null;
+const pad = n => String(n).padStart(2, "0");
+const today = () => { const d = new Date(); return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; };
+const fmtDate = s => { if (!s) return ""; const [y, m, d] = String(s).split("-").map(Number); if (!y || !m || !d) return ""; return new Date(y, m - 1, d).toLocaleDateString("en-GB", {day: "numeric", month: "short", year: "numeric"}); };
+const fmtScore = n => (n == null || isNaN(n)) ? "–" : (Math.round(n * 10) / 10).toFixed(1).replace(/\.0$/, "");
+const fmtMoney = n => typeof n === "number" && !isNaN(n) ? "£" + n.toFixed(2).replace(/\.00$/, "") : "";
+const parseMoney = s => { const n = parseFloat(String(s || "").replace(/[£,\s]/g, "")); return isNaN(n) || n < 0 ? null : Math.round(n * 100) / 100; };
+const pounds = n => n ? "£".repeat(n) : "";
+const WORDS = [[9.5, "Unreal"], [8.5, "Mint"], [7.5, "Boss"], [6.5, "Sound"], [5, "Alright"], [3.5, "Meh"], [-1, "Grim"]];
+const word = n => (WORDS.find(([t]) => Math.round(n * 10) / 10 >= t) || WORDS[WORDS.length - 1])[1];
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2, 10));
+const prefs = {
+  get(k) { try { return localStorage.getItem("bc:" + k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem("bc:" + k, v); } catch (e) {} }
+};
+const hash = s => { let h = 2166136261; for (const c of String(s)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
+const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
+const isTouch = () => matchMedia("(pointer: coarse)").matches;
+
+/* ---------- icons ---------- */
+const I = {
+  pin: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.5s6.5-6.4 6.5-11.6a6.5 6.5 0 0 0-13 0c0 5.2 6.5 11.6 6.5 11.6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="9.8" r="2.4" fill="currentColor"/></svg>`,
+  sandwich: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 14.5 12 4l9 10.5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M3 14.5c1.5 1.4 3 1.4 4.5 0s3-1.4 4.5 0 3 1.4 4.5 0 3-1.4 4.5 0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.5 19h17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+  pizza: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.2 6.8C9 3.4 15 3.4 20.8 6.8L12 21z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M5 9.8c4.7-2.5 9.3-2.5 14 0" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="12.2" r="1.3" fill="currentColor"/><circle cx="14.2" cy="12.9" r="1.3" fill="currentColor"/><circle cx="12" cy="16.3" r="1.2" fill="currentColor"/></svg>`,
+  plus: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/></svg>`,
+  edit: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M13.5 6.5l4 4" stroke="currentColor" stroke-width="2"/></svg>`,
+  check: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  x: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>`,
+  link: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4.2 4.2 0 0 0 6 0l3-3a4.2 4.2 0 0 0-6-6l-1.2 1.2M14 10a4.2 4.2 0 0 0-6 0l-3 3a4.2 4.2 0 0 0 6 6l1.2-1.2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+  photo: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.5-2.5h7L17 8h3v11H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.4" fill="none" stroke="currentColor" stroke-width="2"/></svg>`,
+  dice: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.5" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1.5" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>`,
+  share: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3.5M7.5 8 12 3.5 16.5 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 11.5V20h13v-8.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  download: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5V15M7.5 10.5 12 15l4.5-4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 19.5h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+  upload: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3.5M7.5 8 12 3.5 16.5 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 19.5h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`
+};
+
+/* ---------- reference data ---------- */
+const TYPES = [
+  {id: "pizza", l: "Pizza", c: "--t-pizza"},
+  {id: "sandwich", l: "Sandwiches", c: "--t-sandwich"},
+  {id: "brunch", l: "Brunch & café", c: "--t-brunch"},
+  {id: "burger", l: "Burgers", c: "--t-burger"},
+  {id: "chicken", l: "Chicken", c: "--t-chicken"},
+  {id: "english", l: "English", c: "--t-english"},
+  {id: "italian", l: "Italian", c: "--t-italian"},
+  {id: "greek", l: "Greek", c: "--t-greek"},
+  {id: "mexican", l: "Mexican", c: "--t-mexican"},
+  {id: "caribbean", l: "Caribbean", c: "--t-caribbean"},
+  {id: "african", l: "African", c: "--t-african"},
+  {id: "asian", l: "Asian", c: "--t-asian"},
+  {id: "thai", l: "Thai", c: "--t-thai"},
+  {id: "sushi", l: "Sushi", c: "--t-sushi"},
+  {id: "noodles", l: "Noodles", c: "--t-noodles"},
+  {id: "plates", l: "Small plates", c: "--t-plates"},
+  {id: "fine", l: "Fine dining", c: "--t-fine"},
+  {id: "takeaway", l: "Takeaway", c: "--t-takeaway"},
+  {id: "bakery", l: "Bakery", c: "--t-bakery"},
+  {id: "pub", l: "Pub & bar", c: "--t-pub"},
+  {id: "sweet", l: "Sweet treats", c: "--t-sweet"},
+  {id: "other", l: "Other", c: "--t-other"}
+];
+const TYPE = Object.fromEntries(TYPES.map(t => [t.id, t]));
+
+/* Projection: km from a north-west origin. x grows east, y grows south. */
+const LNG0 = -2.365, LAT0 = 53.535, KX = 66.3, KY = 111.2;
+const X = lng => (lng - LNG0) * KX, Y = lat => (LAT0 - lat) * KY;
+const toLng = x => x / KX + LNG0, toLat = y => LAT0 - y / KY;
+const FRAMES = {
+  centre: {x: 6.70, y: 4.89, w: 3.05, h: 2.78},
+  wide: {x: 0, y: 0, w: 15.25, h: 17.24}
+};
+const inFrame = (p, f) => p.x >= f.x && p.x <= f.x + f.w && p.y >= f.y && p.y <= f.y + f.h;
+
+const AREAS = [
+  {id: "nq", n: "Northern Quarter", lat: 53.4838, lng: -2.2360, z: "centre", lb: [8.553, 5.80, "middle"]},
+  {id: "ancoats", n: "Ancoats", lat: 53.4848, lng: -2.2272, z: "centre", lb: [9.20, 5.56, "start"]},
+  {id: "newislington", n: "New Islington", lat: 53.4822, lng: -2.2215, z: "centre", lb: [9.41, 5.98, "middle"]},
+  {id: "piccadilly", n: "Piccadilly", lat: 53.4806, lng: -2.2328, z: "centre", lb: [8.765, 6.16, "middle"]},
+  {id: "chinatown", n: "Chinatown", lat: 53.4787, lng: -2.2405, z: "centre", lb: [8.20, 6.37, "middle"]},
+  {id: "village", n: "The Village", lat: 53.4770, lng: -2.2352, z: "centre", lb: [8.70, 6.56, "middle"]},
+  {id: "spinningfields", n: "Spinningfields", lat: 53.4806, lng: -2.2508, z: "centre", lb: [7.50, 6.16, "middle"]},
+  {id: "deansgate", n: "Deansgate", lat: 53.4772, lng: -2.2492, z: "centre", lb: [7.62, 6.54, "middle"]},
+  {id: "stpeters", n: "St Peter's Square", lat: 53.4779, lng: -2.2440, z: "centre"},
+  {id: "castlefield", n: "Castlefield", lat: 53.4742, lng: -2.2555, z: "centre", lb: [7.22, 6.86, "middle"]},
+  {id: "oxfordrd", n: "Oxford Road", lat: 53.4705, lng: -2.2385, z: "centre", lb: [8.40, 7.28, "middle"]},
+  {id: "mayfield", n: "Mayfield", lat: 53.4763, lng: -2.2262, z: "centre", lb: [9.25, 6.64, "middle"]},
+  {id: "salford", n: "Salford (Chapel St)", lat: 53.4858, lng: -2.2555, z: "centre", lb: [7.26, 5.58, "middle", "Salford"]},
+  {id: "quays", n: "Salford Quays", lat: 53.4710, lng: -2.2930, z: "wide", lb: [4.774, 7.77, "middle"]},
+  {id: "chorlton", n: "Chorlton", lat: 53.4420, lng: -2.2770, z: "wide", lb: [5.834, 11.0, "middle"]},
+  {id: "didsbury", n: "Didsbury", lat: 53.4165, lng: -2.2310, z: "wide", lb: [8.884, 13.83, "middle"]},
+  {id: "withington", n: "Withington", lat: 53.4330, lng: -2.2290, z: "wide", lb: [9.42, 11.342, "start"]},
+  {id: "fallowfield", n: "Fallowfield", lat: 53.4440, lng: -2.2180, z: "wide", lb: [9.35, 10.119, "end"]},
+  {id: "rusholme", n: "Rusholme", lat: 53.4570, lng: -2.2250, z: "wide", lb: [8.88, 8.674, "end"]},
+  {id: "levenshulme", n: "Levenshulme", lat: 53.4440, lng: -2.1930, z: "wide", lb: [11.80, 10.119, "start"]},
+  {id: "stretford", n: "Stretford", lat: 53.4460, lng: -2.3100, z: "wide", lb: [3.25, 9.897, "end"]},
+  {id: "sale", n: "Sale", lat: 53.4245, lng: -2.3225, z: "wide", lb: [2.42, 12.288, "end"]},
+  {id: "altrincham", n: "Altrincham", lat: 53.3875, lng: -2.3490, z: "wide", lb: [1.46, 16.402, "start"]},
+  {id: "stockport", n: "Stockport", lat: 53.4085, lng: -2.1495, z: "wide", lb: [13.89, 14.067, "end"]},
+  {id: "heatonmoor", n: "Heaton Moor", lat: 53.4235, lng: -2.1860, z: "wide", lb: [12.27, 12.399, "start"]},
+  {id: "prestwich", n: "Prestwich", lat: 53.5290, lng: -2.2860, z: "wide", lb: [5.238, 1.32, "middle"]},
+  {id: "elsewhere", n: "Somewhere else", z: "none"}
+];
+const AREA = Object.fromEntries(AREAS.map(a => [a.id, a]));
+const areaName = id => (AREA[id] || AREA.elsewhere).n;
+
+const SAND_CRIT = [
+  {k: "selection", l: "Selection", h: "The range on the menu"},
+  {k: "integrity", l: "Integrity", h: "Holds together to the last bite"},
+  {k: "quality", l: "Quality", h: "Bread and fillings"},
+  {k: "price", l: "Price", h: "Value for money. 10 is a bargain"},
+  {k: "flavour", l: "Flavour", h: "How it actually tasted"}
+];
+const PIZZA_CRIT = [
+  {k: "crust", l: "Crust", h: "The edge: puff, chew, char", g: "pie"},
+  {k: "base", l: "Base integrity", h: "Holds up, judged for its style", g: "pie"},
+  {k: "tomato", l: "Tomato", h: "Sauce flavour and amount", g: "pie"},
+  {k: "cheese", l: "Cheese", h: "Quality, melt, coverage", g: "pie"},
+  {k: "toppings", l: "Toppings", h: "Quality and balance", g: "pie"},
+  {k: "flavour", l: "Flavour", h: "The whole thing together", g: "pie"},
+  {k: "price", l: "Price", h: "Value for money. 10 is a bargain", g: "visit"},
+  {k: "service", l: "Service", h: "Staff, speed, friendliness", g: "visit"},
+  {k: "atmosphere", l: "Atmosphere", h: "The room and the vibe", g: "visit"}
+];
+const PIZZA_STYLES = [
+  {id: "neapolitan", l: "Neapolitan", h: "A soft, wet centre and floppy tip are normal, so don't mark the base down for it. Judge the crust on puff, lightness and leopard spotting."},
+  {id: "nyslice", l: "New York slice", h: "Should fold lengthways without collapsing. Thin, crisp-but-bendy underside. A bit of grease on the plate is part of the deal."},
+  {id: "sourdough", l: "Sourdough", h: "Expect a tang and a chewier, more open crumb. The base should hold up better than a Neapolitan."},
+  {id: "detroit", l: "Detroit", h: "Rectangular, thick and airy, with crunchy caramelised cheese round the edges. Sauce often goes on last, in stripes."},
+  {id: "roman", l: "Roman", h: "Al taglio: rectangular, airy and crisp underneath. Tonda: very thin and cracker-crisp. Either way it should crunch."},
+  {id: "thin", l: "Thin & crispy", h: "Cracker-like base that snaps rather than bends. Light toppings so it stays crisp."},
+  {id: "sicilian", l: "Sicilian / Grandma", h: "Thick pan base with a fried, crisp bottom. Grandma style is thinner and denser, usually garlicky."},
+  {id: "deepdish", l: "Chicago deep dish", h: "More pie than pizza. Tall buttery crust, cheese underneath, chunky sauce on top. Base integrity means the slice stands up on the plate."},
+  {id: "newhaven", l: "New Haven", h: "Thin, chewy, oblong and properly charred. Light on cheese is normal."},
+  {id: "pinsa", l: "Pinsa", h: "Oval, light and airy with a crisp outside, made from a mix of flours."},
+  {id: "takeaway", l: "Takeaway", h: "Judge it as a takeaway. Did it survive the journey home, or was it steamed soft in the box? Service means the order and the wait."},
+  {id: "festive", l: "Festive", h: "Christmas specials. Points for nailing the theme (pigs in blankets, brie and cranberry, sprouts if you're brave) without it turning into a soggy dinner on a base."},
+  {id: "other", l: "Other", h: "Rate it against what it was trying to be."}
+];
+const SAND_TYPES = [
+  {id: "baguette", l: "Baguette"}, {id: "bagel", l: "Bagel"}, {id: "banhmi", l: "Bánh mì"}, {id: "ciabatta", l: "Ciabatta"},
+  {id: "club", l: "Club / Triple Decker"}, {id: "croissant", l: "Croissant"}, {id: "flatbread", l: "Flatbread / Piadina"},
+  {id: "focaccia", l: "Focaccia"}, {id: "rye", l: "Rye / Deli"}, {id: "roll", l: "Roll"}, {id: "classic", l: "Classic"},
+  {id: "sub", l: "Sub / Hoagie"}, {id: "toastie", l: "Toastie / Grilled"}, {id: "wrap", l: "Wrap"}, {id: "other", l: "Other"}
+];
+const AGAIN = {yes: "Would go back", maybe: "Maybe again", no: "Once was enough"};
+
+const RATE = {
+  sandwich: {col: "sandwiches", crit: SAND_CRIT, styles: SAND_TYPES, nameKey: "sandwich", noun: "sandwich", plural: "sandwiches",
+    eyebrow: "Between two slices", title: "Sandwich Ratings", tally: "Selection · Integrity · Quality · Price · Flavour",
+    styleLegend: "Type", allStyles: "All types", bestIn: "Best in type", icon: "sandwich", add: "Rate a sandwich",
+    emptyTitle: "No sandwiches rated yet", emptyText: "Log the next one you share: where it was, what you had, a photo and five scores out of ten.",
+    nameLabel: "What we had", namePh: "e.g. Mortadella, burrata, pistachio pesto", standPh: "e.g. The pistachio pesto"},
+  pizza: {col: "pizzas", crit: PIZZA_CRIT, styles: PIZZA_STYLES, nameKey: "pizza", noun: "pizza", plural: "pizza",
+    eyebrow: "By the slice and by the pie", title: "Pizza Ratings", tally: "Nine scores, judged against the style",
+    styleLegend: "Style", allStyles: "All styles", bestIn: "Best in style", icon: "pizza", add: "Rate a pizza",
+    emptyTitle: "No pizza rated yet", emptyText: "Log the style first, because a soupy Neapolitan centre is a feature and a soupy New York slice is a problem.",
+    nameLabel: "Which pizza", namePh: "e.g. Nduja and hot honey", standPh: "e.g. The crispy cheese edges"}
+};
+const TAB_KIND = {sandwiches: "sandwich", pizza: "pizza"};
+
+/* ---------- state ---------- */
+const TABS = ["hitlist", "sandwiches", "pizza"];
+const S = {
+  tab: "hitlist", hitMode: "list", frame: "centre", sel: null,
+  hf: {status: "wish", type: "all", area: "all", price: "all", q: ""},
+  rf: {sandwich: {sort: "top", q: "", style: "all"}, pizza: {sort: "top", q: "", style: "all"}},
+  places: [], sandwiches: [], pizzas: [],
+  ready: false, memOnly: false
+};
+const PHOTOS = new Map(); // id -> {blob, url}
+const view = $("#view"), sheetWrap = $("#sheet"), sheet = $("#sheet .sheet"), fab = $("#fab");
+$$("[data-icon]").forEach(el => { el.outerHTML = I[el.dataset.icon]; });
+
+/* ---------- on-device storage (IndexedDB) ---------- */
+const STORES = ["places", "sandwiches", "pizzas", "photos"];
+const Store = {
+  db: null,
+  open() {
+    return new Promise((resolve, reject) => {
+      if (!("indexedDB" in window)) return reject(new Error("no indexedDB"));
+      let req;
+      try { req = indexedDB.open("bite-club", 1); } catch (e) { return reject(e); }
+      req.onupgradeneeded = () => { const d = req.result; for (const s of STORES) if (!d.objectStoreNames.contains(s)) d.createObjectStore(s, {keyPath: "id"}); };
+      req.onsuccess = () => { this.db = req.result; resolve(); };
+      req.onerror = () => reject(req.error);
+      req.onblocked = () => reject(new Error("blocked"));
+    });
+  },
+  all(store) {
+    if (!this.db) return Promise.resolve([]);
+    return new Promise((resolve, reject) => {
+      const r = this.db.transaction(store).objectStore(store).getAll();
+      r.onsuccess = () => resolve(r.result || []); r.onerror = () => reject(r.error);
+    });
+  },
+  run(store, fn) {
+    if (!this.db) return Promise.resolve();
+    return new Promise((resolve, reject) => {
+      const t = this.db.transaction(store, "readwrite");
+      fn(t.objectStore(store));
+      t.oncomplete = () => resolve(); t.onerror = () => reject(t.error); t.onabort = () => reject(t.error);
+    });
+  },
+  put(store, val) { return this.run(store, s => s.put(val)); },
+  del(store, id) { return this.run(store, s => s.delete(id)); }
+};
+let askedPersist = false;
+async function saveEntry(col, doc) {
+  await Store.put(col, doc);
+  const i = S[col].findIndex(x => x.id === doc.id);
+  if (i >= 0) S[col][i] = doc; else S[col].push(doc);
+  if (!askedPersist && navigator.storage && navigator.storage.persist) { askedPersist = true; navigator.storage.persist().catch(() => {}); }
+  render();
+}
+async function removeEntry(col, id) {
+  await Store.del(col, id);
+  S[col] = S[col].filter(x => x.id !== id);
+  render();
+}
+async function savePhoto(blob) {
+  const id = uid(), type = blob.type || "image/jpeg";
+  const data = await blob.arrayBuffer();
+  await Store.put("photos", {id, type, data});
+  const b = new Blob([data], {type});
+  PHOTOS.set(id, {blob: b, url: URL.createObjectURL(b)});
+  return id;
+}
+async function deletePhoto(id) {
+  if (!id) return;
+  try { await Store.del("photos", id); } catch (e) {}
+  const p = PHOTOS.get(id); if (p) { URL.revokeObjectURL(p.url); PHOTOS.delete(id); }
+}
+const photoUrl = id => (id && PHOTOS.get(id) || {}).url || "";
+
+/* ---------- small renderers ---------- */
+const segBtn = (act, v, label, cur) => `<button type="button" data-act="${act}" data-v="${v}" aria-pressed="${String(cur) === String(v)}">${label}</button>`;
+const chip = (act, v, label, cur, c) => `<button type="button" class="chip" data-act="${act}" data-v="${v}" aria-pressed="${String(cur) === String(v)}"${c ? ` style="--tc:var(${c})"` : ""}>${c ? '<span class="dot"></span>' : ""}${esc(label)}</button>`;
+const radioChip = (name, v, label, checked, c) => `<label class="chip"${c ? ` style="--tc:var(${c})"` : ""}><input type="radio" name="${name}" value="${v}"${checked ? " checked" : ""}>${c ? '<span class="dot"></span>' : ""}<span>${esc(label)}</span></label>`;
+const stamp = (n, size) => n == null || isNaN(n) ? "" : `<div class="stamp${size ? " " + size : ""}" role="img" aria-label="Rated ${fmtScore(n)} out of 10, ${word(n)}"><b>${fmtScore(n)}</b><small>${word(n)}</small></div>`;
+const priceTag = n => n ? `<span class="pp" aria-label="Price ${n} out of 4"><b>${pounds(n)}</b><i>${pounds(4 - n)}</i></span>` : "";
+const empty = (icon, title, text, btn) => `<div class="empty">${I[icon]}<h3>${esc(title)}</h3><p>${esc(text)}</p>${btn ? `<button type="button" class="btn primary" data-act="add">${I.plus}${esc(btn)}</button>` : ""}</div>`;
+const loading = () => `<div class="loading" aria-label="Loading"><div></div><div></div></div>`;
+const safeUrl = u => /^https?:\/\//i.test(String(u || "").trim()) ? String(u).trim() : "";
+function mapsHref(p) {
+  const u = safeUrl(p.google); if (u) return u;
+  const a = AREA[p.area]; const where = a && a.id !== "elsewhere" ? `${a.n}, ` : "";
+  return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(`${p.name}, ${where}Manchester`);
+}
+function igHref(v) {
+  if (!v) return ""; v = String(v).trim();
+  if (/^https?:\/\//i.test(v)) return v;
+  const h = v.replace(/^@/, "").replace(/[^A-Za-z0-9._]/g, "");
+  return h ? `https://www.instagram.com/${h}/` : "";
+}
+function coordsFrom(url) {
+  if (!url) return null;
+  const m = url.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/) || url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/) || url.match(/[?&](?:q|ll|query|destination|center)=(-?\d+\.\d+)(?:,|%2C)\s*(-?\d+\.\d+)/i);
+  if (!m) return null;
+  const lat = +m[1], lng = +m[2];
+  return Math.abs(lat) <= 90 && Math.abs(lng) <= 180 ? {lat, lng} : null;
+}
+const scoreOf = (item, crit) => { const s = item.scores || {}; return mean(crit.map(c => s[c.k]).filter(v => typeof v === "number")); };
+const styleLabel = (kind, id) => { const s = RATE[kind].styles.find(x => x.id === id); return s ? s.l : ""; };
+
+/* ---------- map ---------- */
+const GEO = {
+  irwell: [[53.540,-2.302],[53.528,-2.295],[53.516,-2.286],[53.506,-2.279],[53.498,-2.268],[53.493,-2.276],[53.4885,-2.2735],[53.4888,-2.2640],[53.4882,-2.2540],[53.4868,-2.2468],[53.4842,-2.2486],[53.4812,-2.2534],[53.4785,-2.2565],[53.4750,-2.2598],[53.4722,-2.2675],[53.4705,-2.2765],[53.4702,-2.2860],[53.4722,-2.2960],[53.4708,-2.3100],[53.4732,-2.3300],[53.4712,-2.3500],[53.4700,-2.3720]],
+  medlock: [[53.4795,-2.2050],[53.4775,-2.2150],[53.4752,-2.2240],[53.4728,-2.2320],[53.4718,-2.2390],[53.4730,-2.2470],[53.4742,-2.2540],[53.4750,-2.2598]],
+  irk: [[53.5100,-2.2050],[53.5000,-2.2200],[53.4940,-2.2330],[53.4900,-2.2410],[53.4868,-2.2468]],
+  mersey: [[53.4110,-2.1250],[53.4105,-2.1550],[53.4140,-2.1800],[53.4130,-2.2050],[53.4085,-2.2300],[53.4070,-2.2500],[53.4120,-2.2700],[53.4230,-2.2880],[53.4320,-2.3000],[53.4390,-2.3200],[53.4420,-2.3450],[53.4400,-2.3750]],
+  rochdale: [[53.4748,-2.2575],[53.4752,-2.2505],[53.4760,-2.2445],[53.4766,-2.2395],[53.4775,-2.2355],[53.4795,-2.2320],[53.4815,-2.2285],[53.4835,-2.2255],[53.4850,-2.2225],[53.4875,-2.2170],[53.4900,-2.2100]],
+  ashton: [[53.4812,-2.2290],[53.4818,-2.2240],[53.4822,-2.2190],[53.4815,-2.2120],[53.4808,-2.2050]],
+  roads: [
+    [[53.4855,-2.2460],[53.4810,-2.2482],[53.4770,-2.2500],[53.4742,-2.2520]],
+    [[53.4780,-2.2443],[53.4750,-2.2420],[53.4715,-2.2390],[53.4670,-2.2350],[53.4620,-2.2310]],
+    [[53.4828,-2.2445],[53.4820,-2.2400],[53.4812,-2.2370],[53.4800,-2.2330],[53.4778,-2.2310]],
+    [[53.4806,-2.2372],[53.4780,-2.2395],[53.4752,-2.2415]],
+    [[53.4880,-2.2370],[53.4850,-2.2310],[53.4825,-2.2255],[53.4800,-2.2210],[53.4770,-2.2180]],
+    [[53.4760,-2.2650],[53.4728,-2.2540],[53.4712,-2.2460],[53.4710,-2.2380],[53.4722,-2.2300],[53.4745,-2.2230],[53.4760,-2.2150]],
+    [[53.4790,-2.2540],[53.4783,-2.2480],[53.4779,-2.2443]],
+    [[53.4842,-2.2510],[53.4850,-2.2600],[53.4865,-2.2700]],
+    [[53.4900,-2.2440],[53.4870,-2.2425],[53.4840,-2.2430],[53.4828,-2.2445]]
+  ],
+  m60: [[53.5310,-2.2750],[53.5290,-2.2350],[53.5260,-2.2000],[53.5150,-2.1650],[53.4950,-2.1350],[53.4700,-2.1200],[53.4400,-2.1200],[53.4180,-2.1400],[53.4060,-2.1800],[53.4030,-2.2300],[53.4090,-2.2650],[53.4180,-2.2900],[53.4280,-2.3100],[53.4430,-2.3300],[53.4600,-2.3480],[53.4800,-2.3500],[53.5000,-2.3380],[53.5180,-2.3150],[53.5280,-2.2950],[53.5310,-2.2750]],
+  radials: [
+    [[53.4745,-2.2560],[53.4600,-2.2850],[53.4460,-2.3100],[53.4245,-2.3225],[53.4050,-2.3380],[53.3875,-2.3490],[53.3700,-2.3550]],
+    [[53.4705,-2.2385],[53.4570,-2.2250],[53.4440,-2.2200],[53.4330,-2.2290],[53.4165,-2.2310],[53.3950,-2.2300]],
+    [[53.4775,-2.2310],[53.4600,-2.2050],[53.4440,-2.1930],[53.4235,-2.1770],[53.4085,-2.1550],[53.3900,-2.1450]],
+    [[53.4880,-2.2450],[53.5050,-2.2600],[53.5290,-2.2860],[53.5450,-2.2950]],
+    [[53.4720,-2.2470],[53.4600,-2.2600],[53.4420,-2.2770],[53.4250,-2.2850]]
+  ],
+  parksWide: [[7.49,0.22,0.9,0.7],[10.66,5.50,0.35,0.25],[9.32,9.73,0.3,0.25],[6.70,14.62,0.5,0.45],[5.44,12.40,0.35,0.28],[4.31,11.34,0.45,0.28],[6.23,5.12,0.2,0.15],[4.31,9.79,0.22,0.18]]
+};
+const f3 = n => n.toFixed(3);
+function smooth(pts) {
+  const p = pts.map(([la, ln]) => [X(ln), Y(la)]);
+  let d = `M${f3(p[0][0])} ${f3(p[0][1])}`;
+  for (let i = 0; i < p.length - 1; i++) {
+    const p0 = p[i - 1] || p[i], p1 = p[i], p2 = p[i + 1], p3 = p[i + 2] || p2;
+    d += ` C${f3(p1[0] + (p2[0] - p0[0]) / 6)} ${f3(p1[1] + (p2[1] - p0[1]) / 6)} ${f3(p2[0] - (p3[0] - p1[0]) / 6)} ${f3(p2[1] - (p3[1] - p1[1]) / 6)} ${f3(p2[0])} ${f3(p2[1])}`;
+  }
+  return d;
+}
+const BASE = {};
+function mapBase(frame) {
+  if (BASE[frame]) return BASE[frame];
+  const F = FRAMES[frame], C = frame === "centre";
+  const fs = F.w * (C ? 0.03 : 0.026), dot = F.w / 46;
+  let s = `<defs><pattern id="mdots-${frame}" width="${f3(dot)}" height="${f3(dot)}" patternUnits="userSpaceOnUse"><circle cx="${f3(dot / 2)}" cy="${f3(dot / 2)}" r="${f3(dot / 9)}" class="m-dot"/></pattern></defs>`;
+  s += `<rect x="${F.x - F.w}" y="${F.y - F.h}" width="${F.w * 3}" height="${F.h * 3}" class="m-land"/>`;
+  s += `<rect x="${F.x - F.w}" y="${F.y - F.h}" width="${F.w * 3}" height="${F.h * 3}" fill="url(#mdots-${frame})"/>`;
+  const river = (pts, w) => `<path d="${smooth(pts)}" class="m-river" style="stroke-width:${w}px"/>`;
+  const road = (pts, w, cls = "m-road") => `<path d="${smooth(pts)}" class="${cls}" style="stroke-width:${w}px"/>`;
+  if (C) {
+    s += `<rect x="${f3(X(-2.2378))}" y="${f3(Y(53.4814))}" width="0.13" height="0.07" rx="0.02" class="m-park"/>`;
+    s += `<ellipse cx="${f3(X(-2.2552))}" cy="${f3(Y(53.4744))}" rx="0.06" ry="0.035" class="m-park"/>`;
+    s += GEO.roads.map(r => road(r, 4)).join("");
+    s += river(GEO.rochdale, 2.5) + river(GEO.ashton, 2.5);
+    s += river(GEO.medlock, 4) + river(GEO.irk, 4) + river(GEO.irwell, 7);
+  } else {
+    s += GEO.parksWide.map(([cx, cy, rx, ry]) => `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" class="m-park"/>`).join("");
+    s += GEO.radials.map(r => road(r, 2.5)).join("");
+    s += road(GEO.m60, 3, "m-mway");
+    s += river(GEO.medlock, 2) + river(GEO.irk, 2) + river(GEO.irwell, 4) + river(GEO.mersey, 4);
+    s += `<text x="1.79" y="3.89" font-size="${f3(fs * .85)}" stroke-width="${f3(fs * .3)}" class="m-label small" text-anchor="middle">M60</text>`;
+    s += `<text x="${f3(X(-2.205))}" y="${f3(Y(53.4085) + 0.55)}" font-size="${f3(fs * .78)}" stroke-width="${f3(fs * .3)}" class="m-label small" text-anchor="middle">River Mersey</text>`;
+  }
+  for (const a of AREAS) {
+    if (!a.lb || a.z !== frame) continue;
+    const [x, y, anchor, short] = a.lb;
+    s += `<text x="${x}" y="${y}" text-anchor="${anchor}" dominant-baseline="middle" font-size="${f3(fs)}" stroke-width="${f3(fs * .34)}" class="m-label">${esc(short || a.n)}</text>`;
+  }
+  const len = C ? 0.5 : 2, sx = C ? F.x + F.w * 0.04 : F.x + F.w * 0.96 - len, sy = F.y + F.h * 0.955, tk = fs * 0.35;
+  s += `<path d="M${f3(sx)} ${f3(sy - tk)} V${f3(sy)} H${f3(sx + len)} V${f3(sy - tk)}" class="m-inkline" style="stroke-width:1.6px"/>`;
+  s += `<text x="${f3(sx + len / 2)}" y="${f3(sy - tk * 1.5)}" font-size="${f3(fs * .78)}" stroke-width="${f3(fs * .3)}" text-anchor="middle" class="m-label small">${C ? "500 m" : "2 km"}</text>`;
+  const nx = F.x + F.w * 0.94, ny = F.y + F.h * 0.06;
+  s += `<path d="M${f3(nx)} ${f3(ny - fs * .55)} L${f3(nx + fs * .38)} ${f3(ny + fs * .5)} L${f3(nx)} ${f3(ny + fs * .22)} L${f3(nx - fs * .38)} ${f3(ny + fs * .5)} Z" class="m-ink"/>`;
+  s += `<text x="${f3(nx)}" y="${f3(ny + fs * 1.45)}" font-size="${f3(fs * .8)}" stroke-width="${f3(fs * .3)}" text-anchor="middle" class="m-label small">N</text>`;
+  return (BASE[frame] = s);
+}
+function pinPoint(p) {
+  if (typeof p.lat === "number" && typeof p.lng === "number") return {x: X(p.lng), y: Y(p.lat)};
+  const a = AREA[p.area]; if (!a || a.lat == null) return null;
+  const h = hash(p.id || p.name), ang = (h % 360) * Math.PI / 180;
+  const rad = (a.z === "centre" ? 0.075 : 0.38) * (0.3 + ((h >>> 9) % 100) / 143);
+  return {x: X(a.lng) + Math.cos(ang) * rad, y: Y(a.lat) + Math.sin(ang) * rad};
+}
+function pinSVG(p, r) {
+  const mark = p.been
+    ? `<path d="M${f3(-r * .45)} ${f3(r * .02)} L${f3(-r * .1)} ${f3(r * .38)} L${f3(r * .5)} ${f3(-r * .36)}" class="pin-tick" stroke-width="${f3(r * .3)}"/>`
+    : `<circle r="${f3(r * .33)}" class="pin-hole"/>`;
+  return `<g class="pin${p.sel ? " sel" : ""}" data-pin="${esc(p.id)}" transform="translate(${f3(p.x)} ${f3(p.y)})" tabindex="0" role="button" aria-label="${esc(p.label)}"><circle r="${f3(r * 2.1)}" class="pin-hit"/><circle r="${f3(r * 1.55)}" class="pin-ring"/><circle r="${f3(r)}" class="pin-dot" style="fill:var(${p.color})"/>${mark}</g>`;
+}
+function mapSVG(frame, pins, mini) {
+  const F = FRAMES[frame], C = frame === "centre", centre = FRAMES.centre;
+  const r = F.w * (mini ? 0.028 : 0.021);
+  let cluster = 0, out = "";
+  const ordered = pins.slice().sort((a, b) => (a.sel - b.sel) || (a.y - b.y));
+  for (const p of ordered) {
+    if (!C && !mini && inFrame(p, centre)) { cluster++; continue; }
+    out += pinSVG(p, r);
+  }
+  let box = "";
+  if (!C) {
+    const fs = F.w * 0.026;
+    const act = mini ? "" : ` data-act="frame" data-v="centre" role="button" tabindex="0" aria-label="Zoom into the city centre"`;
+    box = `<g class="m-centre-g"${act}><rect x="${centre.x}" y="${centre.y}" width="${centre.w}" height="${centre.h}" rx="${f3(fs * .5)}" class="m-centre"/><text x="${centre.x}" y="${f3(centre.y - fs * .6)}" font-size="${f3(fs)}" stroke-width="${f3(fs * .34)}" class="m-label m-centre-label">City centre</text>${cluster ? `<g transform="translate(${f3(centre.x + centre.w)} ${f3(centre.y)})"><circle r="${f3(fs * 1.2)}" class="m-count"/><text text-anchor="middle" dominant-baseline="central" font-size="${f3(fs * 1.1)}" class="m-count-t">${cluster}</text></g>` : ""}</g>`;
+  }
+  return `<svg class="map-svg" viewBox="${F.x} ${F.y} ${F.w} ${F.h}" preserveAspectRatio="xMidYMid meet" role="group" aria-label="${C ? "City centre map" : "Wider Manchester map"}">${mapBase(frame)}${box}${out}</svg>`;
+}
+
+/* ---------- hit list ---------- */
+function placesFiltered(statusOverride) {
+  const {type, area, price, q} = S.hf, status = statusOverride || S.hf.status, qq = q.trim().toLowerCase();
+  return S.places.filter(p =>
+    (status === "all" || (status === "wish" ? p.status !== "been" : p.status === "been")) &&
+    (type === "all" || p.type === type) && (area === "all" || p.area === area) &&
+    (price === "all" || String(p.price || "") === price) &&
+    (!qq || [p.name, p.notes, p.verdict, areaName(p.area), (TYPE[p.type] || TYPE.other).l].join(" ").toLowerCase().includes(qq)));
+}
+function sortPlaces(list) {
+  return list.slice().sort((a, b) => {
+    const ab = a.status === "been", bb = b.status === "been";
+    if (ab !== bb) return ab ? 1 : -1;
+    if (ab) return ((b.rating ?? -1) - (a.rating ?? -1)) || String(b.visitedOn || "").localeCompare(String(a.visitedOn || ""));
+    return (b.createdAt || 0) - (a.createdAt || 0);
+  });
+}
+function placeCard(p) {
+  const t = TYPE[p.type] || TYPE.other, been = p.status === "been", ig = igHref(p.instagram);
+  const meta = [fmtDate(p.visitedOn), AGAIN[p.again]].filter(Boolean).join(" · ");
+  return `<article class="place-card" style="--tc:var(${t.c})">
+    <div class="pc-main">
+      <p class="pc-kicker"><span class="dot"></span>${esc(t.l)}<span aria-hidden="true">·</span>${esc(areaName(p.area))}${p.price ? `<span aria-hidden="true">·</span>${priceTag(p.price)}` : ""}</p>
+      <h3 class="pc-name">${esc(p.name)}</h3>
+      ${p.notes ? `<p class="pc-notes">${esc(p.notes)}</p>` : ""}
+      ${been && (p.verdict || meta) ? `<p class="pc-verdict">${p.verdict ? `“${esc(p.verdict)}”` : ""}${meta ? `<span class="mono">${esc(meta)}</span>` : ""}</p>` : ""}
+    </div>
+    ${been ? stamp(p.rating) : ""}
+    <div class="pc-actions">
+      <a class="chip-link" href="${esc(mapsHref(p))}" target="_blank" rel="noopener">${I.pin}Maps</a>
+      ${ig ? `<a class="chip-link" href="${esc(ig)}" target="_blank" rel="noopener">${I.link}Instagram</a>` : ""}
+      <span class="grow"></span>
+      ${!been ? `<button type="button" class="btn-tick" data-act="tick" data-id="${esc(p.id)}">${I.check}Tick off</button>` : ""}
+      <button type="button" class="icon-btn" data-act="share-one" data-kind="place" data-id="${esc(p.id)}" aria-label="Share ${esc(p.name)}">${I.share}</button>
+      <button type="button" class="icon-btn" data-act="edit-place" data-id="${esc(p.id)}" aria-label="Edit ${esc(p.name)}">${I.edit}</button>
+    </div>
+  </article>`;
+}
+const headActions = () => `<div class="head-actions"><button type="button" class="btn small" data-act="share">${I.share}Share</button><button type="button" class="btn small" data-act="export">${I.download}Export</button></div>`;
+function hitView() {
+  const all = S.places;
+  const wish = all.filter(p => p.status !== "been").length, been = all.length - wish;
+  const typesUsed = TYPES.filter(t => all.some(p => p.type === t.id));
+  const areasUsed = AREAS.filter(a => all.some(p => p.area === a.id));
+  const pricesUsed = [1, 2, 3, 4].filter(n => all.some(p => p.price === n));
+  if (S.hf.type !== "all" && !typesUsed.some(t => t.id === S.hf.type)) S.hf.type = "all";
+  if (S.hf.area !== "all" && !areasUsed.some(a => a.id === S.hf.area)) S.hf.area = "all";
+  if (S.hf.price !== "all" && !pricesUsed.includes(+S.hf.price)) S.hf.price = "all";
+  const avg = mean(all.filter(p => p.status === "been" && typeof p.rating === "number").map(p => p.rating));
+  const list = sortPlaces(placesFiltered());
+  return `<section class="view-head">
+      <div><p class="eyebrow">Places we want to eat</p><h2 class="view-title">The Hit List</h2></div>
+      ${headActions()}
+    </section>
+    <p class="tally mono">${wish} to try · ${been} ticked off${avg != null ? ` · average ${fmtScore(avg)}/10` : ""}</p>
+    ${all.length ? `<div class="filters">
+      <div class="seg-row">
+        <div class="seg" role="group" aria-label="Status">${segBtn("status", "wish", "To try", S.hf.status)}${segBtn("status", "been", "Been", S.hf.status)}${segBtn("status", "all", "All", S.hf.status)}</div>
+        <div class="seg" role="group" aria-label="Show as">${segBtn("hit-mode", "list", "List", S.hitMode)}${segBtn("hit-mode", "map", "Map", S.hitMode)}</div>
+      </div>
+      ${typesUsed.length > 1 ? `<div class="chips" role="group" aria-label="Type">${chip("type", "all", "All types", S.hf.type)}${typesUsed.map(t => chip("type", t.id, t.l, S.hf.type, t.c)).join("")}</div>` : ""}
+      ${pricesUsed.length ? `<div class="chips" role="group" aria-label="Price">${chip("price", "all", "Any price", S.hf.price)}${[1, 2, 3, 4].map(n => chip("price", String(n), pounds(n), S.hf.price)).join("")}</div>` : ""}
+      <div class="filter-row"><input type="search" id="hit-q" placeholder="Search names and notes" value="${esc(S.hf.q)}" aria-label="Search the hit list" autocomplete="off"><select id="hit-area" aria-label="Area"><option value="all">All areas</option>${areasUsed.map(a => `<option value="${a.id}"${S.hf.area === a.id ? " selected" : ""}>${esc(a.n)}</option>`).join("")}</select></div>
+    </div>` : ""}
+    ${wish ? `<button type="button" class="pick" data-act="pick">${I.dice}<span><b>Can't decide?</b> Pick somewhere for us</span></button>` : ""}
+    <div class="results">${!S.ready ? loading() : !all.length
+      ? empty("pin", "Nothing on the list yet", "Add the places you keep saying you'll try. Link the Google listing or Instagram so you can find them again.", "Add a place")
+      : S.hitMode === "map" ? mapView(list) : listView(list)}</div>`;
+}
+function listView(list) {
+  if (!list.length) return `<div class="empty"><h3>Nothing matches</h3><p>Try a different status, type, price or area.</p><button type="button" class="btn small" data-act="reset-filters">Clear filters</button></div>`;
+  return `<div class="cards">${list.map(placeCard).join("")}</div>`;
+}
+/* ---------- Google Maps layer ---------- */
+const G = {status: GOOGLE_MAPS_API_KEY.trim() ? "idle" : "off", promise: null, map: null, el: null, markers: new Map(), sig: "", me: null, lastPin: 0, pending: [], authFailed: false};
+const googleOn = () => G.status !== "off" && G.status !== "failed";
+const googleReady = () => G.status === "ready";
+const VIEWS = {centre: {center: {lat: 53.4793, lng: -2.2405}, zoom: 15}, wide: {center: {lat: 53.455, lng: -2.25}, zoom: 11}};
+const mapOpts = extra => {
+  const o = {mapId: GOOGLE_MAPS_MAP_ID.trim() || "DEMO_MAP_ID", disableDefaultUI: true, zoomControl: true, clickableIcons: false, gestureHandling: "greedy", ...extra};
+  if (window.google && google.maps && google.maps.ColorScheme) o.colorScheme = google.maps.ColorScheme.FOLLOW_SYSTEM;
+  return o;
+};
+const llNum = ll => ({lat: typeof ll.lat === "function" ? ll.lat() : ll.lat, lng: typeof ll.lng === "function" ? ll.lng() : ll.lng});
+function loadGoogle() {
+  if (G.promise) return G.promise;
+  if (G.status === "off") return Promise.resolve(false);
+  G.status = "loading";
+  G.promise = new Promise(resolve => {
+    let done = false;
+    const finish = ok => {
+      if (done) return; done = true;
+      G.status = ok && !G.authFailed ? "ready" : "failed";
+      resolve(G.status === "ready");
+      render();
+      if (ctx && ctx.kind === "place") { const mm = $("#pf-minimap"); if (mm && !mm.hidden) renderMini(); if (G.status !== "ready") { const f = $("#pf-search-field"); if (f) f.hidden = true; } }
+    };
+    window.__biteClubMaps = () => {
+      Promise.all([google.maps.importLibrary("maps"), google.maps.importLibrary("marker")])
+        .then(([maps, marker]) => { G.Map = maps.Map; G.Marker = marker.AdvancedMarkerElement; finish(true); })
+        .catch(() => finish(false));
+    };
+    window.gm_authFailure = () => { G.authFailed = true; G.status = "failed"; finish(false); render(); };
+    const s = document.createElement("script");
+    s.src = "https://maps.googleapis.com/maps/api/js?" + new URLSearchParams({key: GOOGLE_MAPS_API_KEY.trim(), v: "weekly", loading: "async", callback: "__biteClubMaps", region: "GB", language: "en-GB"});
+    s.async = true; s.onerror = () => finish(false);
+    document.head.appendChild(s);
+    setTimeout(() => finish(false), 15000);
+  });
+  return G.promise;
+}
+function placeLatLng(p) {
+  if (typeof p.lat === "number" && typeof p.lng === "number") return {lat: p.lat, lng: p.lng, approx: false};
+  const pt = pinPoint(p); return pt ? {lat: toLat(pt.y), lng: toLng(pt.x), approx: true} : null;
+}
+function googleMapView(list) {
+  const pins = []; let noPin = 0;
+  for (const p of list) { const pos = placeLatLng(p); if (!pos) { noPin++; continue; } pins.push({p, ...pos}); }
+  G.pending = pins;
+  const sel = list.find(p => p.id === S.sel);
+  return `<div class="map-tools">
+      <div class="seg small" role="group" aria-label="Map area">${segBtn("frame", "centre", "City centre", S.frame)}${segBtn("frame", "wide", "Wider Manchester", S.frame)}</div>
+      <button type="button" class="btn small" data-act="near-me">${I.pin}Near me</button>
+    </div>
+    <div class="map-box" style="--ar:.8">${googleReady() ? `<div id="gmap-slot" class="gmap-slot"></div>` : `<div class="map-loading">Loading Google Maps…</div>`}</div>
+    <p class="legend" style="margin-top:10px"><span><i class="lg hole"></i>To try</span><span><i class="lg tick">${I.check}</i>Been</span></p>
+    ${pins.some(x => x.approx) ? `<p class="map-note">Dashed pins are placed roughly by area. Edit the place and use “Find it on Google” to pin it exactly.</p>` : ""}
+    ${noPin ? `<p class="map-note">${noPin} not on the map (area set to “Somewhere else” with no pin).</p>` : ""}
+    <div class="map-card" id="map-card">${sel ? placeCard(sel) : `<p class="map-hint">${pins.length ? "Tap a pin to see the place." : "No places match these filters."}</p>`}</div>`;
+}
+function mountGoogleMap() {
+  const slot = $("#gmap-slot"); if (!slot || !googleReady()) return;
+  if (!G.el) { G.el = document.createElement("div"); G.el.className = "gmap"; }
+  slot.appendChild(G.el);
+  if (!G.map) {
+    try { G.map = new G.Map(G.el, mapOpts({...VIEWS[S.frame]})); }
+    catch (e) { G.status = "failed"; render(); return; }
+    G.map.addListener("click", () => { if (Date.now() - G.lastPin < 400) return; if (S.sel) selectPin(null); });
+  }
+  syncMarkers(G.pending);
+}
+function pinNode(p, approx) {
+  const t = TYPE[p.type] || TYPE.other, been = p.status === "been";
+  const d = document.createElement("div");
+  d.className = "gpin" + (been ? " been" : "") + (approx ? " approx" : "");
+  d.style.setProperty("--tc", `var(${t.c})`);
+  d.innerHTML = been ? I.check : "";
+  d.setAttribute("role", "button"); d.setAttribute("aria-label", p.name);
+  d.addEventListener("click", e => { e.stopPropagation(); G.lastPin = Date.now(); selectPin(p.id); });
+  return d;
+}
+function syncMarkers(pins) {
+  const keep = new Set();
+  for (const {p, lat, lng, approx} of pins) {
+    keep.add(p.id);
+    const key = [p.updatedAt, p.status, p.type, lat, lng].join("|");
+    const m = G.markers.get(p.id);
+    if (m && m.key === key) continue;
+    if (m) m.marker.map = null;
+    const marker = new G.Marker({map: G.map, position: {lat, lng}, content: pinNode(p, approx), title: p.name});
+    G.markers.set(p.id, {marker, key});
+  }
+  for (const [id, m] of G.markers) if (!keep.has(id)) { m.marker.map = null; G.markers.delete(id); }
+  markSelected();
+  const sig = [...keep].sort().join("|");
+  if (sig !== G.sig) { G.sig = sig; fitPins(pins); }
+}
+function markSelected() {
+  for (const [id, m] of G.markers) {
+    const on = id === S.sel, c = m.marker.content;
+    if (c && c.classList) c.classList.toggle("sel", on);
+    m.marker.zIndex = on ? 999 : null;
+  }
+}
+function fitPins(pins) {
+  if (!G.map || !pins.length) return;
+  if (pins.length === 1) { G.map.setCenter({lat: pins[0].lat, lng: pins[0].lng}); G.map.setZoom(15); return; }
+  const b = new google.maps.LatLngBounds();
+  pins.forEach(x => b.extend({lat: x.lat, lng: x.lng}));
+  G.map.fitBounds(b, 48);
+}
+function selectPin(id) {
+  S.sel = id; markSelected();
+  const card = $("#map-card"), p = id && S.places.find(x => x.id === id);
+  if (!card) return;
+  card.innerHTML = p ? placeCard(p) : `<p class="map-hint">Tap a pin to see the place.</p>`;
+  if (p) card.scrollIntoView({block: "nearest", behavior: reduceMotion() ? "auto" : "smooth"});
+}
+function nearMe() {
+  if (!navigator.geolocation) return toast("Location isn't available on this device.");
+  navigator.geolocation.getCurrentPosition(pos => {
+    const ll = {lat: pos.coords.latitude, lng: pos.coords.longitude};
+    if (!G.map) return;
+    if (!G.me) { const d = document.createElement("div"); d.className = "gme"; G.me = new G.Marker({map: G.map, position: ll, content: d, title: "You are here", zIndex: 1000}); }
+    else G.me.position = ll;
+    G.map.setCenter(ll); G.map.setZoom(15);
+  }, () => toast("Couldn't get your location. Check the location permission."), {enableHighAccuracy: true, timeout: 10000, maximumAge: 60000});
+}
+const PRICE_LEVEL = {FREE: 1, INEXPENSIVE: 1, MODERATE: 2, EXPENSIVE: 3, VERY_EXPENSIVE: 4};
+const GTYPE = {
+  pizza_restaurant: "pizza", sandwich_shop: "sandwich", deli: "sandwich", breakfast_restaurant: "brunch", brunch_restaurant: "brunch",
+  cafe: "brunch", coffee_shop: "brunch", hamburger_restaurant: "burger", chicken_restaurant: "chicken", chicken_wings_restaurant: "chicken",
+  british_restaurant: "english", italian_restaurant: "italian", greek_restaurant: "greek", mexican_restaurant: "mexican",
+  caribbean_restaurant: "caribbean", african_restaurant: "african", thai_restaurant: "thai", sushi_restaurant: "sushi",
+  ramen_restaurant: "noodles", noodle_shop: "noodles", chinese_restaurant: "asian", japanese_restaurant: "asian", korean_restaurant: "asian",
+  vietnamese_restaurant: "asian", asian_restaurant: "asian", fine_dining_restaurant: "fine", meal_takeaway: "takeaway", bakery: "bakery",
+  pub: "pub", bar: "pub", wine_bar: "pub", dessert_shop: "sweet", dessert_restaurant: "sweet", ice_cream_shop: "sweet", donut_shop: "sweet",
+  cake_shop: "sweet", tapas_restaurant: "plates"
+};
+function nearestArea(lat, lng) {
+  const x = X(lng), y = Y(lat); let best = "elsewhere", bestD = Infinity;
+  for (const a of AREAS) {
+    if (a.lat == null) continue;
+    const d = Math.hypot(X(a.lng) - x, Y(a.lat) - y), limit = a.z === "centre" ? 0.6 : 2.5;
+    if (d < limit && d < bestD) { best = a.id; bestD = d; }
+  }
+  return best;
+}
+function setRadio(name, v) { const r = sheet.querySelector(`input[name="${name}"][value="${v}"]`); if (r) r.checked = true; }
+function mountPlaceSearch(c) {
+  if (!$("#pf-search")) return;
+  loadGoogle().then(async ok => {
+    if (ctx !== c) return;
+    const field = $("#pf-search-field");
+    if (!ok) { if (field) field.hidden = true; return; }
+    try {
+      const {PlaceAutocompleteElement} = await google.maps.importLibrary("places");
+      if (ctx !== c) return;
+      const el = new PlaceAutocompleteElement({includedRegionCodes: ["gb"], locationBias: {center: {lat: 53.4808, lng: -2.2426}, radius: 25000}});
+      el.className = "g-search";
+      const host = $("#pf-search"); host.innerHTML = ""; host.appendChild(el);
+      el.addEventListener("gmp-select", e => { const pr = e.placePrediction; if (pr) fillFromGoogle(pr.toPlace(), c); });
+      el.addEventListener("gmp-placeselect", e => { if (e.place) fillFromGoogle(e.place, c); });
+    } catch (e) { if (field) field.hidden = true; }
+  });
+}
+async function fillFromGoogle(place, c) {
+  const hint = $("#pf-search-hint");
+  if (hint) hint.textContent = "Fetching details…";
+  try { await place.fetchFields({fields: ["displayName", "formattedAddress", "location", "googleMapsURI", "priceLevel", "primaryType", "types"]}); }
+  catch (e) {
+    try { await place.fetchFields({fields: ["displayName", "formattedAddress", "location", "googleMapsURI"]}); }
+    catch (e2) { if (hint) hint.textContent = "Couldn't fetch that place. Fill it in by hand."; return; }
+  }
+  if (ctx !== c) return;
+  if (place.displayName) $("#pf-name").value = place.displayName;
+  if (place.googleMapsURI) $("#pf-google").value = place.googleMapsURI;
+  if (place.location) { const {lat, lng} = llNum(place.location); c.pin = {lat, lng, source: "google"}; $("#pf-area").value = nearestArea(lat, lng); }
+  const pl = PRICE_LEVEL[String(place.priceLevel || "").replace(/^PRICE_LEVEL_/, "")]; if (pl) setRadio("pprice", String(pl));
+  const ty = [place.primaryType, ...(place.types || [])].map(t => GTYPE[t]).find(Boolean); if (ty) setRadio("ptype", ty);
+  c.address = place.formattedAddress || "";
+  if (hint) hint.textContent = place.formattedAddress ? `Found: ${place.formattedAddress}. Check the type and price, then save.` : "Found it. Check the type and price, then save.";
+  updatePinStatus();
+}
+
+function mapView(list) {
+  if (googleOn()) { loadGoogle(); return googleMapView(list); }
+  return drawnMapView(list);
+}
+function drawnMapView(list) {
+  const F = FRAMES[S.frame];
+  const pins = [];
+  let noPin = 0;
+  for (const p of list) {
+    const pt = pinPoint(p);
+    if (!pt) { noPin++; continue; }
+    pins.push({id: p.id, x: pt.x, y: pt.y, color: (TYPE[p.type] || TYPE.other).c, been: p.status === "been", sel: p.id === S.sel, label: `${p.name}, ${areaName(p.area)}${p.status === "been" ? ", been" : ""}`});
+  }
+  const outside = pins.filter(p => !inFrame(p, F)).length;
+  const sel = list.find(p => p.id === S.sel);
+  return `<div class="map-tools">
+      <div class="seg small" role="group" aria-label="Map area">${segBtn("frame", "centre", "City centre", S.frame)}${segBtn("frame", "wide", "Wider Manchester", S.frame)}</div>
+      <p class="legend"><span><i class="lg hole"></i>To try</span><span><i class="lg tick">${I.check}</i>Been</span></p>
+    </div>
+    <div class="map-box" style="--ar:${(F.w / F.h).toFixed(4)}">${mapSVG(S.frame, pins, false)}</div>
+    ${S.frame === "centre" && outside ? `<button type="button" class="map-note" data-act="frame" data-v="wide">${outside} more further out. Show the wider map</button>` : ""}
+    ${S.frame === "wide" && outside ? `<p class="map-note">${outside} pinned outside this map.</p>` : ""}
+    ${noPin ? `<p class="map-note">${noPin} not on the map (area set to “Somewhere else” with no pin).</p>` : ""}
+    ${G.status === "failed" ? `<p class="map-note">Google Maps didn't load${G.authFailed ? " because the API key was refused" : ""}, so this is the drawn map.</p>` : ""}
+    <div class="map-card" id="map-card">${sel ? placeCard(sel) : `<p class="map-hint">${pins.length ? "Tap a pin to see the place." : "No places match these filters."}</p>`}</div>`;
+}
+
+/* ---------- ratings ---------- */
+function rateCard(item, kind, rank) {
+  const R = RATE[kind], crit = R.crit, sc = item.scores || {};
+  const vals = crit.map(c => sc[c.k]).filter(v => typeof v === "number");
+  const top = vals.length ? Math.max(...vals) : null;
+  const title = item[R.nameKey] || (kind === "sandwich" ? "Sandwich" : "Pizza");
+  const sl = styleLabel(kind, item.style);
+  const url = photoUrl(item.photo);
+  let split = "";
+  if (kind === "pizza") {
+    const pie = mean(PIZZA_CRIT.filter(c => c.g === "pie").map(c => sc[c.k]).filter(v => typeof v === "number"));
+    const visit = mean(PIZZA_CRIT.filter(c => c.g === "visit").map(c => sc[c.k]).filter(v => typeof v === "number"));
+    split = `<p class="split mono">Pie only <b>${fmtScore(pie)}</b> · The visit <b>${fmtScore(visit)}</b></p>`;
+  }
+  return `<article class="rate-card${url ? " has-photo" : ""}">
+    ${url ? `<div class="rc-media"><img src="${url}" alt="Photo of ${esc(title)}" loading="lazy"></div>` : ""}
+    <div class="rc-body">
+      <div class="rc-head">
+        <div class="rc-titles">
+          <p class="rc-meta mono">${rank ? `<span class="rank">No. ${pad(rank)}</span><span aria-hidden="true">·</span>` : ""}<span>${esc(fmtDate(item.date)) || "Undated"}</span>${typeof item.cost === "number" ? `<span aria-hidden="true">·</span><span>${fmtMoney(item.cost)}</span>` : ""}</p>
+          <h3>${esc(title)}</h3>
+          <p class="rc-place">at <b>${esc(item.place || "Unknown")}</b></p>
+          ${sl ? `<span class="style-tag">${esc(sl)}</span>` : ""}
+        </div>
+        ${stamp(item.score)}
+      </div>
+      ${item.standout ? `<p class="standout"><b>Stand out</b>${esc(item.standout)}</p>` : ""}
+      <ul class="bars${kind === "pizza" ? " two" : ""}">${crit.map(c => { const v = sc[c.k]; return `<li${v != null && v === top ? ' class="top"' : ""}><span>${c.l}</span><span class="b-t"><i style="width:${(typeof v === "number" ? v : 0) * 10}%"></i></span><b>${fmtScore(v)}</b></li>`; }).join("")}</ul>
+      ${split}
+      ${item.notes ? `<p class="rc-notes">${esc(item.notes)}</p>` : ""}
+      <div class="rc-perf"><button type="button" class="icon-btn" data-act="share-one" data-kind="${kind}" data-id="${esc(item.id)}" aria-label="Share ${esc(title)}">${I.share}</button><button type="button" class="btn small" data-act="edit-${kind}" data-id="${esc(item.id)}">${I.edit}Edit</button></div>
+    </div>
+  </article>`;
+}
+const byScore = (a, b) => ((b.score ?? -1) - (a.score ?? -1)) || String(b.date || "").localeCompare(String(a.date || ""));
+const byNewest = (a, b) => String(b.date || "").localeCompare(String(a.date || "")) || (b.createdAt || 0) - (a.createdAt || 0);
+const scored = kind => S[RATE[kind].col].map(x => ({...x, score: scoreOf(x, RATE[kind].crit)}));
+function rateFiltered(kind) {
+  const f = S.rf[kind], all = scored(kind);
+  const inStyle = all.filter(p => f.style === "all" || p.style === f.style);
+  const qq = f.q.trim().toLowerCase();
+  return {all, inStyle, list: inStyle.filter(x => !qq || [x.place, x[RATE[kind].nameKey], x.notes, x.standout].join(" ").toLowerCase().includes(qq))};
+}
+function rateView(kind) {
+  const R = RATE[kind], f = S.rf[kind];
+  const stylesUsed = R.styles.filter(st => S[R.col].some(p => p.style === st.id));
+  if (f.style !== "all" && !stylesUsed.some(st => st.id === f.style)) f.style = "all";
+  const {all, inStyle, list} = rateFiltered(kind);
+  const ranked = inStyle.slice().sort(byScore), rankOf = Object.fromEntries(ranked.map((x, i) => [x.id, i + 1]));
+  const shown = f.sort === "top" ? list.sort(byScore) : list.sort(byNewest);
+  let summary = "";
+  if (all.length && f.style === "all") {
+    const avg = mean(all.map(x => x.score).filter(v => v != null));
+    const best = all.slice().sort(byScore)[0];
+    summary = `<div class="summary" role="group" aria-label="Summary"><div><span>Logged</span><b>${all.length}</b></div><div><span>Average</span><b>${fmtScore(avg)}</b></div><div><span>Best</span><b>${fmtScore(best.score)}</b></div></div>
+    <div class="champ">${stamp(best.score, "sm")}<div><p class="eyebrow">Reigning ${R.noun} champion</p><h3>${esc(best[R.nameKey] || R.noun)}</h3><p class="rc-place">at <b>${esc(best.place || "Unknown")}</b></p></div></div>`;
+  }
+  const shelf = f.style === "all" && stylesUsed.length > 1 ? `<p class="eyebrow">${R.bestIn}</p><div class="shelf">${stylesUsed.map(st => { const b = all.filter(p => p.style === st.id).sort(byScore)[0]; return `<button type="button" class="best" data-act="style" data-v="${st.id}"><span class="mono">${esc(st.l)}</span><b>${esc(b[R.nameKey] || R.noun)}</b><span>${esc(b.place || "")}</span><em>${fmtScore(b.score)}</em></button>`; }).join("")}</div>` : "";
+  const st = kind === "pizza" ? PIZZA_STYLES.find(s => s.id === f.style) : null;
+  return `<section class="view-head"><div><p class="eyebrow">${R.eyebrow}</p><h2 class="view-title">${R.title}</h2></div>${headActions()}</section>
+    <p class="tally mono">${R.tally}</p>
+    ${!S.ready ? loading() : !all.length ? empty(R.icon, R.emptyTitle, R.emptyText, R.add) : `
+    ${summary}
+    ${stylesUsed.length > 1 ? `<div class="chips" role="group" aria-label="${R.styleLegend}" style="margin-bottom:12px">${chip("style", "all", R.allStyles, f.style)}${stylesUsed.map(s => chip("style", s.id, s.l, f.style)).join("")}</div>` : ""}
+    ${st ? `<p class="style-hint" style="margin-bottom:12px"><b>What to expect from ${esc(st.l)}</b>${esc(st.h)}</p>` : ""}
+    ${shelf}
+    <div class="list-tools"><div class="seg small" role="group" aria-label="Sort">${segBtn("sort", "top", "Top rated", f.sort)}${segBtn("sort", "new", "Newest", f.sort)}</div><input type="search" id="rate-q" placeholder="Search places, fillings, notes" value="${esc(f.q)}" aria-label="Search ${R.plural}" autocomplete="off"></div>
+    <div class="cards">${shown.length ? shown.map(x => rateCard(x, kind, f.sort === "top" ? rankOf[x.id] : 0)).join("") : `<div class="empty"><h3>No matches</h3><p>Nothing matches that search.</p></div>`}</div>`}`;
+}
+
+/* ---------- page render ---------- */
+function render() {
+  const ae = document.activeElement, aid = ae && ae.id && view.contains(ae) ? ae.id : null;
+  let sel = null; try { if (aid && typeof ae.selectionStart === "number") sel = [ae.selectionStart, ae.selectionEnd]; } catch (e) {}
+  const note = S.memOnly ? `<div class="notice"><p>This browser isn't letting Bite Club save, so entries will vanish when you close it. Open it in Safari or Chrome (not a private window) and add it to your home screen.</p></div>` : "";
+  view.innerHTML = note + (S.tab === "hitlist" ? hitView() : rateView(TAB_KIND[S.tab]));
+  if ($("#gmap-slot")) mountGoogleMap();
+  if (aid) { const el = document.getElementById(aid); if (el) { el.focus({preventScroll: true}); if (sel) try { el.setSelectionRange(sel[0], sel[1]); } catch (e) {} } }
+  $$(".tab").forEach(t => { if (t.dataset.tab === S.tab) t.setAttribute("aria-current", "page"); else t.removeAttribute("aria-current"); });
+  fab.hidden = !S.ready;
+  fab.innerHTML = I.plus + (S.tab === "hitlist" ? "Add place" : RATE[TAB_KIND[S.tab]].add);
+}
+let toastT = 0;
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2600); }
+
+/* ---------- sheet ---------- */
+let lastFocus = null, ctx = null, closeT = 0;
+function openSheet(title, body, c) {
+  clearTimeout(closeT);
+  if (sheetWrap.hidden) lastFocus = document.activeElement;
+  cleanupCtx(); ctx = c || null;
+  sheet.innerHTML = `<header class="sheet-head"><h2 id="sheet-title">${esc(title)}</h2><button type="button" class="icon-btn" data-act="close" aria-label="Close">${I.x}</button></header><div class="sheet-body">${body}</div>`;
+  sheet.scrollTop = 0;
+  sheetWrap.hidden = false; document.body.classList.add("locked");
+  requestAnimationFrame(() => requestAnimationFrame(() => sheetWrap.classList.add("open")));
+  sheet.focus({preventScroll: true});
+}
+function cleanupCtx() { if (ctx && ctx.previewUrl) { try { URL.revokeObjectURL(ctx.previewUrl); } catch (e) {} } }
+function closeSheet() {
+  if (sheetWrap.hidden) return;
+  sheetWrap.classList.remove("open"); document.body.classList.remove("locked");
+  cleanupCtx(); ctx = null;
+  closeT = setTimeout(() => { sheetWrap.hidden = true; sheet.innerHTML = ""; }, reduceMotion() ? 0 : 300);
+  if (lastFocus && document.contains(lastFocus)) try { lastFocus.focus({preventScroll: true}); } catch (e) {}
+}
+function formError(msg) { const e = $("#form-error"); if (e) { e.textContent = msg; e.hidden = !msg; if (msg) e.scrollIntoView({block: "nearest"}); } else if (msg) toast(msg); }
+function busy(on, label) { const b = sheet.querySelector('button[type="submit"]'); if (!b) return; if (on) { b.dataset.label = b.textContent; b.textContent = label || "Saving…"; b.disabled = true; } else { b.textContent = b.dataset.label || b.textContent; b.disabled = false; } }
+const radioVal = name => { const r = sheet.querySelector(`input[name="${name}"]:checked`); return r ? r.value : ""; };
+const slider = (id, c, v) => `<div class="slider"><div class="sl-top"><label for="${id}">${esc(c.l)}</label><output id="${id}-o" for="${id}">${fmtScore(v)}</output></div><p class="sl-hint">${esc(c.h)}</p><input type="range" id="${id}" data-k="${c.k}" min="1" max="10" step="0.5" value="${v}" style="--p:${((v - 1) / 9 * 100).toFixed(1)}%"></div>`;
+const footScore = v => `<div class="foot-score" id="foot-score">${stamp(v, "sm")}<p>Overall<b>${word(v)}</b></p></div>`;
+function updateLive() {
+  const vals = $$('input[type=range][data-k]', sheet).map(i => +i.value);
+  const el = $("#foot-score"); if (el && vals.length) { const v = mean(vals); el.innerHTML = `${stamp(v, "sm")}<p>Overall<b>${word(v)}</b></p>`; }
+}
+const deleteRow = () => `<div class="danger-row"><button type="button" class="btn danger small" data-act="delete">Delete this entry</button></div>`;
+const areaOptions = sel => `<optgroup label="City centre">${AREAS.filter(a => a.z === "centre").map(a => `<option value="${a.id}"${a.id === sel ? " selected" : ""}>${esc(a.n)}</option>`).join("")}</optgroup><optgroup label="Further out">${AREAS.filter(a => a.z === "wide").map(a => `<option value="${a.id}"${a.id === sel ? " selected" : ""}>${esc(a.n)}</option>`).join("")}</optgroup><option value="elsewhere"${sel === "elsewhere" ? " selected" : ""}>Somewhere else</option>`;
+const againChips = cur => `<fieldset class="field"><legend>Go again?</legend><div class="chips wrap">${radioChip("again", "yes", "Definitely", cur === "yes")}${radioChip("again", "maybe", "Maybe", cur === "maybe")}${radioChip("again", "no", "Once was enough", cur === "no")}</div></fieldset>`;
+
+/* place form */
+function openPlaceForm(existing) {
+  const p = existing || {};
+  const fixed = typeof p.lat === "number" && p.pinSource !== "link";
+  const typeSel = p.type || (S.hf.type !== "all" ? S.hf.type : "pizza");
+  const areaSel = p.area || (S.hf.area !== "all" ? S.hf.area : "nq");
+  const been = p.status === "been";
+  const r = typeof p.rating === "number" ? p.rating : 7;
+  const body = `<form id="placeForm" class="form" novalidate>
+    ${googleOn() ? `<div class="field" id="pf-search-field"><span class="label">Find it on Google</span><div id="pf-search"><p class="hint">Loading search…</p></div><p class="hint" id="pf-search-hint">Search fills in the name, pin, Google link, area and price.</p></div>` : ""}
+    <div class="field"><label for="pf-name">Name</label><input id="pf-name" type="text" value="${esc(p.name)}" placeholder="e.g. That sourdough place on Oldham St" autocomplete="off"></div>
+    <fieldset class="field"><legend>Type</legend><div class="chips wrap">${TYPES.map(t => radioChip("ptype", t.id, t.l, typeSel === t.id, t.c)).join("")}</div></fieldset>
+    <fieldset class="field"><legend>Price point</legend><div class="chips wrap">${radioChip("pprice", "", "Not sure", !p.price)}${[1, 2, 3, 4].map(n => radioChip("pprice", String(n), pounds(n), p.price === n)).join("")}</div><p class="hint">£ is cheap eats, ££££ is a proper splurge.</p></fieldset>
+    <div class="field"><label for="pf-area">Area</label><select id="pf-area">${areaOptions(areaSel)}</select></div>
+    <div class="field"><label for="pf-google">Google Maps link</label><input id="pf-google" type="url" inputmode="url" value="${esc(p.google)}" placeholder="Paste the share link" autocomplete="off" autocapitalize="off"><p class="hint">Full links that include coordinates pin the exact spot.</p></div>
+    <div class="field"><label for="pf-insta">Instagram</label><input id="pf-insta" type="text" value="${esc(p.instagram)}" placeholder="@handle or link" autocomplete="off" autocapitalize="off"></div>
+    <div class="field"><label for="pf-notes">Notes</label><textarea id="pf-notes" rows="2" placeholder="What to order, who recommended it">${esc(p.notes)}</textarea></div>
+    <div class="field"><span class="label">Map pin</span><div class="pin-row"><p class="hint" id="pf-pin-status"></p><button type="button" class="btn small" data-act="pin-toggle" aria-expanded="false">Adjust pin</button></div><div id="pf-minimap" hidden></div></div>
+    ${been ? `<div class="field"><span class="label">Our verdict</span>${slider("vf-rating", {k: "rating", l: "Rating", h: "Out of 10, for the whole visit"}, r)}</div>
+      <div class="two-col"><div class="field"><label for="vf-date">Visited on</label><input id="vf-date" type="date" value="${esc(p.visitedOn || "")}"></div></div>
+      <div class="field"><label for="vf-verdict">One-line verdict</label><input id="vf-verdict" type="text" value="${esc(p.verdict)}" placeholder="e.g. Best crust in Ancoats" autocomplete="off"></div>
+      ${againChips(p.again)}
+      <label class="check"><input type="checkbox" id="vf-untick"> Move it back to the to-try list</label>` : ""}
+    <p class="form-error" id="form-error" role="alert" hidden></p>
+    ${existing ? deleteRow() : ""}
+    <div class="sheet-foot">${been ? footScore(r) : ""}<span class="grow"></span><button type="button" class="btn" data-act="close">Cancel</button><button type="submit" class="btn primary">${existing ? "Save" : "Add to list"}</button></div>
+  </form>`;
+  openSheet(existing ? "Edit place" : "Add a place", body, {kind: "place", existing, pin: fixed ? {lat: p.lat, lng: p.lng, source: p.pinSource || "manual"} : null, frame: "centre", address: p.address || ""});
+  updatePinStatus();
+  mountPlaceSearch(ctx);
+}
+function formPin() {
+  if (!ctx || ctx.kind !== "place") return null;
+  if (ctx.pin) return ctx.pin;
+  const g = coordsFrom(($("#pf-google") || {}).value || "");
+  return g ? {...g, source: "link"} : null;
+}
+function updatePinStatus() {
+  const el = $("#pf-pin-status"); if (!el) return;
+  const pin = formPin(), a = AREA[$("#pf-area").value];
+  el.textContent = pin ? (pin.source === "google" ? "Pinned from Google." : pin.source === "link" ? "Pinned from the Google link." : "Pinned by hand.") : a && a.lat != null ? `Placed roughly in ${a.n}.` : "No pin, so it won't show on the map.";
+  if (!$("#pf-minimap").hidden) renderMini();
+}
+function renderMini() {
+  const box = $("#pf-minimap"); if (!box || !ctx) return;
+  if (googleOn()) {
+    loadGoogle();
+    if (googleReady()) return renderMiniGoogle(box);
+    if (!box.querySelector(".map-loading")) box.innerHTML = `<div class="map-box mini" style="--ar:1.2"><div class="map-loading">Loading Google Maps…</div></div>`;
+    return;
+  }
+  const pin = formPin(), a = AREA[$("#pf-area").value], t = TYPE[radioVal("ptype")] || TYPE.other;
+  const pt = pin ? {x: X(pin.lng), y: Y(pin.lat)} : a && a.lat != null ? {x: X(a.lng), y: Y(a.lat)} : null;
+  const F = FRAMES[ctx.frame];
+  box.innerHTML = `<div class="map-tools"><div class="seg small" role="group" aria-label="Map area">${segBtn("mini-frame", "centre", "City centre", ctx.frame)}${segBtn("mini-frame", "wide", "Wider", ctx.frame)}</div>${ctx.pin ? `<button type="button" class="linkish" data-act="pin-reset">Reset pin</button>` : ""}</div>
+    <div class="map-box mini" id="mini-map" style="--ar:${(F.w / F.h).toFixed(4)}">${mapSVG(ctx.frame, pt ? [{id: "_", x: pt.x, y: pt.y, color: t.c, been: false, sel: true, label: "Pin"}] : [], true)}</div>
+    <p class="hint" style="margin-top:8px">Tap the map where the place is.</p>`;
+}
+
+function renderMiniGoogle(box) {
+  const c = ctx, pin = formPin(), a = AREA[$("#pf-area").value];
+  const pos = pin ? {lat: pin.lat, lng: pin.lng} : a && a.lat != null ? {lat: a.lat, lng: a.lng} : VIEWS.centre.center;
+  const colour = `var(${(TYPE[radioVal("ptype")] || TYPE.other).c})`;
+  if (!c.gmini || !box.contains(c.gmini.el)) {
+    box.innerHTML = `<div class="map-tools"><span class="hint">Tap the map or drag the pin to where the place is.</span><button type="button" class="linkish" data-act="pin-reset" id="pin-reset" hidden>Reset pin</button></div><div class="map-box mini" style="--ar:1.2"><div class="gmap"></div></div>`;
+    const el = box.querySelector(".gmap");
+    let map, marker;
+    try {
+      map = new G.Map(el, mapOpts({center: pos, zoom: pin ? 17 : 15}));
+      const dot = document.createElement("div"); dot.className = "gpin sel"; dot.style.setProperty("--tc", colour);
+      marker = new G.Marker({map, position: pos, content: dot, gmpDraggable: true, title: "Pin"});
+      const setPin = ll => { const v = llNum(ll); c.pin = {lat: v.lat, lng: v.lng, source: "manual"}; updatePinStatus(); };
+      map.addListener("click", e => { if (e.latLng) setPin(e.latLng); });
+      marker.addListener("dragend", () => setPin(marker.position));
+      c.gmini = {el, map, marker, dot};
+    } catch (e) { G.status = "failed"; c.gmini = null; return renderMini(); }
+  } else {
+    c.gmini.marker.position = pos; c.gmini.map.panTo(pos);
+    c.gmini.dot.style.setProperty("--tc", colour);
+  }
+  const r = $("#pin-reset"); if (r) r.hidden = !c.pin;
+}
+
+/* tick off */
+function openTick(p) {
+  const r = 7;
+  const body = `<form id="tickForm" class="form" novalidate>
+    <p class="pc-name" style="margin:0">${esc(p.name)}</p>
+    ${slider("tf-rating", {k: "rating", l: "Our rating", h: "Out of 10, for the whole visit"}, r)}
+    <div class="two-col"><div class="field"><label for="tf-date">Visited on</label><input id="tf-date" type="date" value="${today()}"></div></div>
+    <div class="field"><label for="tf-verdict">One-line verdict</label><input id="tf-verdict" type="text" placeholder="e.g. Worth the queue" autocomplete="off"></div>
+    ${againChips("")}
+    <p class="form-error" id="form-error" role="alert" hidden></p>
+    <div class="sheet-foot">${footScore(r)}<span class="grow"></span><button type="button" class="btn" data-act="close">Cancel</button><button type="submit" class="btn primary">${I.check}Tick it off</button></div>
+  </form>`;
+  openSheet("Tick it off", body, {kind: "tick", existing: p});
+}
+
+/* rating forms */
+function openRateForm(kind, existing) {
+  const R = RATE[kind], it = existing || {};
+  const sc = it.scores || {};
+  const vals = R.crit.map(c => typeof sc[c.k] === "number" ? sc[c.k] : 5);
+  const names = [...new Set([...S.places.map(p => p.name), ...S.sandwiches.map(x => x.place), ...S.pizzas.map(x => x.place)].filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  const st = kind === "pizza" ? PIZZA_STYLES.find(s => s.id === it.style) : null;
+  const defStyle = it.style || (S.rf[kind].style !== "all" ? S.rf[kind].style : "");
+  const purl = photoUrl(it.photo);
+  const body = `<form id="rateForm" class="form" novalidate>
+    <div class="field"><label for="rf-place">Place</label><input id="rf-place" type="text" list="rf-places" value="${esc(it.place)}" placeholder="Where was it?" autocomplete="off"><datalist id="rf-places">${names.map(n => `<option value="${esc(n)}"></option>`).join("")}</datalist></div>
+    <div class="field"><label for="rf-name">${R.nameLabel}</label><input id="rf-name" type="text" value="${esc(it[R.nameKey])}" placeholder="${esc(R.namePh)}" autocomplete="off"></div>
+    <fieldset class="field"><legend>${R.styleLegend}</legend><div class="chips wrap">${R.styles.map(s => radioChip("rstyle", s.id, s.l, defStyle === s.id)).join("")}</div></fieldset>
+    ${kind === "pizza" ? `<p class="style-hint" id="style-hint"${st || defStyle ? "" : " hidden"}><b>Rate it for the style</b><span>${esc((PIZZA_STYLES.find(s => s.id === defStyle) || {}).h || "")}</span></p>` : ""}
+    <div class="two-col">
+      <div class="field"><label for="rf-date">Date</label><input id="rf-date" type="date" value="${esc(it.date || today())}"></div>
+      <div class="field"><label for="rf-cost">Price paid</label><div class="money"><span aria-hidden="true">£</span><input id="rf-cost" type="text" inputmode="decimal" value="${typeof it.cost === "number" ? it.cost.toFixed(2) : ""}" placeholder="0.00" autocomplete="off"></div></div>
+    </div>
+    <div class="field photo-field"><span class="label">Photo</span>
+      <img id="rf-preview" class="photo-preview" alt="Photo preview"${purl ? ` src="${purl}"` : " hidden"}>
+      <div class="btn-row"><label class="btn small" for="rf-photo">${I.photo}<span id="rf-photo-label">${purl ? "Change photo" : "Add a photo"}</span></label><input type="file" id="rf-photo" accept="image/*" class="vh"><button type="button" class="btn small" data-act="photo-remove" id="rf-photo-remove"${purl ? "" : " hidden"}>Remove</button></div>
+    </div>
+    <fieldset class="field scores"><legend>Scores <span class="hint" style="text-transform:none;letter-spacing:0;font-weight:500">out of 10</span></legend>${R.crit.map((c, i) => slider("rs-" + c.k, c, vals[i])).join("")}</fieldset>
+    <div class="field"><label for="rf-standout">Stand out</label><input id="rf-standout" type="text" value="${esc(it.standout)}" placeholder="${esc(R.standPh)}" autocomplete="off"><p class="hint">The one thing you'd tell a mate about.</p></div>
+    <div class="field"><label for="rf-notes">Notes</label><textarea id="rf-notes" rows="3" placeholder="Anything else worth remembering">${esc(it.notes)}</textarea></div>
+    <p class="form-error" id="form-error" role="alert" hidden></p>
+    ${existing ? deleteRow() : ""}
+    <div class="sheet-foot">${footScore(mean(vals))}<span class="grow"></span><button type="button" class="btn" data-act="close">Cancel</button><button type="submit" class="btn primary">Save</button></div>
+  </form>`;
+  openSheet(existing ? `Edit ${kind}` : R.add, body, {kind, existing, file: null, previewUrl: null, removePhoto: false});
+}
+
+/* ---------- saving ---------- */
+async function guarded(fn) {
+  try { await fn(); return true; }
+  catch (e) {
+    const quota = e && (e.name === "QuotaExceededError" || /quota/i.test(e.message || ""));
+    formError(quota ? "Your phone is out of space for Bite Club. Delete some photos or old entries." : "Couldn't save that. Try again.");
+    return false;
+  }
+}
+async function submitPlace() {
+  const name = $("#pf-name").value.trim(); if (!name) return formError("Give the place a name.");
+  const ex = ctx.existing;
+  const price = +radioVal("pprice") || null;
+  const doc = {
+    id: ex ? ex.id : uid(), name, type: radioVal("ptype") || "other", area: $("#pf-area").value, price,
+    google: $("#pf-google").value.trim(), instagram: $("#pf-insta").value.trim(), notes: $("#pf-notes").value.trim(), address: ctx.address || "",
+    status: ex && ex.status === "been" ? "been" : "wish", createdAt: (ex && ex.createdAt) || Date.now(), updatedAt: Date.now()
+  };
+  const pin = formPin();
+  if (pin) { doc.lat = +pin.lat.toFixed(6); doc.lng = +pin.lng.toFixed(6); doc.pinSource = pin.source; }
+  if (doc.status === "been") {
+    if ($("#vf-untick") && $("#vf-untick").checked) doc.status = "wish";
+    else { doc.rating = +$("#vf-rating").value; doc.visitedOn = $("#vf-date").value || ""; doc.verdict = $("#vf-verdict").value.trim(); doc.again = radioVal("again"); }
+  }
+  busy(true);
+  const ok = await guarded(() => saveEntry("places", doc));
+  busy(false);
+  if (ok) { closeSheet(); toast(ex ? "Saved" : "Added to the hit list"); }
+}
+async function submitTick() {
+  const doc = {...ctx.existing, status: "been", rating: +$("#tf-rating").value, visitedOn: $("#tf-date").value || today(), verdict: $("#tf-verdict").value.trim(), again: radioVal("again"), updatedAt: Date.now()};
+  busy(true, "Ticking…");
+  const ok = await guarded(() => saveEntry("places", doc));
+  busy(false);
+  if (ok) { closeSheet(); toast(`Ticked off: ${fmtScore(doc.rating)}/10, ${word(doc.rating)}`); }
+}
+function shrinkImage(file) {
+  return new Promise(resolve => {
+    const url = URL.createObjectURL(file), img = new Image();
+    img.onload = () => {
+      try {
+        const max = 1400, k = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+        const c = document.createElement("canvas"); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        c.toBlob(b => { URL.revokeObjectURL(url); resolve(b || file); }, "image/jpeg", 0.82);
+      } catch (e) { URL.revokeObjectURL(url); resolve(file); }
+    };
+    img.onerror = () => { URL.revokeObjectURL(url); resolve(null); };
+    img.src = url;
+  });
+}
+async function submitRate() {
+  const kind = ctx.kind, R = RATE[kind], ex = ctx.existing;
+  const place = $("#rf-place").value.trim(); if (!place) return formError("Add the place.");
+  const style = radioVal("rstyle");
+  if (kind === "pizza" && !style) return formError("Pick the pizza style. It changes what a good score looks like.");
+  const scores = Object.fromEntries(R.crit.map(c => [c.k, +$("#rs-" + c.k).value]));
+  let photo = (ex && ex.photo) || null, oldPhoto = null;
+  formError("");
+  if (ctx.file) {
+    busy(true, "Adding photo…");
+    const blob = await shrinkImage(ctx.file);
+    if (!blob) { busy(false); return formError("That photo couldn't be opened. Try a JPEG or PNG."); }
+    try { const id = await savePhoto(blob); if (photo) oldPhoto = photo; photo = id; }
+    catch (e) { busy(false); return formError("The photo couldn't be saved. Your phone may be short of space."); }
+    busy(false);
+  } else if (ctx.removePhoto && photo) { oldPhoto = photo; photo = null; }
+  const doc = {
+    id: ex ? ex.id : uid(), place, style, date: $("#rf-date").value || today(), cost: parseMoney($("#rf-cost").value),
+    scores, standout: $("#rf-standout").value.trim(), notes: $("#rf-notes").value.trim(), photo,
+    createdAt: (ex && ex.createdAt) || Date.now(), updatedAt: Date.now()
+  };
+  doc[R.nameKey] = $("#rf-name").value.trim();
+  busy(true);
+  const ok = await guarded(() => saveEntry(R.col, doc));
+  busy(false);
+  if (!ok) return;
+  if (oldPhoto) deletePhoto(oldPhoto);
+  closeSheet(); toast(`Saved: ${fmtScore(mean(Object.values(scores)))}/10`);
+}
+async function deleteCurrent() {
+  if (!ctx || !ctx.existing) return;
+  const col = ctx.kind === "place" ? "places" : RATE[ctx.kind].col;
+  const it = ctx.existing;
+  const ok = await guarded(() => removeEntry(col, it.id));
+  if (!ok) return;
+  if (it.photo) deletePhoto(it.photo);
+  if (S.sel === it.id) S.sel = null;
+  closeSheet(); toast("Deleted");
+}
+
+/* ---------- share ---------- */
+const canShareText = () => typeof navigator.share === "function";
+function filterNote() {
+  if (S.tab === "hitlist") {
+    const bits = [];
+    if (S.hf.type !== "all") bits.push((TYPE[S.hf.type] || {}).l);
+    if (S.hf.area !== "all") bits.push(areaName(S.hf.area));
+    if (S.hf.price !== "all") bits.push(pounds(+S.hf.price));
+    if (S.hf.q.trim()) bits.push(`“${S.hf.q.trim()}”`);
+    return bits.join(", ");
+  }
+  const kind = TAB_KIND[S.tab], f = S.rf[kind], bits = [];
+  if (f.style !== "all") bits.push(styleLabel(kind, f.style));
+  if (f.q.trim()) bits.push(`“${f.q.trim()}”`);
+  return bits.join(", ");
+}
+function placeLines(p, i, rated) {
+  const t = (TYPE[p.type] || TYPE.other).l;
+  const head = `${i ? i + ". " : ""}${p.name} (${[areaName(p.area), t, pounds(p.price)].filter(Boolean).join(", ")})${rated && typeof p.rating === "number" ? ` – ${fmtScore(p.rating)}/10` : ""}`;
+  const out = [head];
+  if (rated && p.verdict) out.push(`   “${p.verdict}”`);
+  if (!rated && p.notes) out.push(`   ${p.notes}`);
+  const g = safeUrl(p.google); if (g) out.push(`   ${g}`);
+  return out.join("\n");
+}
+function rateLines(x, kind, i) {
+  const R = RATE[kind], sl = styleLabel(kind, x.style);
+  const head = `${i ? i + ". " : ""}${x[R.nameKey] || R.noun} at ${x.place || "?"} – ${fmtScore(x.score)}/10${sl ? ` (${sl}${typeof x.cost === "number" ? ", " + fmtMoney(x.cost) : ""})` : typeof x.cost === "number" ? ` (${fmtMoney(x.cost)})` : ""}`;
+  return x.standout ? `${head}\n   Stand out: ${x.standout}` : head;
+}
+function buildShare(c) {
+  const n = +c.n, take = arr => n ? arr.slice(0, n) : arr;
+  const fn = filterNote();
+  const sign = "\n\nFrom Luke & Gill's food diaries";
+  if (S.tab === "hitlist") {
+    if (c.mode === "rated") {
+      const list = take(placesFiltered("been").filter(p => typeof p.rating === "number").sort((a, b) => b.rating - a.rating));
+      if (!list.length) return "";
+      return `Bite Club: our favourite places${fn ? ` (${fn})` : ""}\n\n` + list.map((p, i) => placeLines(p, i + 1, true)).join("\n\n") + sign;
+    }
+    const list = take(sortPlaces(placesFiltered("wish")));
+    if (!list.length) return "";
+    return `Bite Club: places on our list${fn ? ` (${fn})` : ""}\n\n` + list.map((p, i) => placeLines(p, i + 1, false)).join("\n\n") + sign;
+  }
+  const kind = TAB_KIND[S.tab];
+  const list = take(rateFiltered(kind).list.sort(byScore));
+  if (!list.length) return "";
+  return `Bite Club: our top ${RATE[kind].plural}${fn ? ` (${fn})` : ""}\n\n` + list.map((x, i) => rateLines(x, kind, i + 1)).join("\n\n") + sign;
+}
+function openShare() {
+  const rated = S.places.some(p => p.status === "been");
+  const c = {kind: "share", n: "5", mode: rated ? "rated" : "wish"};
+  const body = `<div class="form pb">
+    ${S.tab === "hitlist" ? `<div class="seg" role="group" aria-label="What to share">${segBtn("sh-mode", "rated", "Places we rate", c.mode)}${segBtn("sh-mode", "wish", "Still to try", c.mode)}</div>` : ""}
+    <div class="seg small" role="group" aria-label="How many">${segBtn("sh-n", "5", "Top 5", c.n)}${segBtn("sh-n", "10", "Top 10", c.n)}${segBtn("sh-n", "0", "Everything", c.n)}</div>
+    <p class="hint" id="sh-note"></p>
+    <textarea id="sh-text" class="share-text" rows="12" aria-label="Message to share"></textarea>
+    <div class="btn-row"><button type="button" class="btn" data-act="sh-copy">Copy</button>${canShareText() ? `<button type="button" class="btn primary" data-act="sh-send">${I.share}Share</button>` : ""}</div>
+  </div>`;
+  openSheet("Share our picks", body, c);
+  updateShare();
+}
+function updateShare() {
+  if (!ctx || ctx.kind !== "share") return;
+  $$('[data-act="sh-n"]', sheet).forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === ctx.n)));
+  $$('[data-act="sh-mode"]', sheet).forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === ctx.mode)));
+  const text = buildShare(ctx), fn = filterNote();
+  $("#sh-text").value = text || "Nothing to share here yet.";
+  $("#sh-note").textContent = (fn ? `Using your current filters: ${fn}. ` : "") + "You can edit the message before sending.";
+}
+function copyText(text, ta) {
+  const fallback = () => { if (ta) { ta.focus(); ta.select(); try { document.execCommand("copy"); toast("Copied"); return; } catch (e) {} } toast("Select the text and copy it"); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(() => toast("Copied"), fallback);
+  else fallback();
+}
+function sendShare(data, ta) {
+  if (!canShareText()) return copyText(data.text, ta);
+  navigator.share(data).catch(e => { if (e && e.name !== "AbortError") copyText(data.text, ta); });
+}
+function shareOne(kind, id) {
+  if (kind === "place") {
+    const p = S.places.find(x => x.id === id); if (!p) return;
+    const rated = p.status === "been";
+    const text = `${rated ? "We rate" : "On our list"}: ${placeLines(p, 0, rated).replace(/\n {3}/g, "\n")}\n\nFrom Bite Club, Luke & Gill's food diaries`;
+    return sendShare({title: p.name, text});
+  }
+  const x = scored(kind).find(y => y.id === id); if (!x) return;
+  const text = `${rateLines(x, kind, 0).replace(/\n {3}/g, "\n")}${x.notes ? `\n${x.notes}` : ""}\n\nFrom Bite Club, Luke & Gill's food diaries`;
+  const ph = x.photo && PHOTOS.get(x.photo);
+  if (ph && navigator.canShare) {
+    try {
+      const file = new File([ph.blob], "bite-club.jpg", {type: ph.blob.type || "image/jpeg"});
+      if (navigator.canShare({files: [file]})) return sendShare({files: [file], text});
+    } catch (e) {}
+  }
+  sendShare({title: x[RATE[kind].nameKey] || "Bite Club", text});
+}
+
+/* ---------- export, backup, restore ---------- */
+function csv(rows) {
+  const cell = v => { let s = v == null ? "" : String(v); if (/^[=+@]/.test(s)) s = "'" + s; return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  return "﻿" + rows.map(r => r.map(cell).join(",")).join("\r\n");
+}
+function csvFor(tab) {
+  if (tab === "hitlist") {
+    return csv([["Name", "Type", "Area", "Price point", "Status", "Rating", "Verdict", "Visited", "Go again", "Google Maps", "Instagram", "Notes"],
+      ...sortPlaces(S.places).map(p => [p.name, (TYPE[p.type] || TYPE.other).l, areaName(p.area), pounds(p.price), p.status === "been" ? "Been" : "To try",
+        typeof p.rating === "number" ? p.rating : "", p.verdict || "", p.visitedOn || "", AGAIN[p.again] || "", p.google || "", p.instagram || "", p.notes || ""])]);
+  }
+  const kind = TAB_KIND[tab], R = RATE[kind];
+  const pieVisit = kind === "pizza" ? ["Pie only", "The visit"] : [];
+  return csv([["Date", "Place", R.nameLabel, R.styleLegend, "Price paid", "Overall", ...pieVisit, ...R.crit.map(c => c.l === "Price" ? "Price score" : c.l), "Stand out", "Notes"],
+    ...scored(kind).sort(byScore).map(x => {
+      const sc = x.scores || {};
+      const extra = kind === "pizza" ? [fmtScore(mean(PIZZA_CRIT.filter(c => c.g === "pie").map(c => sc[c.k]).filter(v => typeof v === "number"))), fmtScore(mean(PIZZA_CRIT.filter(c => c.g === "visit").map(c => sc[c.k]).filter(v => typeof v === "number")))] : [];
+      return [x.date || "", x.place || "", x[R.nameKey] || "", styleLabel(kind, x.style), typeof x.cost === "number" ? x.cost.toFixed(2) : "", fmtScore(x.score), ...extra, ...R.crit.map(c => sc[c.k] ?? ""), x.standout || "", x.notes || ""];
+    })]);
+}
+function saveFile(name, type, data) {
+  const blob = data instanceof Blob ? data : new Blob([data], {type});
+  try {
+    const file = new File([blob], name, {type});
+    if (isTouch() && navigator.canShare && navigator.canShare({files: [file]})) {
+      navigator.share({files: [file], title: name}).catch(e => { if (e && e.name !== "AbortError") downloadBlob(blob, name); });
+      return;
+    }
+  } catch (e) {}
+  downloadBlob(blob, name);
+}
+function downloadBlob(blob, name) {
+  const url = URL.createObjectURL(blob), a = document.createElement("a");
+  a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+  toast("Downloaded " + name);
+}
+function bufToBase64(buf) {
+  const bytes = new Uint8Array(buf); let bin = "";
+  for (let i = 0; i < bytes.length; i += 0x8000) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 0x8000));
+  return btoa(bin);
+}
+function base64ToBuf(b64) { const bin = atob(b64), out = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i); return out.buffer; }
+async function buildBackup() {
+  const used = new Set([...S.sandwiches, ...S.pizzas].map(x => x.photo).filter(Boolean));
+  const recs = (await Store.all("photos")).filter(r => used.has(r.id));
+  const photos = recs.map(r => ({id: r.id, type: r.type, data: bufToBase64(r.data)}));
+  return new Blob([JSON.stringify({app: "bite-club", version: 1, exportedAt: new Date().toISOString(), places: S.places, sandwiches: S.sandwiches, pizzas: S.pizzas, photos})], {type: "application/json"});
+}
+function openExport() {
+  const counts = `${S.places.length} places, ${S.sandwiches.length} sandwiches, ${S.pizzas.length} pizzas`;
+  const body = `<div class="form pb">
+    <div class="field"><span class="label">Spreadsheets</span><p class="hint">Opens in Excel, Numbers or Google Sheets.</p>
+      <div class="btn-row"><button type="button" class="btn small" data-act="csv" data-v="hitlist">${I.download}Hit List</button><button type="button" class="btn small" data-act="csv" data-v="sandwiches">${I.download}Sandwiches</button><button type="button" class="btn small" data-act="csv" data-v="pizza">${I.download}Pizza</button></div></div>
+    <div class="field"><span class="label">Backup</span><p class="hint">Everything is saved on this phone only. Back up now and then, and use a backup file to copy your lists onto another phone.</p>
+      <div class="btn-row"><button type="button" class="btn small" data-act="backup" id="backup-btn" disabled>Preparing backup…</button><label class="btn small" for="restore-file">${I.upload}Restore a backup</label><input type="file" id="restore-file" accept=".json,application/json" class="vh"></div>
+      <div id="restore-confirm"></div></div>
+    <p class="hint mono" id="storage-note">${counts}</p>
+  </div>`;
+  openSheet("Export & backup", body, {kind: "export", backup: null, restore: null});
+  const c = ctx;
+  buildBackup().then(b => {
+    if (ctx !== c) return; c.backup = b;
+    const btn = $("#backup-btn"); if (btn) { btn.disabled = false; btn.innerHTML = `${I.download}Back up everything`; }
+  }).catch(() => { const btn = $("#backup-btn"); if (btn) btn.textContent = "Backup failed"; });
+  if (navigator.storage && navigator.storage.estimate) navigator.storage.estimate().then(e => { const el = $("#storage-note"); if (el && ctx === c && e.usage) el.textContent = `${counts} · using ${(e.usage / 1048576).toFixed(1)} MB on this device`; }).catch(() => {});
+}
+function validBackup(d) { return d && d.app === "bite-club" && Array.isArray(d.places) && Array.isArray(d.sandwiches) && Array.isArray(d.pizzas); }
+async function readRestore(file) {
+  const box = $("#restore-confirm");
+  try {
+    const d = JSON.parse(await file.text());
+    if (!validBackup(d)) throw new Error("bad");
+    ctx.restore = d;
+    box.innerHTML = `<div class="panel"><p>This backup has <b>${d.places.length}</b> places, <b>${d.sandwiches.length}</b> sandwiches, <b>${d.pizzas.length}</b> pizzas and <b>${(d.photos || []).length}</b> photos. Entries that are already here get updated; nothing else is removed.</p><div class="btn-row"><button type="button" class="btn primary small" data-act="restore">Restore now</button></div></div>`;
+  } catch (e) { box.innerHTML = `<p class="form-error">That file isn't a Bite Club backup.</p>`; }
+}
+async function doRestore() {
+  const d = ctx && ctx.restore; if (!d) return;
+  const btn = sheet.querySelector('[data-act="restore"]'); if (btn) { btn.disabled = true; btn.textContent = "Restoring…"; }
+  try {
+    for (const p of d.photos || []) {
+      if (!p || !p.id || !p.data) continue;
+      const data = base64ToBuf(p.data), type = p.type || "image/jpeg";
+      await Store.put("photos", {id: p.id, type, data});
+      const old = PHOTOS.get(p.id); if (old) URL.revokeObjectURL(old.url);
+      const b = new Blob([data], {type}); PHOTOS.set(p.id, {blob: b, url: URL.createObjectURL(b)});
+    }
+    for (const col of ["places", "sandwiches", "pizzas"]) {
+      const items = d[col].filter(x => x && typeof x.id === "string");
+      await Store.run(col, s => items.forEach(x => s.put(x)));
+      const map = new Map(S[col].map(x => [x.id, x])); items.forEach(x => map.set(x.id, x)); S[col] = [...map.values()];
+    }
+    closeSheet(); render(); toast("Backup restored");
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = "Restore now"; }
+    $("#restore-confirm").insertAdjacentHTML("beforeend", `<p class="form-error">Restore stopped part-way. Your phone may be short of space.</p>`);
+  }
+}
+
+/* ---------- pick for us ---------- */
+function pick() {
+  const qless = placesFiltered("wish");
+  if (!qless.length) return toast("Nothing on the to-try list matches those filters.");
+  const choice = qless[Math.floor(Math.random() * qless.length)];
+  const fn = filterNote();
+  const body = `<div class="roulette">
+    <p class="hint center">Picking from ${qless.length} place${qless.length === 1 ? "" : "s"} on the to-try list${fn ? ` (${esc(fn)})` : ""}.</p>
+    <p class="roll" id="roll" aria-live="polite"></p>
+    <div id="roll-detail" hidden>${placeCard(choice)}</div>
+    ${qless.length > 1 ? `<div class="pick-actions"><button type="button" class="btn" data-act="pick">${I.dice}Pick again</button></div>` : ""}
+  </div>`;
+  openSheet("Next stop", body, {kind: "pick"});
+  const roll = $("#roll"), det = $("#roll-detail");
+  if (reduceMotion() || qless.length < 2) { roll.textContent = choice.name; det.hidden = false; return; }
+  let i = 0, delay = 50; const names = qless.map(p => p.name);
+  const step = () => {
+    if (!document.body.contains(roll)) return;
+    if (i >= 15) { roll.textContent = choice.name; roll.classList.add("landed"); det.hidden = false; return; }
+    roll.textContent = names[(Math.random() * names.length) | 0]; i++; delay *= 1.17; setTimeout(step, delay);
+  };
+  step();
+}
+
+/* ---------- events ---------- */
+function setTab(t) {
+  if (!TABS.includes(t) || t === S.tab) return;
+  S.tab = t; prefs.set("tab", t); render(); window.scrollTo(0, 0);
+}
+const findItem = (col, id) => S[col].find(x => x.id === id);
+function arm(el, armedText, resetText) {
+  if (el.dataset.armed) return true;
+  el.dataset.armed = "1"; el.textContent = armedText;
+  setTimeout(() => { if (document.contains(el)) { delete el.dataset.armed; el.textContent = resetText; } }, 4000);
+  return false;
+}
+document.addEventListener("click", e => {
+  const mini = e.target.closest("#mini-map svg");
+  if (mini && ctx && ctx.kind === "place") {
+    const pt = mini.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
+    const m = mini.getScreenCTM(); if (!m) return;
+    const p = pt.matrixTransform(m.inverse());
+    ctx.pin = {lat: toLat(p.y), lng: toLng(p.x), source: "manual"};
+    updatePinStatus(); return;
+  }
+  const pinEl = e.target.closest("[data-pin]");
+  if (pinEl && view.contains(pinEl)) {
+    S.sel = S.sel === pinEl.getAttribute("data-pin") ? null : pinEl.getAttribute("data-pin");
+    render();
+    const card = $("#map-card"); if (card && S.sel) card.scrollIntoView({block: "nearest", behavior: reduceMotion() ? "auto" : "smooth"});
+    return;
+  }
+  const el = e.target.closest("[data-act]"); if (!el) return;
+  const act = el.getAttribute("data-act"), v = el.getAttribute("data-v"), id = el.getAttribute("data-id");
+  const kind = TAB_KIND[S.tab];
+  switch (act) {
+    case "close": closeSheet(); break;
+    case "hit-mode": S.hitMode = v; prefs.set("hitMode", v); render(); break;
+    case "status": S.hf.status = v; S.sel = null; render(); break;
+    case "type": S.hf.type = v; S.sel = null; render(); break;
+    case "price": S.hf.price = v; S.sel = null; render(); break;
+    case "frame":
+      S.frame = v; prefs.set("frame", v); if (S.hitMode !== "map") S.hitMode = "map"; render();
+      if (googleReady() && G.map) { G.map.setCenter(VIEWS[v].center); G.map.setZoom(VIEWS[v].zoom); }
+      break;
+    case "near-me": nearMe(); break;
+    case "reset-filters": S.hf = {status: "all", type: "all", area: "all", price: "all", q: ""}; render(); break;
+    case "sort": if (kind) { S.rf[kind].sort = v; render(); } break;
+    case "style": if (kind) { S.rf[kind].style = v; render(); window.scrollTo({top: 0, behavior: reduceMotion() ? "auto" : "smooth"}); } break;
+    case "pick": pick(); break;
+    case "add": if (S.tab === "hitlist") openPlaceForm(null); else openRateForm(kind, null); break;
+    case "edit-place": { const p = findItem("places", id); if (p) openPlaceForm(p); break; }
+    case "tick": { const p = findItem("places", id); if (p) openTick(p); break; }
+    case "edit-sandwich": { const x = findItem("sandwiches", id); if (x) openRateForm("sandwich", x); break; }
+    case "edit-pizza": { const x = findItem("pizzas", id); if (x) openRateForm("pizza", x); break; }
+    case "share": openShare(); break;
+    case "share-one": shareOne(el.getAttribute("data-kind"), id); break;
+    case "sh-n": if (ctx) { ctx.n = v; updateShare(); } break;
+    case "sh-mode": if (ctx) { ctx.mode = v; updateShare(); } break;
+    case "sh-copy": { const ta = $("#sh-text"); copyText(ta.value, ta); break; }
+    case "sh-send": { const ta = $("#sh-text"); sendShare({title: "Bite Club picks", text: ta.value}, ta); break; }
+    case "export": openExport(); break;
+    case "csv": saveFile(`bite-club-${v}-${today()}.csv`, "text/csv", csvFor(v)); break;
+    case "backup": if (ctx && ctx.backup) saveFile(`bite-club-backup-${today()}.json`, "application/json", ctx.backup); break;
+    case "restore": doRestore(); break;
+    case "pin-toggle": {
+      const box = $("#pf-minimap"); box.hidden = !box.hidden;
+      el.setAttribute("aria-expanded", String(!box.hidden)); el.textContent = box.hidden ? "Adjust pin" : "Hide map";
+      if (!box.hidden) { const a = AREA[$("#pf-area").value]; const pin = formPin(); const pt = pin ? {x: X(pin.lng), y: Y(pin.lat)} : a && a.lat != null ? {x: X(a.lng), y: Y(a.lat)} : null; ctx.frame = pt && !inFrame(pt, FRAMES.centre) ? "wide" : "centre"; renderMini(); }
+      break;
+    }
+    case "mini-frame": if (ctx) { ctx.frame = v; renderMini(); } break;
+    case "pin-reset": if (ctx) { ctx.pin = null; updatePinStatus(); } break;
+    case "photo-remove":
+      if (ctx) { cleanupCtx(); ctx.file = null; ctx.previewUrl = null; ctx.removePhoto = true; const pv = $("#rf-preview"); pv.hidden = true; pv.removeAttribute("src"); el.hidden = true; $("#rf-photo-label").textContent = "Add a photo"; $("#rf-photo").value = ""; }
+      break;
+    case "delete": if (arm(el, "Tap again to delete", "Delete this entry")) deleteCurrent(); break;
+  }
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && !sheetWrap.hidden) { closeSheet(); return; }
+  if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches("[data-pin], g[data-act]")) { e.preventDefault(); e.target.dispatchEvent(new MouseEvent("click", {bubbles: true})); }
+});
+document.addEventListener("input", e => {
+  const t = e.target;
+  if (t.id === "hit-q") { S.hf.q = t.value; S.sel = null; render(); }
+  else if (t.id === "rate-q") { const k = TAB_KIND[S.tab]; if (k) { S.rf[k].q = t.value; render(); } }
+  else if (t.type === "range") {
+    t.style.setProperty("--p", ((t.value - t.min) / (t.max - t.min) * 100).toFixed(1) + "%");
+    const o = document.getElementById(t.id + "-o"); if (o) o.textContent = fmtScore(+t.value);
+    updateLive();
+  } else if (t.id === "pf-google") updatePinStatus();
+});
+document.addEventListener("change", e => {
+  const t = e.target;
+  if (t.id === "hit-area") { S.hf.area = t.value; S.sel = null; render(); }
+  else if (t.id === "pf-area") updatePinStatus();
+  else if (t.name === "ptype") { if (!$("#pf-minimap").hidden) renderMini(); }
+  else if (t.name === "rstyle") { const h = $("#style-hint"), s = PIZZA_STYLES.find(x => x.id === t.value); if (h && s) { h.hidden = false; h.querySelector("span").textContent = s.h; } }
+  else if (t.id === "rf-photo" && ctx) {
+    const file = t.files && t.files[0]; if (!file) return;
+    if (file.type && !/^image\//.test(file.type)) return formError("That file isn't a photo.");
+    cleanupCtx(); ctx.file = file; ctx.removePhoto = false; ctx.previewUrl = URL.createObjectURL(file);
+    const pv = $("#rf-preview"); pv.src = ctx.previewUrl; pv.hidden = false;
+    $("#rf-photo-remove").hidden = false; $("#rf-photo-label").textContent = "Change photo"; formError("");
+  }
+  else if (t.id === "restore-file" && ctx) { const f = t.files && t.files[0]; if (f) readRestore(f); t.value = ""; }
+});
+document.addEventListener("submit", e => {
+  e.preventDefault();
+  const id = e.target.id;
+  if (id === "placeForm") submitPlace();
+  else if (id === "tickForm") submitTick();
+  else if (id === "rateForm") submitRate();
+});
+window.addEventListener("hashchange", () => setTab(location.hash.slice(1)));
+
+/* ---------- start ---------- */
+(async function start() {
+  const h = location.hash.slice(1);
+  if (TABS.includes(h)) S.tab = h; else { const t = prefs.get("tab"); if (TABS.includes(t)) S.tab = t; }
+  const hm = prefs.get("hitMode"); if (hm === "map" || hm === "list") S.hitMode = hm;
+  const fr = prefs.get("frame"); if (fr && FRAMES[fr]) S.frame = fr;
+  render();
+  try {
+    await Store.open();
+    const [places, sandwiches, pizzas, photos] = await Promise.all(STORES.map(s => Store.all(s)));
+    S.places = places; S.sandwiches = sandwiches; S.pizzas = pizzas;
+    for (const r of photos) { const b = new Blob([r.data], {type: r.type || "image/jpeg"}); PHOTOS.set(r.id, {blob: b, url: URL.createObjectURL(b)}); }
+  } catch (e) { S.memOnly = true; }
+  S.ready = true;
+  render();
+  if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
+})();
+})();
+</script>
+</body>
+</html>
