@@ -1,5 +1,5 @@
 // Bite Club offline cache. Bump VERSION when you change index.html so phones pick up the new copy.
-const VERSION = "bite-club-v6";
+const VERSION = "bite-club-v7";
 const SHELL = [
   "./",
   "./index.html",

@@ -404,6 +404,14 @@ input[type=range]:focus-visible{outline:3px solid var(--mustard); outline-offset
 .wr-facts div:first-child{border-top:0; padding-top:0}
 .wr-facts dt{font:500 11.5px/1.4 var(--font-mono); letter-spacing:.07em; text-transform:uppercase; color:var(--ink-soft); flex:none}
 .wr-facts dd{margin:0; text-align:right; font-weight:650; min-width:0; overflow-wrap:anywhere}
+/* import */
+.imp-list{max-height:320px; overflow:auto; display:grid; border:1.5px solid var(--line); border-radius:12px; padding:4px 12px; background:var(--surface); overscroll-behavior:contain}
+.imp-row{align-items:flex-start; padding:9px 0; border-top:1px solid var(--line)}
+.imp-row:first-child{border-top:0}
+.imp-row input{margin-top:1px; flex:none}
+.imp-row span{display:grid; gap:2px; min-width:0}
+.imp-row b{font-weight:700; overflow-wrap:anywhere}
+.imp-row small{color:var(--ink-soft); font-size:12.5px; overflow-wrap:anywhere}
 /* picture sharing */
 .pic-wrap{display:grid; place-items:center; min-height:180px}
 .pic-preview{display:block; width:100%; max-width:300px; aspect-ratio:9/16; object-fit:cover; border-radius:14px; box-shadow:var(--shadow); border:1.5px solid var(--line)}
@@ -701,7 +709,7 @@ const chip = (act, v, label, cur, c) => `<button type="button" class="chip" data
 const radioChip = (name, v, label, checked, c) => `<label class="chip"${c ? ` style="--tc:var(${c})"` : ""}><input type="radio" name="${name}" value="${v}"${checked ? " checked" : ""}>${c ? '<span class="dot"></span>' : ""}<span>${esc(label)}</span></label>`;
 const stamp = (n, size) => n == null || isNaN(n) ? "" : `<div class="stamp${size ? " " + size : ""}" role="img" aria-label="Rated ${fmtScore(n)} out of 10, ${word(n)}"><b>${fmtScore(n)}</b><small>${word(n)}</small></div>`;
 const priceTag = n => n ? `<span class="pp" aria-label="Price ${n} out of 4"><b>${pounds(n)}</b><i>${pounds(4 - n)}</i></span>` : "";
-const empty = (icon, title, text, btn) => `<div class="empty">${I[icon]}<h3>${esc(title)}</h3><p>${esc(text)}</p>${btn ? `<button type="button" class="btn primary" data-act="add">${I.plus}${esc(btn)}</button>` : ""}</div>`;
+const empty = (icon, title, text, btn, extra) => `<div class="empty">${I[icon]}<h3>${esc(title)}</h3><p>${esc(text)}</p>${btn ? `<button type="button" class="btn primary" data-act="add">${I.plus}${esc(btn)}</button>` : ""}${extra || ""}</div>`;
 const loading = () => `<div class="loading" aria-label="Loading"><div></div><div></div></div>`;
 const safeUrl = u => /^https?:\/\//i.test(String(u || "").trim()) ? String(u).trim() : "";
 function mapsHref(p) {
@@ -916,7 +924,7 @@ function hitView() {
     </div>` : ""}
     ${wish ? `<button type="button" class="pick" data-act="pick">${I.dice}<span><b>Can't decide?</b> Pick somewhere for us</span></button>` : ""}
     <div class="results">${!S.ready ? loading() : !all.length
-      ? empty("pin", "Nothing on the list yet", "Add the places you keep saying you'll try. Link the Google listing or Instagram so you can find them again.", "Add a place")
+      ? empty("pin", "Nothing on the list yet", "Add the places you keep saying you'll try. Link the Google listing or Instagram so you can find them again.", "Add a place", `<button type="button" class="btn small" data-act="import">${I.upload}Import from Google Maps</button>`)
       : S.hitMode === "map" ? mapView(list) : listView(list)}</div>`;
 }
 function listView(list) {
@@ -2017,6 +2025,8 @@ function openExport() {
   const body = `<div class="form pb">
     <div class="field"><span class="label">Spreadsheets</span><p class="hint">Opens in Excel, Numbers or Google Sheets.</p>
       <div class="btn-row"><button type="button" class="btn small" data-act="csv" data-v="hitlist">${I.download}Hit List</button><button type="button" class="btn small" data-act="csv" data-v="sandwiches">${I.download}Sandwiches</button><button type="button" class="btn small" data-act="csv" data-v="pizza">${I.download}Pizza</button></div></div>
+    <div class="field"><span class="label">Google Maps saved places</span><p class="hint">Bring in your Google Maps lists (like Want to go) from a Google Takeout download.</p>
+      <div class="btn-row"><button type="button" class="btn small" data-act="import">${I.upload}Import from Google Maps</button></div></div>
     <div class="field"><span class="label">Backup</span><p class="hint">Everything is saved on this phone only. Back up now and then, and use a backup file to copy your lists onto another phone.</p>
       <div class="btn-row"><button type="button" class="btn small" data-act="backup" id="backup-btn" disabled>Preparing backup…</button><label class="btn small" for="restore-file">${I.upload}Restore a backup</label><input type="file" id="restore-file" accept=".json,application/json" class="vh"></div>
       <div id="restore-confirm"></div></div>
@@ -2061,6 +2071,140 @@ async function doRestore() {
     if (btn) { btn.disabled = false; btn.textContent = "Restore now"; }
     $("#restore-confirm").insertAdjacentHTML("beforeend", `<p class="form-error">Restore stopped part-way. Your phone may be short of space.</p>`);
   }
+}
+
+/* ---------- import from Google Maps (Takeout) ---------- */
+function parseCSV(text) {
+  text = String(text).replace(/^﻿/, "");
+  const rows = []; let row = [], cell = "", q = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (q) { if (ch === '"') { if (text[i + 1] === '"') { cell += '"'; i++; } else q = false; } else cell += ch; }
+    else if (ch === '"') q = true;
+    else if (ch === ",") { row.push(cell); cell = ""; }
+    else if (ch === "\n" || ch === "\r") { if (ch === "\r" && text[i + 1] === "\n") i++; row.push(cell); rows.push(row); row = []; cell = ""; }
+    else cell += ch;
+  }
+  if (cell || row.length) { row.push(cell); rows.push(row); }
+  return rows;
+}
+function rowsFromCSV(text, list) {
+  const rows = parseCSV(text).filter(r => r.some(c => c.trim()));
+  if (!rows.length) return [];
+  const head = rows[0].map(norm), find = names => head.findIndex(h => names.includes(h));
+  let ti = find(["title", "name", "place", "place name"]);
+  const ui = find(["url", "google maps url", "link"]), ni = find(["note", "notes"]), ci = find(["comment", "comments"]);
+  const body = ti >= 0 ? rows.slice(1) : rows; if (ti < 0) ti = 0;
+  return body.map(r => ({
+    name: (r[ti] || "").trim(), url: ui >= 0 ? (r[ui] || "").trim() : "",
+    note: [ni >= 0 ? r[ni] : "", ci >= 0 ? r[ci] : ""].map(s => (s || "").trim()).filter(Boolean).join(" · "), list
+  })).filter(x => x.name);
+}
+function rowsFromJSON(text, list) {
+  const d = JSON.parse(text), feats = Array.isArray(d.features) ? d.features : [];
+  return feats.map(f => {
+    const pr = f.properties || {}, loc = pr.location || pr.Location || {};
+    let lat = null, lng = null;
+    const c = f.geometry && f.geometry.coordinates;
+    if (Array.isArray(c) && c.length >= 2 && (+c[0] || +c[1])) { lng = +c[0]; lat = +c[1]; }
+    const gc = loc["Geo Coordinates"]; if (lat == null && gc && (+gc.Latitude || +gc.Longitude)) { lat = +gc.Latitude; lng = +gc.Longitude; }
+    return {
+      name: String(loc.name || loc["Business Name"] || pr.Title || pr.name || "").trim(), address: String(loc.address || loc.Address || "").trim(),
+      url: String(pr.google_maps_url || pr["Google Maps URL"] || "").trim(), note: String(pr.Comment || pr.comment || "").trim(),
+      lat: Number.isFinite(lat) ? lat : null, lng: Number.isFinite(lng) ? lng : null, list
+    };
+  }).filter(x => x.name);
+}
+function prepareImport(rows) {
+  const seen = new Set(), out = [];
+  for (const r of rows) {
+    const k = norm(r.name); if (seen.has(k)) continue; seen.add(k);
+    if (r.lat == null && r.url) { const c = coordsFrom(r.url); if (c) { r.lat = c.lat; r.lng = c.lng; } }
+    const dup = S.places.some(p => norm(p.name) === k || (r.url && p.google === r.url));
+    out.push({...r, dup, on: !dup});
+  }
+  return out;
+}
+function openImport() {
+  openSheet("Import from Google Maps", `<div class="form pb">
+    <p style="margin:0">Pick files from your Google Takeout download: the list files in the <b>Saved</b> folder (like <b>Want to go.csv</b>), or <b>Saved Places.json</b>. You can pick several at once.</p>
+    <div class="btn-row"><label class="btn primary small" for="imp-file">${I.upload}Choose files</label><input type="file" id="imp-file" accept=".csv,.json,text/csv,application/json" multiple class="vh"></div>
+    <div id="imp-area"></div>
+  </div>`, {kind: "import", rows: []});
+}
+async function readImportFiles(files) {
+  const c = ctx; let rows = []; const bad = [];
+  for (const f of files) {
+    try {
+      const t = await f.text(), list = f.name.replace(/\.(csv|json)$/i, "");
+      rows = rows.concat(/\.json$/i.test(f.name) || /^\s*[{[]/.test(t) ? rowsFromJSON(t, list) : rowsFromCSV(t, list));
+    } catch (e) { bad.push(f.name); }
+  }
+  if (ctx !== c) return;
+  c.rows = prepareImport(rows);
+  renderImport(bad);
+}
+function renderImport(bad) {
+  const c = ctx, area = $("#imp-area"); if (!area) return;
+  const rows = c.rows, dups = rows.filter(r => r.dup).length;
+  if (!rows.length) { area.innerHTML = `<p class="form-error">No places found${bad.length ? ` (couldn't read ${esc(bad.join(", "))})` : ""}. Pick the list CSVs from the Saved folder, or Saved Places.json.</p>`; return; }
+  area.innerHTML = `<div class="panel">
+    <p>Found <b>${rows.length}</b> places in ${esc([...new Set(rows.map(r => r.list))].join(", "))}.${dups ? ` ${dups} ${dups === 1 ? "is" : "are"} already on your Hit List, so ${dups === 1 ? "it's" : "they're"} unticked.` : ""}${bad.length ? ` Couldn't read ${esc(bad.join(", "))}.` : ""}</p>
+    <p class="hint">Untick anything you don't want, like places outside Manchester.</p>
+    <div class="btn-row"><button type="button" class="btn small" data-act="imp-all" data-v="1">Tick all</button><button type="button" class="btn small" data-act="imp-all" data-v="0">Untick all</button></div>
+    <div class="imp-list">${rows.map((r, i) => `<label class="check imp-row"><input type="checkbox" data-imp="${i}"${r.on ? " checked" : ""}><span><b>${esc(r.name)}${r.dup ? ' <span class="ex-tag">On list</span>' : ""}</b>${r.address || r.note ? `<small>${esc(r.address || r.note)}</small>` : ""}</span></label>`).join("")}</div>
+    <div class="btn-row"><button type="button" class="btn primary" data-act="imp-go" id="imp-go"></button></div>
+    <p class="hint" id="imp-status">${googleOn() ? "Each place gets looked up on Google for its pin, link, area and price." : "Google Maps isn't switched on, so places are added without pins."}</p>
+  </div>`;
+  updateImpCount();
+}
+function updateImpCount() {
+  const btn = $("#imp-go"); if (!btn || !ctx || !ctx.rows) return;
+  const n = ctx.rows.filter(r => r.on).length;
+  btn.textContent = n ? `Add ${n} to the Hit List` : "Tick some places to add"; btn.disabled = !n;
+}
+async function runImport() {
+  const c = ctx; if (!c || !c.rows) return;
+  const todo = c.rows.filter(r => r.on); if (!todo.length) return;
+  const btn = $("#imp-go"), status = $("#imp-status");
+  btn.disabled = true; $$("input[data-imp]", sheet).forEach(i => { i.disabled = true; }); $$('[data-act="imp-all"]', sheet).forEach(b => { b.disabled = true; });
+  let Place = null;
+  if (googleOn() && await loadGoogle()) { try { ({Place} = await google.maps.importLibrary("places")); } catch (e) {} }
+  let added = 0, noPin = 0, failed = false; const now = Date.now();
+  for (let i = 0; i < todo.length; i++) {
+    if (ctx !== c) break;
+    const r = todo[i];
+    status.textContent = `Adding ${i + 1} of ${todo.length}: ${r.name}`;
+    let info = null;
+    if (Place) {
+      try {
+        const hasLL = typeof r.lat === "number";
+        const res = await Place.searchByText({textQuery: r.address ? `${r.name}, ${r.address}` : r.name, fields: G_FIELDS, region: "gb", language: "en-GB", maxResultCount: 1,
+          locationBias: hasLL ? {center: {lat: r.lat, lng: r.lng}, radius: 500} : {center: {lat: 53.4808, lng: -2.2426}, radius: 25000}});
+        const pl = res && res.places && res.places[0];
+        if (pl) {
+          info = googleInfo(pl, "other");
+          if (hasLL && info.lat != null && Math.hypot(X(info.lng) - X(r.lng), Y(info.lat) - Y(r.lat)) > 1.5) info = null;
+        }
+      } catch (e) {}
+      await new Promise(ok => setTimeout(ok, 120));
+    }
+    const lat = typeof r.lat === "number" ? r.lat : info ? info.lat : null, lng = typeof r.lng === "number" ? r.lng : info ? info.lng : null;
+    const doc = {
+      id: uid(), name: r.name, type: info ? info.type : "other", area: lat != null ? nearestArea(lat, lng) : "elsewhere", price: info ? info.price : null,
+      google: (info && info.google) || safeUrl(r.url), instagram: "", notes: r.note || "", address: (info && info.address) || r.address || "",
+      status: "wish", createdAt: now - i, updatedAt: now
+    };
+    if (lat != null && lng != null) { doc.lat = +lat.toFixed(6); doc.lng = +lng.toFixed(6); doc.pinSource = "google"; } else noPin++;
+    try { await Store.put("places", doc); S.places.push(doc); added++; }
+    catch (e) { failed = true; break; }
+  }
+  if (added && navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+  render();
+  if (ctx !== c) { toast(`Added ${added} places to the Hit List`); return; }
+  status.textContent = failed ? `Stopped after ${added}. Your phone may be short of space.`
+    : `Added ${added} ${added === 1 ? "place" : "places"} to the Hit List.${noPin ? ` ${noPin} couldn't be pinned, so edit ${noPin === 1 ? "it" : "them"} and use “Find it on Google”.` : ""} Types default to Google's category, so check any marked Other.`;
+  btn.textContent = "Done"; btn.disabled = false; btn.setAttribute("data-act", "close");
 }
 
 /* ---------- pick for us ---------- */
@@ -2135,6 +2279,9 @@ document.addEventListener("click", e => {
     case "rf-unlink": if (ctx) { ctx.placeId = null; ctx.newPlace = null; updateLinkUI(); const i = $("#rf-place"); i.value = ""; i.focus(); } break;
     case "show-place": showPlace(id); break;
     case "wy": S.wy = v; render(); break;
+    case "import": openImport(); break;
+    case "imp-all": if (ctx && ctx.rows) { const on = v === "1"; ctx.rows.forEach(r => { r.on = on; }); $$("input[data-imp]", sheet).forEach(i => { i.checked = on; }); updateImpCount(); } break;
+    case "imp-go": runImport(); break;
     case "pic": openPicture(el.getAttribute("data-kind"), id); break;
     case "pic-share": if (ctx && ctx.blob) saveFile(ctx.src === "wrapped" ? `bite-club-wrapped-${S.wy}.jpg` : `bite-club-${ctx.src}-${today()}.jpg`, "image/jpeg", ctx.blob); break;
     case "pic-text": if (ctx) shareOne(ctx.src, ctx.id); break;
@@ -2203,6 +2350,8 @@ document.addEventListener("change", e => {
     $("#rf-photo-remove").hidden = false; $("#rf-photo-label").textContent = "Change photo"; formError("");
   }
   else if (t.id === "restore-file" && ctx) { const f = t.files && t.files[0]; if (f) readRestore(f); t.value = ""; }
+  else if (t.id === "imp-file" && ctx) { const fs = [...(t.files || [])]; if (fs.length) readImportFiles(fs); t.value = ""; }
+  else if (t.hasAttribute && t.hasAttribute("data-imp") && ctx && ctx.rows) { const r = ctx.rows[+t.getAttribute("data-imp")]; if (r) r.on = t.checked; updateImpCount(); }
 });
 document.addEventListener("submit", e => {
   e.preventDefault();
