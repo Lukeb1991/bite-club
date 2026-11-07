@@ -306,7 +306,7 @@ button.map-note{background:none; border:0; padding:0; color:var(--tomato); font-
 
 /* tab bar + fab */
 .tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; background:var(--surface); border-top:1.5px solid var(--line); padding-bottom:env(safe-area-inset-bottom, 0px); padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px))}
-.tabbar-in{max-width:520px; margin:0 auto; display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; padding-block:6px}
+.tabbar-in{max-width:560px; margin:0 auto; display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:4px; padding-block:6px}
 .tab{display:flex; flex-direction:column; align-items:center; gap:3px; padding:7px 4px 6px; border-radius:14px; color:var(--ink-soft); text-decoration:none; font:700 12px/1 var(--font-body)}
 .tab svg{width:25px; height:25px}
 .tab[aria-current="page"]{color:var(--tomato); background:color-mix(in srgb, var(--tomato) 11%, transparent)}
@@ -373,6 +373,41 @@ input[type=range]:focus-visible{outline:3px solid var(--mustard); outline-offset
 .center{text-align:center}
 .pick-actions{display:flex; justify-content:center; gap:10px}
 
+/* wrapped */
+.wr-hero{background:var(--ink); color:var(--surface); border-radius:var(--radius); padding:22px 20px 20px; margin-bottom:12px; overflow:hidden}
+.wr-kicker{margin:0; font:500 12px/1.2 var(--font-mono); letter-spacing:.12em; text-transform:uppercase; color:var(--mustard)}
+.wr-big{margin:8px 0 0; font:400 clamp(92px, 30vw, 156px)/.92 var(--font-display); color:var(--tomato); text-shadow:4px 4px 0 var(--mustard); font-variant-numeric:tabular-nums}
+.wr-cap{margin:8px 0 0; font:800 22px/1.2 var(--font-body)}
+.wr-sub{margin:6px 0 0; font:500 13px/1.4 var(--font-mono); opacity:.8}
+.wr-grid{display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; margin-bottom:14px}
+.wr-tile{background:var(--surface); border-radius:14px; box-shadow:var(--shadow); padding:14px; display:grid; gap:4px; align-content:start; min-width:0}
+.wr-tile span{font:500 11px/1.2 var(--font-mono); letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft)}
+.wr-tile b{font:400 34px/1.05 var(--font-display); color:var(--ink); font-variant-numeric:tabular-nums; overflow-wrap:anywhere}
+.wr-tile small{font-size:12px; color:var(--ink-soft)}
+.wr-best{background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden; margin-bottom:14px}
+.wr-photo{width:100%; aspect-ratio:16/10; object-fit:cover; display:block}
+.wr-best-body{padding:14px; display:grid; grid-template-columns:minmax(0, 1fr) auto; gap:8px 12px; align-items:start}
+.wr-best-body > *{grid-column:1; margin:0}
+.wr-best-body > .stamp{grid-column:2; grid-row:1 / span 3}
+.wr-best h3{font:800 20px/1.2 var(--font-body); overflow-wrap:anywhere}
+.wr-panel{background:var(--surface); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px 14px; margin-bottom:14px; display:grid; gap:10px}
+.wr-panel > p, .wr-panel > h3{margin:0}
+.wr-h{font:400 28px/1.1 var(--font-display)}
+.wr-bars{list-style:none; margin:0; padding:0; display:grid; gap:8px}
+.wr-bars li{display:grid; grid-template-columns:minmax(0, 9em) minmax(0, 1fr) 2em; align-items:center; gap:8px; font-size:14px}
+.wr-bars li span:first-child{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.wr-bars li:first-child .b-t i{background:var(--tomato)}
+.wr-bars b{font:500 13px var(--font-mono); text-align:right}
+.static-map{pointer-events:none; box-shadow:none}
+.wr-facts{margin:0; display:grid}
+.wr-facts div{display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:10px 0; border-top:1.5px dashed var(--line)}
+.wr-facts div:first-child{border-top:0; padding-top:0}
+.wr-facts dt{font:500 11.5px/1.4 var(--font-mono); letter-spacing:.07em; text-transform:uppercase; color:var(--ink-soft); flex:none}
+.wr-facts dd{margin:0; text-align:right; font-weight:650; min-width:0; overflow-wrap:anywhere}
+/* picture sharing */
+.pic-wrap{display:grid; place-items:center; min-height:180px}
+.pic-preview{display:block; width:100%; max-width:300px; aspect-ratio:9/16; object-fit:cover; border-radius:14px; box-shadow:var(--shadow); border:1.5px solid var(--line)}
+
 .toast{position:fixed; left:50%; bottom:calc(140px + env(safe-area-inset-bottom, 0px)); transform:translate(-50%, 16px); background:var(--ink); color:var(--surface); padding:11px 18px; border-radius:999px; font:650 14px/1.3 var(--font-body); opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:60; max-width:calc(100% - 32px); text-align:center}
 .toast.show{opacity:1; transform:translate(-50%, 0)}
 
@@ -399,6 +434,7 @@ input[type=range]:focus-visible{outline:3px solid var(--mustard); outline-offset
     <a class="tab" href="#hitlist" data-tab="hitlist"><span data-icon="pin"></span><span>Hit List</span></a>
     <a class="tab" href="#sandwiches" data-tab="sandwiches"><span data-icon="sandwich"></span><span>Sandwiches</span></a>
     <a class="tab" href="#pizza" data-tab="pizza"><span data-icon="pizza"></span><span>Pizza</span></a>
+    <a class="tab" href="#wrapped" data-tab="wrapped"><span data-icon="trophy"></span><span>Wrapped</span></a>
   </div>
 </nav>
 <button class="fab" id="fab" type="button" data-act="add" hidden></button>
@@ -456,6 +492,7 @@ const I = {
   dice: `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/><circle cx="15.5" cy="15.5" r="1.5" fill="currentColor"/><circle cx="15.5" cy="8.5" r="1.5" fill="currentColor"/><circle cx="8.5" cy="15.5" r="1.5" fill="currentColor"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>`,
   share: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3.5M7.5 8 12 3.5 16.5 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 11.5V20h13v-8.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   download: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5V15M7.5 10.5 12 15l4.5-4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 19.5h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+  trophy: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 6H4.5a2.5 2.5 0 0 0 2.6 3.6M17 6h2.5a2.5 2.5 0 0 1-2.6 3.6M12 14v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
   upload: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3.5M7.5 8 12 3.5 16.5 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 19.5h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`
 };
 
@@ -584,12 +621,13 @@ const RATE = {
 const TAB_KIND = {sandwiches: "sandwich", pizza: "pizza"};
 
 /* ---------- state ---------- */
-const TABS = ["hitlist", "sandwiches", "pizza"];
+const TABS = ["hitlist", "sandwiches", "pizza", "wrapped"];
 const S = {
   tab: "hitlist", hitMode: "list", frame: "centre", sel: null,
   hf: {status: "wish", type: "all", area: "all", price: "all", q: ""},
   rf: {sandwich: {sort: "top", q: "", style: "all"}, pizza: {sort: "top", q: "", style: "all"}},
   places: [], sandwiches: [], pizzas: [],
+  wy: null,
   ready: false, memOnly: false
 };
 const PHOTOS = new Map(); // id -> {blob, url}
@@ -1203,7 +1241,7 @@ function rateCard(item, kind, rank) {
       <ul class="bars${kind === "pizza" ? " two" : ""}">${crit.map(c => { const v = sc[c.k]; return `<li${v != null && v === top ? ' class="top"' : ""}><span>${c.l}</span><span class="b-t"><i style="width:${(typeof v === "number" ? v : 0) * 10}%"></i></span><b>${fmtScore(v)}</b></li>`; }).join("")}</ul>
       ${split}
       ${item.notes ? `<p class="rc-notes">${esc(item.notes)}</p>` : ""}
-      <div class="rc-perf"><a class="chip-link" href="${esc(mapsLink)}" target="_blank" rel="noopener">${I.pin}Maps</a><span class="grow"></span><button type="button" class="icon-btn" data-act="share-one" data-kind="${kind}" data-id="${esc(item.id)}" aria-label="Share ${esc(title)}">${I.share}</button><button type="button" class="btn small" data-act="edit-${kind}" data-id="${esc(item.id)}">${I.edit}Edit</button></div>
+      <div class="rc-perf"><a class="chip-link" href="${esc(mapsLink)}" target="_blank" rel="noopener">${I.pin}Maps</a><span class="grow"></span><button type="button" class="icon-btn" data-act="pic" data-kind="${kind}" data-id="${esc(item.id)}" aria-label="Share ${esc(title)} as a picture">${I.share}</button><button type="button" class="btn small" data-act="edit-${kind}" data-id="${esc(item.id)}">${I.edit}Edit</button></div>
     </div>
   </article>`;
 }
@@ -1243,17 +1281,299 @@ function rateView(kind) {
     <div class="cards">${shown.length ? shown.map(x => rateCard(x, kind, f.sort === "top" ? rankOf[x.id] : 0)).join("") : `<div class="empty"><h3>No matches</h3><p>Nothing matches that search.</p></div>`}</div>`}`;
 }
 
+/* ---------- wrapped ---------- */
+const moneyRound = n => "£" + (n >= 100 ? String(Math.round(n)) : n.toFixed(2).replace(/\.00$/, ""));
+const monthName = m => new Date(2000, +m - 1, 1).toLocaleDateString("en-GB", {month: "long"});
+const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+function wrappedYears() {
+  const ys = new Set();
+  S.places.forEach(p => { if (p.status === "been" && p.visitedOn) ys.add(String(p.visitedOn).slice(0, 4)); });
+  [...S.pizzas, ...S.sandwiches].forEach(x => { if (x.date) ys.add(String(x.date).slice(0, 4)); });
+  return [...ys].filter(y => /^\d{4}$/.test(y)).sort().reverse();
+}
+function wrappedData(Y) {
+  const inY = d => String(d || "").startsWith(Y + "-");
+  const pz = scored("pizza").filter(x => inY(x.date)), sw = scored("sandwich").filter(x => inY(x.date));
+  const rated = [...pz.map(x => ({kind: "pizza", x})), ...sw.map(x => ({kind: "sandwich", x}))];
+  const beenY = S.places.filter(p => p.status === "been" && inY(p.visitedOn));
+  const visits = new Map();
+  const addVisit = (p, name, date) => { const pk = p ? p.id : "n:" + norm(name); const key = pk + "|" + date; if (!visits.has(key)) visits.set(key, {pk, p, date}); };
+  beenY.forEach(p => addVisit(p, p.name, p.visitedOn));
+  rated.forEach(({x}) => addVisit(linkedPlace(x), x.place, x.date));
+  const vs = [...visits.values()];
+  const costs = rated.map(r => r.x.cost).filter(n => typeof n === "number");
+  const tally = arr => { const o = {}; arr.forEach(k => { if (k) o[k] = (o[k] || 0) + 1; }); return Object.entries(o).sort((a, b) => b[1] - a[1]); };
+  const withCost = rated.filter(r => typeof r.x.cost === "number" && r.x.cost > 0);
+  const pins = new Map();
+  vs.forEach(v => { if (v.p && !pins.has(v.p.id)) { const pt = pinPoint(v.p); if (pt) pins.set(v.p.id, {id: v.p.id, x: pt.x, y: pt.y, color: (TYPE[v.p.type] || TYPE.other).c, been: true, sel: false, label: v.p.name}); } });
+  return {
+    Y, pz, sw, beenY, visits: vs.length, places: new Set(vs.map(v => v.pk)).size,
+    spent: costs.reduce((s, n) => s + n, 0), costCount: costs.length,
+    avg: mean(rated.map(r => r.x.score).filter(n => n != null)),
+    bestPizza: pz.slice().sort(byScore)[0], bestSandwich: sw.slice().sort(byScore)[0],
+    areas: tally(vs.map(v => v.p && v.p.area !== "elsewhere" ? v.p.area : "")),
+    busiest: tally(vs.map(v => String(v.date).slice(5, 7)))[0],
+    favStyle: tally(pz.map(x => x.style))[0],
+    priciest: withCost.slice().sort((a, b) => b.x.cost - a.x.cost)[0],
+    value: withCost.filter(r => r.x.score != null).sort((a, b) => b.x.score / b.x.cost - a.x.score / a.x.cost)[0],
+    goBack: beenY.filter(p => p.again === "yes").length,
+    stillToTry: S.places.filter(p => p.status !== "been").length,
+    pins: [...pins.values()]
+  };
+}
+function wrappedBest(label, x, kind) {
+  if (!x) return "";
+  const R = RATE[kind], url = photoUrl(x.photo);
+  return `<section class="wr-best">
+    ${url ? `<img class="wr-photo" src="${url}" alt="Photo of ${esc(x[R.nameKey] || R.noun)}">` : ""}
+    <div class="wr-best-body">
+      <p class="eyebrow">${label}</p>
+      <h3>${esc(x[R.nameKey] || (kind === "pizza" ? "Pizza" : "Sandwich"))}</h3>
+      <p class="rc-place">at <b>${esc(placeLabel(x))}</b>${styleLabel(kind, x.style) ? ` · ${esc(styleLabel(kind, x.style))}` : ""}</p>
+      ${x.standout ? `<p class="standout"><b>Stand out</b>${esc(x.standout)}</p>` : ""}
+      <div class="btn-row"><button type="button" class="btn small" data-act="pic" data-kind="${kind}" data-id="${esc(x.id)}">${I.share}Share picture</button></div>
+      ${stamp(x.score)}
+    </div>
+  </section>`;
+}
+function wrappedView() {
+  const years = wrappedYears(), cy = String(new Date().getFullYear());
+  if (!S.wy || (!years.includes(S.wy) && S.wy !== cy)) S.wy = years.includes(cy) || !years.length ? cy : years[0];
+  const Y = S.wy, d = wrappedData(Y);
+  const head = `<section class="view-head"><div><p class="eyebrow">Your year in food</p><h2 class="view-title">Bite Club Wrapped</h2></div>${S.ready && d.visits ? `<div class="head-actions"><button type="button" class="btn small" data-act="pic" data-kind="wrapped">${I.share}Share picture</button></div>` : ""}</section>`;
+  const yearChips = years.length > 1 || (years.length && !years.includes(Y)) ? `<div class="chips" role="group" aria-label="Year" style="margin:4px 0 14px">${[...new Set([cy, ...years])].sort().reverse().map(y => chip("wy", y, y, Y)).join("")}</div>` : `<div style="height:8px"></div>`;
+  if (!S.ready) return head + loading();
+  if (!d.visits) return head + yearChips + `<div class="empty">${I.trophy}<h3>Nothing logged in ${Y} yet</h3><p>Tick places off the Hit List and rate some pizza and sandwiches. Your year builds up here as you go.</p></div>`;
+  const tile = (label, val, sub) => `<div class="wr-tile"><span>${label}</span><b>${val}</b>${sub ? `<small>${sub}</small>` : ""}</div>`;
+  const top = d.areas[0], maxA = top ? top[1] : 1;
+  const inC = d.pins.filter(p => inFrame(p, FRAMES.centre)), outC = d.pins.length - inC.length;
+  const facts = [
+    d.busiest && ["Busiest month", `${monthName(d.busiest[0])} · ${plural(d.busiest[1], "visit", "visits")}`],
+    d.favStyle && ["Go-to pizza style", `${styleLabel("pizza", d.favStyle[0])} · ${d.favStyle[1]} rated`],
+    d.priciest && ["Priciest bite", `${d.priciest.x[RATE[d.priciest.kind].nameKey] || RATE[d.priciest.kind].noun} at ${placeLabel(d.priciest.x)} · ${fmtMoney(d.priciest.x.cost)}`],
+    d.value && d.value !== d.priciest && ["Best value", `${d.value.x[RATE[d.value.kind].nameKey] || RATE[d.value.kind].noun} · ${fmtScore(d.value.x.score)}/10 for ${fmtMoney(d.value.x.cost)}`],
+    d.goBack && ["Would go back", plural(d.goBack, "place", "places")],
+    ["Homework for " + (+Y + 1), d.stillToTry ? `${plural(d.stillToTry, "place", "places")} still to try` : "List's empty. Add some!"]
+  ].filter(Boolean);
+  return head + yearChips + `
+    <section class="wr-hero">
+      <p class="wr-kicker">${Y} in food</p>
+      <p class="wr-big">${d.places}</p>
+      <p class="wr-cap">${d.places === 1 ? "place" : "places"} visited</p>
+      <p class="wr-sub">${plural(d.visits, "visit", "visits")} · ${d.beenY.length} ticked off the Hit List</p>
+    </section>
+    <div class="wr-grid">
+      ${tile("Pizzas rated", d.pz.length)}
+      ${tile("Sandwiches rated", d.sw.length)}
+      ${tile("Spent", d.costCount ? moneyRound(d.spent) : "–", d.costCount ? `across ${plural(d.costCount, "logged bill", "logged bills")}` : "Log prices to see this")}
+      ${tile("Average score", fmtScore(d.avg), d.avg != null ? word(d.avg) : "")}
+    </div>
+    ${wrappedBest(`Best pizza of ${Y}`, d.bestPizza, "pizza")}
+    ${wrappedBest(`Best sandwich of ${Y}`, d.bestSandwich, "sandwich")}
+    ${top ? `<section class="wr-panel"><p class="eyebrow">Most-visited area</p><h3 class="wr-h">${esc(areaName(top[0]))}</h3>
+      <ul class="wr-bars">${d.areas.slice(0, 5).map(([a, n]) => `<li><span>${esc(areaName(a))}</span><span class="b-t"><i style="width:${(n / maxA * 100).toFixed(0)}%"></i></span><b>${n}</b></li>`).join("")}</ul></section>` : ""}
+    <section class="wr-panel"><p class="eyebrow">Everywhere you went</p><h3 class="wr-h">${d.pins.length ? plural(d.pins.length, "spot", "spots") + " on the map" : "No pins yet"}</h3>
+      ${!d.pins.length ? `<p class="hint">Link ratings to Hit List places and they'll show up here.</p>` : ""}
+      ${outC ? `<div class="map-box static-map" style="--ar:${(FRAMES.wide.w / FRAMES.wide.h).toFixed(4)}">${mapSVG("wide", d.pins, false)}</div>` : ""}
+      ${inC.length ? `${outC ? `<p class="hint">In town</p>` : ""}<div class="map-box static-map" style="--ar:${(FRAMES.centre.w / FRAMES.centre.h).toFixed(4)}">${mapSVG("centre", d.pins, false)}</div>` : ""}
+    </section>
+    <section class="wr-panel"><p class="eyebrow">The small print</p><dl class="wr-facts">${facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl></section>`;
+}
+
+/* ---------- share as a picture ---------- */
+const CC = {bg: "#E4EEDA", tile: "#D7E3CB", surface: "#FFFDF7", surface2: "#F2EFE4", ink: "#1C2230", soft: "#596070", tomato: "#D63A27", mustard: "#F0B23A", line: "#C9C4B3", mustardTint: "#F8E4B5", night: "#262C3B", nightSoft: "#A7ADB8"};
+const FD = '"Shrikhand", "Cooper Black", Georgia, serif', FBODY = '"Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", sans-serif', FMONO = '"DM Mono", ui-monospace, Menlo, monospace';
+async function ensureFonts() {
+  if (!document.fonts || !document.fonts.load) return;
+  const loads = ['400 100px "Shrikhand"', '800 60px "Schibsted Grotesk"', '700 40px "Schibsted Grotesk"', '500 40px "Schibsted Grotesk"', '500 30px "DM Mono"'].map(f => document.fonts.load(f).catch(() => {}));
+  await Promise.race([Promise.all(loads), new Promise(r => setTimeout(r, 2500))]);
+}
+function rr(g, x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+function tiles(g, W, H, bg, line) {
+  g.fillStyle = bg; g.fillRect(0, 0, W, H);
+  g.strokeStyle = line; g.lineWidth = 2; g.beginPath();
+  for (let x = 0; x <= W; x += 88) { g.moveTo(x + .5, 0); g.lineTo(x + .5, H); }
+  for (let y = 0; y <= H; y += 44) { g.moveTo(0, y + .5); g.lineTo(W, y + .5); }
+  g.stroke();
+}
+function spacedText(g, text, x, y, sp, align) {
+  const chars = [...String(text)];
+  const w = chars.reduce((s, c) => s + g.measureText(c).width + sp, 0) - sp;
+  let cx = align === "center" ? x - w / 2 : align === "right" ? x - w : x;
+  const prev = g.textAlign; g.textAlign = "left";
+  for (const c of chars) { g.fillText(c, cx, y); cx += g.measureText(c).width + sp; }
+  g.textAlign = prev; return w;
+}
+function fitLine(g, s, maxW) { s = String(s); if (g.measureText(s).width <= maxW) return s; while (s.length > 1 && g.measureText(s + "…").width > maxW) s = s.slice(0, -1); return s.trimEnd() + "…"; }
+function wrapText(g, text, maxW, maxLines) {
+  const words = String(text || "").split(/\s+/).filter(Boolean), lines = []; let line = "";
+  for (const w of words) { const t = line ? line + " " + w : w; if (!line || g.measureText(t).width <= maxW) line = t; else { lines.push(line); line = w; } }
+  if (line) lines.push(line);
+  if (lines.length > maxLines) { const keep = lines.slice(0, maxLines); keep[maxLines - 1] = fitLine(g, keep[maxLines - 1] + " " + lines[maxLines], maxW); return keep.map(l => fitLine(g, l, maxW)); }
+  return lines.map(l => fitLine(g, l, maxW));
+}
+const loadImage = src => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
+const iconImage = (name, color) => loadImage("data:image/svg+xml;charset=utf-8," + encodeURIComponent(I[name].replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" ').replace(/currentColor/g, color)));
+function drawWordmark(g, x, y, size) {
+  g.save(); g.translate(x, y); g.rotate(-2.5 * Math.PI / 180);
+  g.font = `400 ${size}px ${FD}`; g.textAlign = "left"; g.textBaseline = "alphabetic";
+  g.fillStyle = CC.mustard; g.fillText("Bite Club", size * .05, size * .05);
+  g.fillStyle = CC.tomato; g.fillText("Bite Club", 0, 0);
+  g.restore();
+}
+function drawStampC(g, cx, cy, r, score, rot, bg) {
+  g.save(); g.translate(cx, cy); g.rotate(rot * Math.PI / 180);
+  g.fillStyle = bg; g.beginPath(); g.arc(0, 0, r, 0, Math.PI * 2); g.fill();
+  g.strokeStyle = CC.tomato; g.lineWidth = r * .06; g.beginPath(); g.arc(0, 0, r - r * .03, 0, Math.PI * 2); g.stroke();
+  g.lineWidth = r * .025; g.beginPath(); g.arc(0, 0, r * .84, 0, Math.PI * 2); g.stroke();
+  g.fillStyle = CC.tomato; g.textAlign = "center"; g.textBaseline = "middle";
+  g.font = `400 ${Math.round(r * .6)}px ${FD}`; g.fillText(fmtScore(score), 0, -r * .1);
+  g.font = `500 ${Math.round(r * .17)}px ${FMONO}`; spacedText(g, word(score).toUpperCase(), 0, r * .46, r * .03, "center");
+  g.restore();
+}
+function drawFooter(g, W, H, line, text, notch, label) {
+  const y = H - 150;
+  g.save();
+  g.strokeStyle = line; g.lineWidth = 4; g.setLineDash([18, 14]); g.beginPath(); g.moveTo(40, y); g.lineTo(W - 40, y); g.stroke(); g.setLineDash([]);
+  g.fillStyle = notch; g.beginPath(); g.arc(0, y, 26, 0, Math.PI * 2); g.fill(); g.beginPath(); g.arc(W, y, 26, 0, Math.PI * 2); g.fill();
+  g.font = `500 26px ${FMONO}`; g.fillStyle = text; g.textBaseline = "alphabetic"; spacedText(g, label, W / 2, H - 78, 3, "center");
+  g.restore();
+}
+const canvasBlob = cv => new Promise((res, rej) => cv.toBlob(b => b ? res(b) : rej(new Error("toBlob failed")), "image/jpeg", 0.9));
+async function drawRatingCard(kind, x) {
+  if (!x) throw new Error("missing rating");
+  await ensureFonts();
+  const R = RATE[kind], W = 1080, H = 1920, cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+  const g = cv.getContext("2d"); g.textBaseline = "alphabetic";
+  tiles(g, W, H, CC.bg, CC.tile);
+  drawWordmark(g, 80, 190, 124);
+  g.font = `500 28px ${FMONO}`; g.fillStyle = CC.soft; spacedText(g, "LUKE & GILL'S FOOD DIARIES", 86, 252, 3);
+  // sticker
+  g.save(); g.translate(W - 150, 172); g.rotate(11 * Math.PI / 180);
+  g.fillStyle = CC.ink; g.beginPath(); g.arc(6, 6, 92, 0, Math.PI * 2); g.fill();
+  g.fillStyle = CC.mustard; g.beginPath(); g.arc(0, 0, 92, 0, Math.PI * 2); g.fill(); g.lineWidth = 4; g.strokeStyle = CC.ink; g.stroke();
+  g.fillStyle = CC.ink; g.textAlign = "center"; g.textBaseline = "middle";
+  g.font = `500 20px ${FMONO}`; spacedText(g, "RATED", 0, -42, 3, "center");
+  g.font = `400 ${kind === "pizza" ? 42 : 30}px ${FD}`; g.fillText(kind === "pizza" ? "Pizza" : "Sandwich", 0, 2);
+  g.font = `500 20px ${FMONO}`; spacedText(g, "MCR", 0, 46, 3, "center");
+  g.restore(); g.textAlign = "left"; g.textBaseline = "alphabetic";
+  // photo frame
+  const ph = x.photo && PHOTOS.get(x.photo);
+  const fw = 900, inner = ph ? 760 : 460, fh = inner + 60, fy = 320;
+  g.save(); g.translate(W / 2, fy + fh / 2); g.rotate(-1.5 * Math.PI / 180);
+  g.fillStyle = CC.ink; rr(g, -fw / 2 + 14, -fh / 2 + 14, fw, fh, 20); g.fill();
+  g.fillStyle = CC.surface; rr(g, -fw / 2, -fh / 2, fw, fh, 20); g.fill(); g.lineWidth = 4; g.strokeStyle = CC.ink; g.stroke();
+  const ix = -fw / 2 + 30, iy = -fh / 2 + 30, iw = fw - 60, ih = inner;
+  g.save(); rr(g, ix, iy, iw, ih, 12); g.clip();
+  g.fillStyle = CC.surface2; g.fillRect(ix, iy, iw, ih);
+  if (ph) {
+    try { const img = await loadImage(ph.url); const s = Math.max(iw / img.naturalWidth, ih / img.naturalHeight), dw = img.naturalWidth * s, dh = img.naturalHeight * s; g.drawImage(img, ix + (iw - dw) / 2, iy + (ih - dh) / 2, dw, dh); } catch (e) {}
+  } else {
+    try { const ic = await iconImage(kind === "pizza" ? "pizza" : "sandwich", CC.tomato); g.drawImage(ic, -150, iy + (ih - 300) / 2, 300, 300); } catch (e) {}
+  }
+  g.restore(); g.restore();
+  drawStampC(g, W - 190, fy + fh - 20, 135, x.score, -9, CC.surface);
+  // words
+  const L = 90, maxW = W - 180; let y = fy + fh + 100;
+  const meta = [fmtDate(x.date), typeof x.cost === "number" ? fmtMoney(x.cost) : "", styleLabel(kind, x.style)].filter(Boolean).join("  ·  ").toUpperCase();
+  if (meta) { g.font = `500 28px ${FMONO}`; g.fillStyle = CC.soft; spacedText(g, meta, L, y, 2); y += 80; }
+  g.font = `800 70px ${FBODY}`; g.fillStyle = CC.ink;
+  for (const ln of wrapText(g, x[R.nameKey] || (kind === "pizza" ? "Pizza" : "Sandwich"), maxW, 2)) { g.fillText(ln, L, y); y += 80; }
+  const lp = linkedPlace(x), area = lp && lp.area !== "elsewhere" ? areaName(lp.area) : "";
+  g.font = `500 40px ${FBODY}`; g.fillStyle = CC.soft; g.fillText("at ", L, y);
+  let px = L + g.measureText("at ").width;
+  const areaW = area ? g.measureText(" · " + area).width : 0;
+  g.font = `700 40px ${FBODY}`; g.fillStyle = CC.ink;
+  const nm = fitLine(g, placeLabel(x), maxW - (px - L) - areaW); g.fillText(nm, px, y); px += g.measureText(nm).width;
+  if (area) { g.font = `500 40px ${FBODY}`; g.fillStyle = CC.soft; g.fillText(" · " + area, px, y); }
+  y += 50;
+  if (x.standout) {
+    g.font = `650 40px ${FBODY}`;
+    const lines = wrapText(g, x.standout, maxW - 60, 2), bh = 70 + lines.length * 52 + 22;
+    y += 20;
+    g.fillStyle = CC.mustardTint; rr(g, L, y, maxW, bh, 22); g.fill();
+    g.font = `500 24px ${FMONO}`; g.fillStyle = CC.soft; spacedText(g, "STAND OUT", L + 30, y + 50, 3);
+    g.font = `650 40px ${FBODY}`; g.fillStyle = CC.ink; lines.forEach((ln, i) => g.fillText(ln, L + 30, y + 104 + i * 52));
+    y += bh + 20;
+  }
+  const top = R.crit.map(c => ({l: c.l, v: (x.scores || {})[c.k]})).filter(c => typeof c.v === "number").sort((a, b) => b.v - a.v).slice(0, 3);
+  if (top.length && y < H - 270) {
+    y += 34; g.font = `500 24px ${FMONO}`; g.fillStyle = CC.soft; spacedText(g, "TOP MARKS", L, y, 3); y += 24;
+    g.font = `700 32px ${FBODY}`; let cx = L;
+    for (const t of top) {
+      const label = `${t.l} ${fmtScore(t.v)}`, w = g.measureText(label).width + 48;
+      if (cx + w > L + maxW) break;
+      g.fillStyle = CC.surface; rr(g, cx, y, w, 64, 32); g.fill(); g.lineWidth = 3; g.strokeStyle = CC.ink; g.stroke();
+      g.fillStyle = CC.ink; g.fillText(label, cx + 24, y + 43); cx += w + 14;
+    }
+  }
+  drawFooter(g, W, H, CC.line, CC.soft, CC.bg, "RATED IN MANCHESTER  ·  BITE CLUB");
+  return canvasBlob(cv);
+}
+async function drawWrappedCard(Y) {
+  await ensureFonts();
+  const d = wrappedData(Y), W = 1080, H = 1920, cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+  const g = cv.getContext("2d"); g.textBaseline = "alphabetic";
+  tiles(g, W, H, CC.ink, CC.night);
+  drawWordmark(g, 80, 190, 110);
+  g.font = `400 150px ${FD}`; g.fillStyle = CC.mustard; g.fillText("Wrapped", 80, 372);
+  g.save(); g.translate(W - 150, 250); g.rotate(8 * Math.PI / 180);
+  g.fillStyle = CC.tomato; g.beginPath(); g.arc(0, 0, 86, 0, Math.PI * 2); g.fill();
+  g.fillStyle = CC.surface; g.textAlign = "center"; g.textBaseline = "middle"; g.font = `400 52px ${FD}`; g.fillText(String(Y), 0, 4);
+  g.restore(); g.textAlign = "left"; g.textBaseline = "alphabetic";
+  g.font = `400 290px ${FD}`; g.fillStyle = CC.mustard; g.fillText(String(d.places), 94, 734); g.fillStyle = CC.tomato; g.fillText(String(d.places), 80, 720);
+  g.font = `800 52px ${FBODY}`; g.fillStyle = CC.surface; g.fillText(d.places === 1 ? "place visited" : "places visited", 84, 806);
+  g.font = `500 28px ${FMONO}`; g.fillStyle = CC.nightSoft; spacedText(g, `${plural(d.visits, "VISIT", "VISITS")}  ·  ${d.beenY.length} TICKED OFF`, 86, 862, 2);
+  const tilesData = [["PIZZAS RATED", String(d.pz.length)], ["SANDWICHES RATED", String(d.sw.length)], ["SPENT", d.costCount ? moneyRound(d.spent) : "–"], ["AVERAGE SCORE", fmtScore(d.avg)]];
+  const tw = (W - 160 - 24) / 2, th = 170;
+  tilesData.forEach(([lab, val], i) => {
+    const tx = 80 + (i % 2) * (tw + 24), ty = 920 + Math.floor(i / 2) * (th + 24);
+    g.fillStyle = CC.night; rr(g, tx, ty, tw, th, 24); g.fill();
+    g.font = `500 24px ${FMONO}`; g.fillStyle = CC.mustard; spacedText(g, lab, tx + 30, ty + 54, 2);
+    g.font = `400 80px ${FD}`; g.fillStyle = CC.surface; g.fillText(fitLine(g, val, tw - 60), tx + 30, ty + 140);
+  });
+  let y = 1360;
+  const block = (label, text, score) => {
+    g.font = `500 24px ${FMONO}`; g.fillStyle = CC.mustard; spacedText(g, label, 80, y, 3); y += 52;
+    g.font = `800 44px ${FBODY}`; g.fillStyle = CC.surface; g.fillText(fitLine(g, text, score != null ? W - 160 - 170 : W - 160), 80, y);
+    if (score != null) { g.font = `400 64px ${FD}`; g.fillStyle = CC.tomato; g.textAlign = "right"; g.fillText(fmtScore(score), W - 80, y + 6); g.textAlign = "left"; }
+    y += 70;
+  };
+  const best = (x, kind) => `${x[RATE[kind].nameKey] || (kind === "pizza" ? "Pizza" : "Sandwich")} at ${placeLabel(x)}`;
+  if (d.bestPizza) block("BEST PIZZA", best(d.bestPizza, "pizza"), d.bestPizza.score);
+  if (d.bestSandwich) block("BEST SANDWICH", best(d.bestSandwich, "sandwich"), d.bestSandwich.score);
+  if (d.areas[0] && y < 1700) block("MOST VISITED", `${areaName(d.areas[0][0])} · ${plural(d.areas[0][1], "visit", "visits")}`, null);
+  drawFooter(g, W, H, "#3A4152", CC.nightSoft, CC.ink, "LUKE & GILL'S FOOD DIARIES");
+  return canvasBlob(cv);
+}
+async function openPicture(src, id) {
+  const isW = src === "wrapped";
+  openSheet(isW ? "Share your Wrapped" : "Share as a picture", `<div class="form pb">
+    <div class="pic-wrap"><p class="hint" id="pic-status">Making your picture…</p><img id="pic-preview" class="pic-preview" alt="Preview of the picture to share" hidden></div>
+    <div class="btn-row"><button type="button" class="btn primary" data-act="pic-share" id="pic-share" disabled>${I.share}Share or save picture</button>${isW ? "" : `<button type="button" class="btn" data-act="pic-text">Send as text instead</button>`}</div>
+    <p class="hint">Sized for Instagram stories and WhatsApp.</p>
+  </div>`, {kind: "picture", src, id, blob: null});
+  const c = ctx;
+  try {
+    const blob = isW ? await drawWrappedCard(S.wy) : await drawRatingCard(src, scored(src).find(x => x.id === id));
+    if (ctx !== c) return;
+    c.blob = blob; c.previewUrl = URL.createObjectURL(blob);
+    const img = $("#pic-preview"); img.src = c.previewUrl; img.hidden = false;
+    $("#pic-status").hidden = true; $("#pic-share").disabled = false;
+  } catch (e) { if (ctx === c) $("#pic-status").textContent = "Couldn't make the picture. Try again."; }
+}
+
 /* ---------- page render ---------- */
 function render() {
   const ae = document.activeElement, aid = ae && ae.id && view.contains(ae) ? ae.id : null;
   let sel = null; try { if (aid && typeof ae.selectionStart === "number") sel = [ae.selectionStart, ae.selectionEnd]; } catch (e) {}
   const note = S.memOnly ? `<div class="notice"><p>This browser isn't letting Bite Club save, so entries will vanish when you close it. Open it in Safari or Chrome (not a private window) and add it to your home screen.</p></div>` : "";
-  view.innerHTML = note + (S.tab === "hitlist" ? hitView() : rateView(TAB_KIND[S.tab]));
+  view.innerHTML = note + (S.tab === "hitlist" ? hitView() : S.tab === "wrapped" ? wrappedView() : rateView(TAB_KIND[S.tab]));
   if ($("#gmap-slot")) mountGoogleMap();
   if (aid) { const el = document.getElementById(aid); if (el) { el.focus({preventScroll: true}); if (sel) try { el.setSelectionRange(sel[0], sel[1]); } catch (e) {} } }
   $$(".tab").forEach(t => { if (t.dataset.tab === S.tab) t.setAttribute("aria-current", "page"); else t.removeAttribute("aria-current"); });
-  fab.hidden = !S.ready;
-  fab.innerHTML = I.plus + (S.tab === "hitlist" ? "Add place" : RATE[TAB_KIND[S.tab]].add);
+  fab.hidden = !S.ready || S.tab === "wrapped";
+  fab.innerHTML = I.plus + (S.tab === "hitlist" ? "Add place" : S.tab === "wrapped" ? "" : RATE[TAB_KIND[S.tab]].add);
 }
 let toastT = 0;
 function toast(msg) { const t = $("#toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2600); }
@@ -1814,6 +2134,10 @@ document.addEventListener("click", e => {
     case "rf-link": if (ctx) { ctx.placeId = id; ctx.newPlace = null; $("#rf-suggest").innerHTML = ""; $("#rf-gresults").innerHTML = ""; updateLinkUI(); } break;
     case "rf-unlink": if (ctx) { ctx.placeId = null; ctx.newPlace = null; updateLinkUI(); const i = $("#rf-place"); i.value = ""; i.focus(); } break;
     case "show-place": showPlace(id); break;
+    case "wy": S.wy = v; render(); break;
+    case "pic": openPicture(el.getAttribute("data-kind"), id); break;
+    case "pic-share": if (ctx && ctx.blob) saveFile(ctx.src === "wrapped" ? `bite-club-wrapped-${S.wy}.jpg` : `bite-club-${ctx.src}-${today()}.jpg`, "image/jpeg", ctx.blob); break;
+    case "pic-text": if (ctx) shareOne(ctx.src, ctx.id); break;
     case "rate-here": openRateForm(el.getAttribute("data-kind"), null, id); break;
     case "reset-filters": S.hf = {status: "all", type: "all", area: "all", price: "all", q: ""}; render(); break;
     case "sort": if (kind) { S.rf[kind].sort = v; render(); } break;
