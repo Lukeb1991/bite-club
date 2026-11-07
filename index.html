@@ -2203,10 +2203,17 @@ function prepareImport(rows) {
   const byName = new Map(), out = [];
   for (const r of rows) {
     const k = norm(r.name);
-    if (byName.has(k)) { const first = byName.get(k); for (const f of Object.keys(r)) if ((first[f] == null || first[f] === "") && r[f] != null && r[f] !== "") first[f] = r[f]; continue; }
+    if (byName.has(k)) {
+      const first = byName.get(k);
+      if (r.note && first.note && !first.note.includes(r.note)) first.note = `${first.note} · ${r.note}`;
+      for (const f of Object.keys(r)) if ((first[f] == null || first[f] === "") && r[f] != null && r[f] !== "") first[f] = r[f];
+      continue;
+    }
     if (r.lat == null && r.url) { const c = coordsFrom(r.url); if (c) { r.lat = c.lat; r.lng = c.lng; } }
     const existing = S.places.find(p => norm(p.name) === k || (r.url && p.google === r.url));
-    const row = {...r, existingId: existing ? existing.id : null, dup: !!existing, on: !existing};
+    /* Rough Greater Manchester box: Wigan to Saddleworth, Ramsbottom to Wilmslow */
+    const far = typeof r.lat === "number" && !(r.lat >= 53.30 && r.lat <= 53.69 && r.lng >= -2.75 && r.lng <= -1.90);
+    const row = {...r, existingId: existing ? existing.id : null, dup: !!existing, far, on: !existing && !far};
     byName.set(k, row); out.push(row);
   }
   return out;
@@ -2243,14 +2250,14 @@ async function readImportFiles(files) {
 }
 function renderImport(bad) {
   const c = ctx, area = $("#imp-area"); if (!area) return;
-  const rows = c.rows, dups = rows.filter(r => r.dup).length;
+  const rows = c.rows, dups = rows.filter(r => r.dup).length, far = rows.filter(r => r.far && !r.dup).length;
   if (!rows.length) { area.innerHTML = `<p class="form-error">No places found${bad.length ? ` (couldn't read ${esc(bad.join(", "))})` : ""}. Pick the list CSVs from the Saved folder, or Saved Places.json.</p>`; return; }
   area.innerHTML = `<div class="panel">
-    <p>Found <b>${rows.length}</b> places in ${esc([...new Set(rows.map(r => r.list))].join(", "))}.${dups ? ` ${dups} ${dups === 1 ? "is" : "are"} already on your Hit List, so ${dups === 1 ? "it's" : "they're"} unticked. Tick ${dups === 1 ? "it" : "them"} to update with what's in your file.` : ""}${bad.length ? ` Couldn't read ${esc(bad.join(", "))}.` : ""}</p>
+    <p>Found <b>${rows.length}</b> places in ${esc([...new Set(rows.map(r => r.list))].join(", "))}.${dups ? ` ${dups} ${dups === 1 ? "is" : "are"} already on your Hit List, so ${dups === 1 ? "it's" : "they're"} unticked. Tick ${dups === 1 ? "it" : "them"} to update with what's in your file.` : ""}${far ? ` ${far} ${far === 1 ? "is" : "are"} outside Greater Manchester, so ${far === 1 ? "it's" : "they're"} unticked too.` : ""}${bad.length ? ` Couldn't read ${esc(bad.join(", "))}.` : ""}</p>
     ${c.cols.length ? `<p class="hint">Columns used: ${esc(c.cols.join(", "))}.</p>` : ""}
     <p class="hint">Untick anything you don't want, like places outside Manchester.</p>
     <div class="btn-row"><button type="button" class="btn small" data-act="imp-all" data-v="1">Tick all</button><button type="button" class="btn small" data-act="imp-all" data-v="0">Untick all</button></div>
-    <div class="imp-list">${rows.map((r, i) => { const tags = importTags(r), extra = r.address || r.note; return `<label class="check imp-row"><input type="checkbox" data-imp="${i}"${r.on ? " checked" : ""}><span><b>${esc(r.name)}${r.dup ? ' <span class="ex-tag">On list</span>' : ""}</b>${tags ? `<small class="imp-tags">${esc(tags)}</small>` : ""}${extra ? `<small>${esc(extra)}</small>` : ""}</span></label>`; }).join("")}</div>
+    <div class="imp-list">${rows.map((r, i) => { const tags = importTags(r), extra = r.address || r.note; return `<label class="check imp-row"><input type="checkbox" data-imp="${i}"${r.on ? " checked" : ""}><span><b>${esc(r.name)}${r.dup ? ' <span class="ex-tag">On list</span>' : r.far ? ' <span class="ex-tag">Far away</span>' : ""}</b>${tags ? `<small class="imp-tags">${esc(tags)}</small>` : ""}${extra ? `<small>${esc(extra)}</small>` : ""}</span></label>`; }).join("")}</div>
     <div class="btn-row"><button type="button" class="btn primary" data-act="imp-go" id="imp-go"></button></div>
     <p class="hint" id="imp-status">${googleOn() ? "Each place gets looked up on Google for its pin, link, area and price." : "Google Maps isn't switched on, so places are added without pins."}</p>
   </div>`;
@@ -2272,7 +2279,8 @@ async function runImport() {
   const isMapsLink = u => /^https?:\/\/([a-z0-9-]+\.)*(google\.[a-z.]+|goo\.gl)\//i.test(u || "");
   for (let i = 0; i < todo.length; i++) {
     if (ctx !== c) break;
-    const r = todo[i], ex = r.existingId ? S.places.find(p => p.id === r.existingId) : null;
+    const r = todo[i];
+    let ex = r.existingId ? S.places.find(p => p.id === r.existingId) : null;
     status.textContent = `${ex ? "Updating" : "Adding"} ${i + 1} of ${todo.length}: ${r.name}`;
     const hasLL = typeof r.lat === "number", exLL = ex && typeof ex.lat === "number";
     let info = null;
@@ -2292,7 +2300,11 @@ async function runImport() {
       await new Promise(ok => setTimeout(ok, 120));
     }
     const lat = hasLL ? r.lat : exLL ? ex.lat : info ? info.lat : null, lng = hasLL ? r.lng : exLL ? ex.lng : info ? info.lng : null;
-    const link = isMapsLink(r.url) ? r.url : (info && info.google) || safeUrl(r.url) || (ex && ex.google) || "";
+    /* Same Google listing as a place already on the list (e.g. "Kala" and "Kala Bistro"): merge rather than duplicate */
+    if (!ex && info && info.google) { const same = S.places.find(p => p.google === info.google); if (same) ex = same; }
+    /* Pin-only and search links work, but the listing link Google found is more useful */
+    const searchOnly = /\/maps\/search\/|[?&]q=/i.test(r.url || "");
+    const link = isMapsLink(r.url) && !(searchOnly && info && info.google) ? r.url : (info && info.google) || safeUrl(r.url) || (ex && ex.google) || "";
     const base = ex ? {...ex} : {id: uid(), name: r.name, instagram: "", notes: "", createdAt: now - i};
     const doc = {
       ...base,
