@@ -116,6 +116,10 @@ button{font-family:inherit}
 input[type=search], input[type=text], input[type=url], input[type=date], select, textarea{
   font:500 16px/1.3 var(--font-body); color:var(--ink); background:var(--surface); border:1.5px solid var(--line); border-radius:12px; padding:10px 12px; width:100%; min-width:0; max-width:100%
 }
+/* iOS Safari sizes date boxes to their own content and spills them over the next field; reset that */
+input[type=date]{-webkit-appearance:none; appearance:none; display:block; min-height:45px; text-align:left}
+input[type=date]::-webkit-date-and-time-value{text-align:left; margin:0}
+input[type=date]::-webkit-datetime-edit{padding:0}
 select{max-width:48vw; padding-right:8px}
 .form select{max-width:100%}
 textarea{resize:vertical; min-height:68px}
@@ -276,6 +280,20 @@ input:focus, select:focus, textarea:focus{outline:none; border-color:var(--ink);
 .gpin.sel{transform:scale(1.3); box-shadow:0 0 0 3px var(--ink), 0 2px 8px rgb(0 0 0 / .4)}
 .gme{width:16px; height:16px; border-radius:50%; background:var(--me); border:3px solid var(--me-ring); box-shadow:0 0 0 7px color-mix(in srgb, var(--me) 25%, transparent)}
 .g-row{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px; align-items:center}
+.g-row.solo{grid-template-columns:minmax(0,1fr)}
+.pick-area{display:grid; gap:8px}
+.linked{display:flex; gap:10px; align-items:center; background:var(--surface-2); border:1.5px solid var(--ink); border-radius:12px; padding:10px 12px}
+.linked .dot{width:12px; height:12px; border-radius:50%; background:var(--tc); flex:none}
+.linked div{flex:1; min-width:0; display:grid; gap:1px}
+.linked b{font-weight:750; overflow-wrap:anywhere}
+.linked span{font-size:13px; color:var(--ink-soft)}
+.place-link{background:none; border:0; padding:0; font:inherit; font-weight:700; color:var(--ink); text-decoration:underline; text-decoration-color:var(--tomato); text-decoration-thickness:2px; text-underline-offset:3px; cursor:pointer}
+.pc-rated{margin:10px 0 0; display:grid; gap:6px}
+.rated-row{display:flex; justify-content:space-between; align-items:center; gap:10px; width:100%; background:var(--surface-2); border:0; border-radius:10px; padding:8px 10px; font:inherit; font-size:14px; color:var(--ink); cursor:pointer; text-align:left}
+.rated-row span{min-width:0; overflow-wrap:anywhere}
+.rated-row b{font:400 17px/1 var(--font-display); color:var(--tomato)}
+.pc-rate{margin:8px 0 0; font-size:13px; color:var(--ink-soft)}
+.pc-rate .linkish{font-size:13px}
 .g-results{display:grid; gap:6px}
 .g-results:empty{display:none}
 .g-result{text-align:left; display:grid; gap:2px; background:var(--surface-2); border:1.5px solid var(--line); border-radius:12px; padding:10px 12px; cursor:pointer; color:var(--ink); font:inherit; width:100%}
@@ -321,6 +339,8 @@ button.map-note{background:none; border:0; padding:0; color:var(--tomato); font-
 .field > legend{margin-bottom:7px}
 .hint{font-size:13px; color:var(--ink-soft); margin:0}
 .two-col{display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:14px}
+.two-col > .field{min-width:0}
+.two-col > .field > *{min-width:0; max-width:100%}
 .pin-row{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
 .scores{display:grid; gap:16px}
 .slider{display:grid; gap:3px}
@@ -666,6 +686,21 @@ function coordsFrom(url) {
 }
 const scoreOf = (item, crit) => { const s = item.scores || {}; return mean(crit.map(c => s[c.k]).filter(v => typeof v === "number")); };
 const styleLabel = (kind, id) => { const s = RATE[kind].styles.find(x => x.id === id); return s ? s.l : ""; };
+const norm = s => String(s || "").trim().toLowerCase();
+const roundHalf = n => Math.round(n * 2) / 2;
+/* A rating is tied to a Hit List place by placeId, or by an exact name match for older entries. */
+function linkedPlace(x) {
+  if (!x) return null;
+  if (x.placeId) { const p = S.places.find(p => p.id === x.placeId); if (p) return p; }
+  const n = norm(x.place);
+  return n ? S.places.find(p => norm(p.name) === n) || null : null;
+}
+const placeLabel = x => { const p = linkedPlace(x); return p ? p.name : (x.place || "Unknown"); };
+function ratingsFor(placeId) {
+  const out = [];
+  for (const kind of ["pizza", "sandwich"]) for (const x of S[RATE[kind].col]) { const p = linkedPlace(x); if (p && p.id === placeId) out.push({kind, x, score: scoreOf(x, RATE[kind].crit)}); }
+  return out.sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
+}
 
 /* ---------- map ---------- */
 const GEO = {
@@ -794,12 +829,15 @@ function sortPlaces(list) {
 function placeCard(p) {
   const t = TYPE[p.type] || TYPE.other, been = p.status === "been", ig = igHref(p.instagram);
   const meta = [fmtDate(p.visitedOn), AGAIN[p.again]].filter(Boolean).join(" · ");
+  const rated = ratingsFor(p.id);
   return `<article class="place-card" style="--tc:var(${t.c})">
     <div class="pc-main">
       <p class="pc-kicker"><span class="dot"></span>${esc(t.l)}<span aria-hidden="true">·</span>${esc(areaName(p.area))}${p.price ? `<span aria-hidden="true">·</span>${priceTag(p.price)}` : ""}</p>
       <h3 class="pc-name">${esc(p.name)}</h3>
       ${p.notes ? `<p class="pc-notes">${esc(p.notes)}</p>` : ""}
       ${been && (p.verdict || meta) ? `<p class="pc-verdict">${p.verdict ? `“${esc(p.verdict)}”` : ""}${meta ? `<span class="mono">${esc(meta)}</span>` : ""}</p>` : ""}
+      ${rated.length ? `<div class="pc-rated">${rated.slice(0, 3).map(r => `<button type="button" class="rated-row" data-act="edit-${r.kind}" data-id="${esc(r.x.id)}"><span>${r.kind === "pizza" ? "Pizza" : "Sandwich"}${r.x[RATE[r.kind].nameKey] ? ` · ${esc(r.x[RATE[r.kind].nameKey])}` : ""}</span><b>${fmtScore(r.score)}</b></button>`).join("")}${rated.length > 3 ? `<p class="hint">+${rated.length - 3} more rated here</p>` : ""}</div>` : ""}
+      <p class="pc-rate">Rate here: <button type="button" class="linkish" data-act="rate-here" data-kind="pizza" data-id="${esc(p.id)}">Pizza</button> · <button type="button" class="linkish" data-act="rate-here" data-kind="sandwich" data-id="${esc(p.id)}">Sandwich</button></p>
     </div>
     ${been ? stamp(p.rating) : ""}
     <div class="pc-actions">
@@ -914,6 +952,7 @@ function mountGoogleMap() {
     G.map.addListener("click", () => { if (Date.now() - G.lastPin < 400) return; if (S.sel) selectPin(null); });
   }
   syncMarkers(G.pending);
+  if (G.focus) { G.map.setCenter(G.focus); G.map.setZoom(16); G.focus = null; }
 }
 function pinNode(p, approx) {
   const t = TYPE[p.type] || TYPE.other, been = p.status === "been";
@@ -995,9 +1034,11 @@ function nearestArea(lat, lng) {
 function setRadio(name, v) { const r = sheet.querySelector(`input[name="${name}"][value="${v}"]`); if (r) r.checked = true; }
 const G_FIELDS = ["displayName", "formattedAddress", "location", "googleMapsURI", "priceLevel", "primaryType", "types"];
 const G_FIELDS_MIN = ["displayName", "formattedAddress", "location", "googleMapsURI"];
-async function runGoogleSearch() {
-  const c = ctx, input = $("#pf-gq"), out = $("#pf-gresults");
+async function runGoogleSearch(forKey) {
+  forKey = forKey === "rf" ? "rf" : "pf";
+  const c = ctx, input = $(forKey === "rf" ? "#rf-place" : "#pf-gq"), out = $(`#${forKey}-gresults`);
   if (!input || !out) return;
+  if (forKey === "rf") { const s = $("#rf-suggest"); if (s) s.innerHTML = ""; }
   const q = input.value.trim();
   if (!q) { input.focus(); return; }
   out.innerHTML = `<p class="hint">Searching Google…</p>`;
@@ -1016,7 +1057,7 @@ async function runGoogleSearch() {
     if (ctx !== c) return;
     c.gResults = (res && res.places) || [];
     out.innerHTML = c.gResults.length
-      ? c.gResults.map((p, i) => `<button type="button" class="g-result" data-act="g-pick" data-v="${i}"><b>${esc(p.displayName || "Unnamed place")}</b><span>${esc(p.formattedAddress || "")}</span></button>`).join("")
+      ? c.gResults.map((p, i) => `<button type="button" class="g-result" data-act="g-pick" data-for="${forKey}" data-v="${i}"><b>${esc(p.displayName || "Unnamed place")}</b><span>${esc(p.formattedAddress || "")}</span></button>`).join("")
       : `<p class="hint">No matches on Google. Try adding the area, e.g. “${esc(q)} Ancoats”.</p>`;
   } catch (e) {
     if (ctx !== c) return;
@@ -1024,10 +1065,63 @@ async function runGoogleSearch() {
     out.innerHTML = `<p class="form-error">Google search failed: ${esc(msg)}</p><p class="hint">If it mentions Places API, check Places API (New) is enabled and ticked on the key.</p>`;
   }
 }
-function pickGoogleResult(i) {
+function pickGoogleResult(i, forKey) {
   const c = ctx, place = c && c.gResults && c.gResults[i]; if (!place) return;
+  if (forKey === "rf") { $("#rf-gresults").innerHTML = ""; return linkGoogleToRating(place, c); }
   $("#pf-gresults").innerHTML = "";
   fillFromGoogle(place, c);
+}
+function googleInfo(place, fallbackType) {
+  const loc = place.location ? llNum(place.location) : null;
+  return {
+    name: place.displayName || "", google: place.googleMapsURI || "", address: place.formattedAddress || "",
+    lat: loc ? +loc.lat.toFixed(6) : null, lng: loc ? +loc.lng.toFixed(6) : null,
+    area: loc ? nearestArea(loc.lat, loc.lng) : "elsewhere",
+    price: PRICE_LEVEL[String(place.priceLevel || "").replace(/^PRICE_LEVEL_/, "")] || null,
+    type: [place.primaryType, ...(place.types || [])].map(t => GTYPE[t]).find(Boolean) || fallbackType || "other"
+  };
+}
+function linkGoogleToRating(place, c) {
+  const info = googleInfo(place, c.kind === "pizza" ? "pizza" : "sandwich");
+  const match = S.places.find(p => (info.google && p.google === info.google) || norm(p.name) === norm(info.name));
+  if (match) { c.placeId = match.id; c.newPlace = null; } else { c.placeId = null; c.newPlace = info; }
+  updateLinkUI();
+}
+function updateLinkUI() {
+  if (!ctx || !RATE[ctx.kind]) return;
+  const linked = ctx.placeId ? S.places.find(p => p.id === ctx.placeId) : null, np = ctx.newPlace, cur = linked || np;
+  const box = $("#rf-linked"), pick = $("#rf-place-pick"), tick = $("#rf-tick"), lbl = $("#rf-tick-label");
+  if (!box) return;
+  if (cur) {
+    const t = TYPE[cur.type] || TYPE.other;
+    const where = cur.area && cur.area !== "elsewhere" ? `${areaName(cur.area)} · ` : "";
+    const status = linked ? (linked.status === "been" ? "On your Hit List, been" : "On your Hit List, to try") : "From Google, not on your Hit List yet";
+    box.innerHTML = `<span class="dot" style="--tc:var(${t.c})"></span><div><b>${esc(cur.name)}</b><span>${esc(where + status)}</span></div><button type="button" class="linkish" data-act="rf-unlink">Change</button>`;
+    box.hidden = false; pick.hidden = true;
+    $("#rf-place").value = cur.name;
+    if (np) { tick.hidden = false; lbl.textContent = "Add it to the Hit List as been, with its map pin"; }
+    else if (linked.status !== "been") { tick.hidden = false; lbl.textContent = `Tick ${linked.name} off the Hit List`; }
+    else tick.hidden = true;
+  } else { box.hidden = true; pick.hidden = false; tick.hidden = true; }
+}
+function updateSuggest() {
+  const box = $("#rf-suggest"); if (!box) return;
+  const q = norm($("#rf-place").value);
+  if (!q) { box.innerHTML = ""; return; }
+  const m = S.places.filter(p => norm(p.name).includes(q)).slice(0, 5);
+  box.innerHTML = m.map(p => `<button type="button" class="g-result" data-act="rf-link" data-id="${esc(p.id)}"><b>${esc(p.name)}</b><span>${esc(areaName(p.area))} · On your Hit List${p.status === "been" ? ", been" : ""}</span></button>`).join("");
+}
+function showPlace(id) {
+  const p = S.places.find(x => x.id === id); if (!p) return;
+  closeSheet();
+  S.tab = "hitlist"; prefs.set("tab", "hitlist");
+  if (location.hash !== "#hitlist") history.replaceState(null, "", "#hitlist");
+  S.hitMode = "map"; prefs.set("hitMode", "map");
+  S.hf = {status: "all", type: "all", area: "all", price: "all", q: ""};
+  S.sel = id;
+  const pt = pinPoint(p); if (pt) S.frame = inFrame(pt, FRAMES.centre) ? "centre" : "wide";
+  const pos = placeLatLng(p); G.focus = pos ? {lat: pos.lat, lng: pos.lng} : null;
+  render(); window.scrollTo(0, 0);
 }
 async function fillFromGoogle(place, c) {
   const hint = $("#pf-search-hint");
@@ -1085,6 +1179,8 @@ function rateCard(item, kind, rank) {
   const title = item[R.nameKey] || (kind === "sandwich" ? "Sandwich" : "Pizza");
   const sl = styleLabel(kind, item.style);
   const url = photoUrl(item.photo);
+  const lp = linkedPlace(item);
+  const mapsLink = lp ? mapsHref(lp) : (safeUrl(item.googleUrl) || mapsHref({name: item.place || "", area: "elsewhere"}));
   let split = "";
   if (kind === "pizza") {
     const pie = mean(PIZZA_CRIT.filter(c => c.g === "pie").map(c => sc[c.k]).filter(v => typeof v === "number"));
@@ -1098,7 +1194,7 @@ function rateCard(item, kind, rank) {
         <div class="rc-titles">
           <p class="rc-meta mono">${rank ? `<span class="rank">No. ${pad(rank)}</span><span aria-hidden="true">·</span>` : ""}<span>${esc(fmtDate(item.date)) || "Undated"}</span>${typeof item.cost === "number" ? `<span aria-hidden="true">·</span><span>${fmtMoney(item.cost)}</span>` : ""}</p>
           <h3>${esc(title)}</h3>
-          <p class="rc-place">at <b>${esc(item.place || "Unknown")}</b></p>
+          <p class="rc-place">at ${lp ? `<button type="button" class="place-link" data-act="show-place" data-id="${esc(lp.id)}">${esc(lp.name)}</button>${lp.area && lp.area !== "elsewhere" ? ` · ${esc(areaName(lp.area))}` : ""}` : `<b>${esc(item.place || "Unknown")}</b>`}</p>
           ${sl ? `<span class="style-tag">${esc(sl)}</span>` : ""}
         </div>
         ${stamp(item.score)}
@@ -1107,7 +1203,7 @@ function rateCard(item, kind, rank) {
       <ul class="bars${kind === "pizza" ? " two" : ""}">${crit.map(c => { const v = sc[c.k]; return `<li${v != null && v === top ? ' class="top"' : ""}><span>${c.l}</span><span class="b-t"><i style="width:${(typeof v === "number" ? v : 0) * 10}%"></i></span><b>${fmtScore(v)}</b></li>`; }).join("")}</ul>
       ${split}
       ${item.notes ? `<p class="rc-notes">${esc(item.notes)}</p>` : ""}
-      <div class="rc-perf"><button type="button" class="icon-btn" data-act="share-one" data-kind="${kind}" data-id="${esc(item.id)}" aria-label="Share ${esc(title)}">${I.share}</button><button type="button" class="btn small" data-act="edit-${kind}" data-id="${esc(item.id)}">${I.edit}Edit</button></div>
+      <div class="rc-perf"><a class="chip-link" href="${esc(mapsLink)}" target="_blank" rel="noopener">${I.pin}Maps</a><span class="grow"></span><button type="button" class="icon-btn" data-act="share-one" data-kind="${kind}" data-id="${esc(item.id)}" aria-label="Share ${esc(title)}">${I.share}</button><button type="button" class="btn small" data-act="edit-${kind}" data-id="${esc(item.id)}">${I.edit}Edit</button></div>
     </div>
   </article>`;
 }
@@ -1118,7 +1214,7 @@ function rateFiltered(kind) {
   const f = S.rf[kind], all = scored(kind);
   const inStyle = all.filter(p => f.style === "all" || p.style === f.style);
   const qq = f.q.trim().toLowerCase();
-  return {all, inStyle, list: inStyle.filter(x => !qq || [x.place, x[RATE[kind].nameKey], x.notes, x.standout].join(" ").toLowerCase().includes(qq))};
+  return {all, inStyle, list: inStyle.filter(x => !qq || [placeLabel(x), x[RATE[kind].nameKey], x.notes, x.standout].join(" ").toLowerCase().includes(qq))};
 }
 function rateView(kind) {
   const R = RATE[kind], f = S.rf[kind];
@@ -1132,9 +1228,9 @@ function rateView(kind) {
     const avg = mean(all.map(x => x.score).filter(v => v != null));
     const best = all.slice().sort(byScore)[0];
     summary = `<div class="summary" role="group" aria-label="Summary"><div><span>Logged</span><b>${all.length}</b></div><div><span>Average</span><b>${fmtScore(avg)}</b></div><div><span>Best</span><b>${fmtScore(best.score)}</b></div></div>
-    <div class="champ">${stamp(best.score, "sm")}<div><p class="eyebrow">Reigning ${R.noun} champion</p><h3>${esc(best[R.nameKey] || R.noun)}</h3><p class="rc-place">at <b>${esc(best.place || "Unknown")}</b></p></div></div>`;
+    <div class="champ">${stamp(best.score, "sm")}<div><p class="eyebrow">Reigning ${R.noun} champion</p><h3>${esc(best[R.nameKey] || R.noun)}</h3><p class="rc-place">at <b>${esc(placeLabel(best))}</b></p></div></div>`;
   }
-  const shelf = f.style === "all" && stylesUsed.length > 1 ? `<p class="eyebrow">${R.bestIn}</p><div class="shelf">${stylesUsed.map(st => { const b = all.filter(p => p.style === st.id).sort(byScore)[0]; return `<button type="button" class="best" data-act="style" data-v="${st.id}"><span class="mono">${esc(st.l)}</span><b>${esc(b[R.nameKey] || R.noun)}</b><span>${esc(b.place || "")}</span><em>${fmtScore(b.score)}</em></button>`; }).join("")}</div>` : "";
+  const shelf = f.style === "all" && stylesUsed.length > 1 ? `<p class="eyebrow">${R.bestIn}</p><div class="shelf">${stylesUsed.map(st => { const b = all.filter(p => p.style === st.id).sort(byScore)[0]; return `<button type="button" class="best" data-act="style" data-v="${st.id}"><span class="mono">${esc(st.l)}</span><b>${esc(b[R.nameKey] || R.noun)}</b><span>${esc(placeLabel(b))}</span><em>${fmtScore(b.score)}</em></button>`; }).join("")}</div>` : "";
   const st = kind === "pizza" ? PIZZA_STYLES.find(s => s.id === f.style) : null;
   return `<section class="view-head"><div><p class="eyebrow">${R.eyebrow}</p><h2 class="view-title">${R.title}</h2></div>${headActions()}</section>
     <p class="tally mono">${R.tally}</p>
@@ -1294,16 +1390,26 @@ function openTick(p) {
 }
 
 /* rating forms */
-function openRateForm(kind, existing) {
+function openRateForm(kind, existing, presetPlaceId) {
   const R = RATE[kind], it = existing || {};
   const sc = it.scores || {};
   const vals = R.crit.map(c => typeof sc[c.k] === "number" ? sc[c.k] : 5);
-  const names = [...new Set([...S.places.map(p => p.name), ...S.sandwiches.map(x => x.place), ...S.pizzas.map(x => x.place)].filter(Boolean))].sort((a, b) => a.localeCompare(b));
+  const lp = existing ? linkedPlace(it) : presetPlaceId ? S.places.find(p => p.id === presetPlaceId) || null : null;
+  const g = googleOn();
   const st = kind === "pizza" ? PIZZA_STYLES.find(s => s.id === it.style) : null;
   const defStyle = it.style || (S.rf[kind].style !== "all" ? S.rf[kind].style : "");
   const purl = photoUrl(it.photo);
   const body = `<form id="rateForm" class="form" novalidate>
-    <div class="field"><label for="rf-place">Place</label><input id="rf-place" type="text" list="rf-places" value="${esc(it.place)}" placeholder="Where was it?" autocomplete="off"><datalist id="rf-places">${names.map(n => `<option value="${esc(n)}"></option>`).join("")}</datalist></div>
+    <div class="field"><label for="rf-place">Place</label>
+      <div class="linked" id="rf-linked" hidden></div>
+      <div class="pick-area" id="rf-place-pick">
+        <div class="g-row${g ? "" : " solo"}"><input id="rf-place" type="search" enterkeyhint="${g ? "search" : "done"}" value="${esc(lp ? lp.name : it.place)}" placeholder="Start typing the name" autocomplete="off">${g ? `<button type="button" class="btn small" data-act="g-search" data-for="rf">Google</button>` : ""}</div>
+        <div id="rf-suggest" class="g-results"></div>
+        <div id="rf-gresults" class="g-results"></div>
+        <p class="hint">Pick it from your Hit List${g ? ", or tap Google to find it," : ""} so it's linked on the map.</p>
+      </div>
+      <div id="rf-tick" hidden><label class="check"><input type="checkbox" id="rf-tick-box"${existing ? "" : " checked"}> <span id="rf-tick-label"></span></label></div>
+    </div>
     <div class="field"><label for="rf-name">${R.nameLabel}</label><input id="rf-name" type="text" value="${esc(it[R.nameKey])}" placeholder="${esc(R.namePh)}" autocomplete="off"></div>
     <fieldset class="field"><legend>${R.styleLegend}</legend><div class="chips wrap">${R.styles.map(s => radioChip("rstyle", s.id, s.l, defStyle === s.id)).join("")}</div></fieldset>
     ${kind === "pizza" ? `<p class="style-hint" id="style-hint"${st || defStyle ? "" : " hidden"}><b>Rate it for the style</b><span>${esc((PIZZA_STYLES.find(s => s.id === defStyle) || {}).h || "")}</span></p>` : ""}
@@ -1322,7 +1428,9 @@ function openRateForm(kind, existing) {
     ${existing ? deleteRow() : ""}
     <div class="sheet-foot">${footScore(mean(vals))}<span class="grow"></span><button type="button" class="btn" data-act="close">Cancel</button><button type="submit" class="btn primary">Save</button></div>
   </form>`;
-  openSheet(existing ? `Edit ${kind}` : R.add, body, {kind, existing, file: null, previewUrl: null, removePhoto: false});
+  openSheet(existing ? `Edit ${kind}` : R.add, body, {kind, existing, file: null, previewUrl: null, removePhoto: false, placeId: lp ? lp.id : null, newPlace: null});
+  updateLinkUI();
+  if (g) loadGoogle();
 }
 
 /* ---------- saving ---------- */
@@ -1377,8 +1485,12 @@ function shrinkImage(file) {
   });
 }
 async function submitRate() {
-  const kind = ctx.kind, R = RATE[kind], ex = ctx.existing;
-  const place = $("#rf-place").value.trim(); if (!place) return formError("Add the place.");
+  const c = ctx, kind = c.kind, R = RATE[kind], ex = c.existing;
+  let lp = c.placeId ? S.places.find(p => p.id === c.placeId) || null : null;
+  const typed = $("#rf-place").value.trim();
+  if (!lp && !c.newPlace && typed) lp = S.places.find(p => norm(p.name) === norm(typed)) || null;
+  const place = lp ? lp.name : c.newPlace ? c.newPlace.name : typed;
+  if (!place) return formError("Add the place.");
   const style = radioVal("rstyle");
   if (kind === "pizza" && !style) return formError("Pick the pizza style. It changes what a good score looks like.");
   const scores = Object.fromEntries(R.crit.map(c => [c.k, +$("#rs-" + c.k).value]));
@@ -1392,18 +1504,34 @@ async function submitRate() {
     catch (e) { busy(false); return formError("The photo couldn't be saved. Your phone may be short of space."); }
     busy(false);
   } else if (ctx.removePhoto && photo) { oldPhoto = photo; photo = null; }
+  const date = $("#rf-date").value || today(), score = mean(Object.values(scores));
+  const tick = !$("#rf-tick").hidden && $("#rf-tick-box").checked;
+  let placeId = lp ? lp.id : null, placeNote = "";
+  busy(true);
+  if (c.newPlace && tick) {
+    const np = c.newPlace, now = Date.now();
+    const pd = {id: uid(), name: np.name, type: np.type, area: np.area, price: np.price, google: np.google, instagram: "", notes: "", address: np.address,
+      status: "been", rating: roundHalf(score), visitedOn: date, createdAt: now, updatedAt: now};
+    if (typeof np.lat === "number") { pd.lat = np.lat; pd.lng = np.lng; pd.pinSource = "google"; }
+    if (!await guarded(() => saveEntry("places", pd))) { busy(false); return; }
+    placeId = pd.id; placeNote = " and added to the Hit List";
+  } else if (lp && tick && lp.status !== "been") {
+    const pd = {...lp, status: "been", visitedOn: date, rating: typeof lp.rating === "number" ? lp.rating : roundHalf(score), updatedAt: Date.now()};
+    if (!await guarded(() => saveEntry("places", pd))) { busy(false); return; }
+    placeNote = " and ticked off the Hit List";
+  }
   const doc = {
-    id: ex ? ex.id : uid(), place, style, date: $("#rf-date").value || today(), cost: parseMoney($("#rf-cost").value),
+    id: ex ? ex.id : uid(), place, placeId, style, date, cost: parseMoney($("#rf-cost").value),
+    googleUrl: !placeId && c.newPlace ? c.newPlace.google : !placeId && ex ? ex.googleUrl || "" : "",
     scores, standout: $("#rf-standout").value.trim(), notes: $("#rf-notes").value.trim(), photo,
     createdAt: (ex && ex.createdAt) || Date.now(), updatedAt: Date.now()
   };
   doc[R.nameKey] = $("#rf-name").value.trim();
-  busy(true);
   const ok = await guarded(() => saveEntry(R.col, doc));
   busy(false);
   if (!ok) return;
   if (oldPhoto) deletePhoto(oldPhoto);
-  closeSheet(); toast(`Saved: ${fmtScore(mean(Object.values(scores)))}/10`);
+  closeSheet(); toast(`Saved: ${fmtScore(score)}/10${placeNote}`);
 }
 async function deleteCurrent() {
   if (!ctx || !ctx.existing) return;
@@ -1443,7 +1571,7 @@ function placeLines(p, i, rated) {
 }
 function rateLines(x, kind, i) {
   const R = RATE[kind], sl = styleLabel(kind, x.style);
-  const head = `${i ? i + ". " : ""}${x[R.nameKey] || R.noun} at ${x.place || "?"} – ${fmtScore(x.score)}/10${sl ? ` (${sl}${typeof x.cost === "number" ? ", " + fmtMoney(x.cost) : ""})` : typeof x.cost === "number" ? ` (${fmtMoney(x.cost)})` : ""}`;
+  const head = `${i ? i + ". " : ""}${x[R.nameKey] || R.noun} at ${placeLabel(x)} –${fmtScore(x.score)}/10${sl ? ` (${sl}${typeof x.cost === "number" ? ", " + fmtMoney(x.cost) : ""})` : typeof x.cost === "number" ? ` (${fmtMoney(x.cost)})` : ""}`;
   return x.standout ? `${head}\n   Stand out: ${x.standout}` : head;
 }
 function buildShare(c) {
@@ -1527,11 +1655,12 @@ function csvFor(tab) {
   }
   const kind = TAB_KIND[tab], R = RATE[kind];
   const pieVisit = kind === "pizza" ? ["Pie only", "The visit"] : [];
-  return csv([["Date", "Place", R.nameLabel, R.styleLegend, "Price paid", "Overall", ...pieVisit, ...R.crit.map(c => c.l === "Price" ? "Price score" : c.l), "Stand out", "Notes"],
+  return csv([["Date", "Place", "Area", R.nameLabel, R.styleLegend, "Price paid", "Overall", ...pieVisit, ...R.crit.map(c => c.l === "Price" ? "Price score" : c.l), "Stand out", "Notes"],
     ...scored(kind).sort(byScore).map(x => {
       const sc = x.scores || {};
       const extra = kind === "pizza" ? [fmtScore(mean(PIZZA_CRIT.filter(c => c.g === "pie").map(c => sc[c.k]).filter(v => typeof v === "number"))), fmtScore(mean(PIZZA_CRIT.filter(c => c.g === "visit").map(c => sc[c.k]).filter(v => typeof v === "number")))] : [];
-      return [x.date || "", x.place || "", x[R.nameKey] || "", styleLabel(kind, x.style), typeof x.cost === "number" ? x.cost.toFixed(2) : "", fmtScore(x.score), ...extra, ...R.crit.map(c => sc[c.k] ?? ""), x.standout || "", x.notes || ""];
+      const lp = linkedPlace(x);
+      return [x.date || "", placeLabel(x), lp && lp.area !== "elsewhere" ? areaName(lp.area) : "", x[R.nameKey] || "", styleLabel(kind, x.style), typeof x.cost === "number" ? x.cost.toFixed(2) : "", fmtScore(x.score), ...extra, ...R.crit.map(c => sc[c.k] ?? ""), x.standout || "", x.notes || ""];
     })]);
 }
 function saveFile(name, type, data) {
@@ -1680,8 +1809,12 @@ document.addEventListener("click", e => {
       if (googleReady() && G.map) { G.map.setCenter(VIEWS[v].center); G.map.setZoom(VIEWS[v].zoom); }
       break;
     case "near-me": nearMe(); break;
-    case "g-search": runGoogleSearch(); break;
-    case "g-pick": pickGoogleResult(+v); break;
+    case "g-search": runGoogleSearch(el.getAttribute("data-for")); break;
+    case "g-pick": pickGoogleResult(+v, el.getAttribute("data-for")); break;
+    case "rf-link": if (ctx) { ctx.placeId = id; ctx.newPlace = null; $("#rf-suggest").innerHTML = ""; $("#rf-gresults").innerHTML = ""; updateLinkUI(); } break;
+    case "rf-unlink": if (ctx) { ctx.placeId = null; ctx.newPlace = null; updateLinkUI(); const i = $("#rf-place"); i.value = ""; i.focus(); } break;
+    case "show-place": showPlace(id); break;
+    case "rate-here": openRateForm(el.getAttribute("data-kind"), null, id); break;
     case "reset-filters": S.hf = {status: "all", type: "all", area: "all", price: "all", q: ""}; render(); break;
     case "sort": if (kind) { S.rf[kind].sort = v; render(); } break;
     case "style": if (kind) { S.rf[kind].style = v; render(); window.scrollTo({top: 0, behavior: reduceMotion() ? "auto" : "smooth"}); } break;
@@ -1717,12 +1850,14 @@ document.addEventListener("click", e => {
 });
 document.addEventListener("keydown", e => {
   if (e.key === "Escape" && !sheetWrap.hidden) { closeSheet(); return; }
-  if (e.key === "Enter" && e.target.id === "pf-gq") { e.preventDefault(); runGoogleSearch(); return; }
+  if (e.key === "Enter" && e.target.id === "pf-gq") { e.preventDefault(); runGoogleSearch("pf"); return; }
+  if (e.key === "Enter" && e.target.id === "rf-place") { e.preventDefault(); if (googleOn()) runGoogleSearch("rf"); else e.target.blur(); return; }
   if ((e.key === "Enter" || e.key === " ") && e.target.matches && e.target.matches("[data-pin], g[data-act]")) { e.preventDefault(); e.target.dispatchEvent(new MouseEvent("click", {bubbles: true})); }
 });
 document.addEventListener("input", e => {
   const t = e.target;
   if (t.id === "hit-q") { S.hf.q = t.value; S.sel = null; render(); }
+  else if (t.id === "rf-place") updateSuggest();
   else if (t.id === "rate-q") { const k = TAB_KIND[S.tab]; if (k) { S.rf[k].q = t.value; render(); } }
   else if (t.type === "range") {
     t.style.setProperty("--p", ((t.value - t.min) / (t.max - t.min) * 100).toFixed(1) + "%");
