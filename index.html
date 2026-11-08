@@ -30,6 +30,7 @@
   --t-noodles:#9C7A1C; --t-caribbean:#13A35B; --t-mexican:#C8401A; --t-african:#A3522B; --t-fine:#34365C;
   --shadow:0 1px 0 rgb(28 34 48 / .05), 0 12px 26px -18px rgb(28 34 48 / .55);
   --me:#1A73E8; --me-ring:#FFFFFF;
+  --logo-edge:#1C2230; --logo-shadow:#1C2230;
   --radius:16px;
   --font-display:"Shrikhand","Cooper Black",Georgia,serif;
   --font-body:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
@@ -47,6 +48,7 @@
     --t-english:#A6B865; --t-greek:#5DB9E6; --t-takeaway:#8C95F0; --t-chicken:#F59A52; --t-thai:#A5CF4A; --t-sushi:#F58A9C;
     --t-noodles:#D2AE4A; --t-caribbean:#4CCB86; --t-mexican:#F0724D; --t-african:#D68B5E; --t-fine:#A6AAE0;
     --shadow:0 1px 0 rgb(0 0 0 / .3), 0 14px 30px -20px rgb(0 0 0 / .9);
+    --logo-edge:#F2EEE4; --logo-shadow:rgb(0 0 0 / .55);
     color-scheme:dark;
   }
 }
@@ -60,6 +62,7 @@
   --t-english:#A6B865; --t-greek:#5DB9E6; --t-takeaway:#8C95F0; --t-chicken:#F59A52; --t-thai:#A5CF4A; --t-sushi:#F58A9C;
   --t-noodles:#D2AE4A; --t-caribbean:#4CCB86; --t-mexican:#F0724D; --t-african:#D68B5E; --t-fine:#A6AAE0;
   --shadow:0 1px 0 rgb(0 0 0 / .3), 0 14px 30px -20px rgb(0 0 0 / .9);
+  --logo-edge:#F2EEE4; --logo-shadow:rgb(0 0 0 / .55);
   color-scheme:dark;
 }
 
@@ -85,7 +88,10 @@ button{font-family:inherit}
 
 /* masthead */
 .masthead{display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:22px}
-.wordmark{font-family:var(--font-display); font-weight:400; font-size:clamp(40px, 11vw, 58px); line-height:.95; margin:0; color:var(--tomato); text-shadow:3px 3px 0 var(--mustard); transform:rotate(-2.5deg); transform-origin:left bottom; white-space:nowrap}
+.brand{display:flex; align-items:center; gap:10px; min-width:0}
+.logo{flex:none; width:clamp(44px, 12vw, 62px)}
+.logo svg{display:block; width:100%; height:auto}
+.wordmark{font-family:var(--font-display); font-weight:400; font-size:clamp(36px, 10vw, 58px); line-height:.95; margin:0; color:var(--tomato); text-shadow:3px 3px 0 var(--mustard); transform:rotate(-2.5deg); transform-origin:left bottom; white-space:nowrap}
 .tagline{font-family:var(--font-mono); font-size:11.5px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-soft); margin:12px 0 0}
 .sticker{flex:none; width:68px; height:68px; border-radius:50%; background:var(--mustard); color:var(--on-mustard); border:2px solid var(--ink); display:grid; place-content:center; text-align:center; transform:rotate(11deg); box-shadow:3px 3px 0 var(--ink); font-family:var(--font-mono); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase; line-height:1.15}
 .sticker b{font-family:var(--font-display); font-weight:400; font-size:17px; letter-spacing:0; line-height:1.05}
@@ -175,6 +181,10 @@ input:focus, select:focus, textarea:focus{outline:none; border-color:var(--ink);
 .stamp{--s:66px; flex:none; width:var(--s); height:var(--s); border-radius:50%; display:grid; place-content:center; text-align:center; color:var(--tomato); border:2.5px solid var(--tomato); box-shadow:inset 0 0 0 3px var(--surface), inset 0 0 0 4.5px var(--tomato); transform:rotate(-9deg); align-self:start}
 .stamp b{font:400 calc(var(--s) * .37)/1 var(--font-display); display:block; font-variant-numeric:tabular-nums}
 .stamp small{font:500 calc(var(--s) * .135)/1 var(--font-mono); text-transform:uppercase; letter-spacing:.08em; margin-top:3px; display:block}
+.pin-badge{flex:none; align-self:start; width:58px; display:grid; justify-items:center; gap:3px; transform:rotate(7deg); margin-top:2px}
+.pin-badge svg{display:block; width:40px; height:auto; filter:drop-shadow(0 2px 0 rgb(28 34 48 / .14))}
+.pin-badge small{font:500 9.5px/1 var(--font-mono); letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); white-space:nowrap}
+.k-emoji{font-size:13px; line-height:1; letter-spacing:0}
 .stamp.sm{--s:52px}
 .stamp.sm small{display:none}
 
@@ -243,9 +253,8 @@ input:focus, select:focus, textarea:focus{outline:none; border-color:var(--ink);
 .map-tools{display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px}
 .legend{display:flex; gap:12px; align-items:center; font-size:12px; color:var(--ink-soft); margin:0}
 .legend span{display:inline-flex; align-items:center; gap:5px}
-.lg{width:14px; height:14px; border-radius:50%; background:var(--ink-soft); display:inline-grid; place-items:center; border:2px solid var(--surface); box-shadow:0 0 0 1px var(--line)}
-.lg.hole::after{content:""; width:4px; height:4px; border-radius:50%; background:var(--surface)}
-.lg.tick svg{width:9px; height:9px; color:var(--surface)}
+.lg{display:inline-block; width:14px; flex:none}
+.lg svg{display:block; width:100%; height:auto}
 .map-box{position:relative; width:100%; aspect-ratio:var(--ar); max-height:min(72vh, 680px); background:var(--map-land); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); border:1.5px solid var(--line)}
 .map-box.mini{max-height:320px; cursor:crosshair; box-shadow:none}
 .map-svg{display:block; width:100%; height:100%; touch-action:manipulation; user-select:none; -webkit-user-select:none}
@@ -266,18 +275,13 @@ input:focus, select:focus, textarea:focus{outline:none; border-color:var(--ink);
 .pin{cursor:pointer}
 .pin:focus{outline:none}
 .pin-hit{fill:transparent}
-.pin-dot{stroke:var(--surface); stroke-width:2.2px; vector-effect:non-scaling-stroke}
-.pin-hole{fill:var(--surface)}
-.pin-tick{fill:none; stroke:var(--surface); stroke-linecap:round; stroke-linejoin:round}
-.pin-ring{fill:none; stroke:transparent; stroke-width:2.5px; vector-effect:non-scaling-stroke}
-.pin.sel .pin-ring, .pin:focus-visible .pin-ring{stroke:var(--ink)}
+.pin-body{transition:transform .15s}
+.pin.sel .pin-body, .pin:focus-visible .pin-body{transform:scale(1.35)}
 .gmap-slot, .gmap{width:100%; height:100%}
 .map-loading{display:grid; place-items:center; height:100%; min-height:200px; color:var(--ink-soft); font-size:14px}
-.gpin{width:24px; height:24px; border-radius:50%; background:var(--tc); border:3px solid var(--surface); box-shadow:0 1px 5px rgb(0 0 0 / .35); display:grid; place-items:center; cursor:pointer; transition:transform .15s}
-.gpin:not(.been)::after{content:""; width:6px; height:6px; border-radius:50%; background:var(--surface)}
-.gpin svg{width:13px; height:13px; color:var(--surface)}
-.gpin.approx{border-style:dashed}
-.gpin.sel{transform:scale(1.3); box-shadow:0 0 0 3px var(--ink), 0 2px 8px rgb(0 0 0 / .4)}
+.gpin{width:34px; cursor:pointer; transform-origin:50% 100%; transition:transform .15s; filter:drop-shadow(0 1px 1.5px rgb(0 0 0 / .45))}
+.gpin svg{display:block; width:100%; height:auto; overflow:visible}
+.gpin.sel{transform:scale(1.35)}
 .gme{width:16px; height:16px; border-radius:50%; background:var(--me); border:3px solid var(--me-ring); box-shadow:0 0 0 7px color-mix(in srgb, var(--me) 25%, transparent)}
 .g-row{display:grid; grid-template-columns:minmax(0,1fr) auto; gap:8px; align-items:center}
 .g-row.solo{grid-template-columns:minmax(0,1fr)}
@@ -428,9 +432,12 @@ input[type=range]:focus-visible{outline:3px solid var(--mustard); outline-offset
 <body>
 <div class="app">
   <header class="masthead">
-    <div>
-      <h1 class="wordmark">Bite Club</h1>
-      <p class="tagline">Luke &amp; Gill's food diaries</p>
+    <div class="brand">
+      <div class="logo" id="logo" aria-hidden="true"></div>
+      <div>
+        <h1 class="wordmark">Bite Club</h1>
+        <p class="tagline">Luke &amp; Gill's food diaries</p>
+      </div>
     </div>
     <div class="sticker" aria-hidden="true"><span>Est.</span><b>2026</b><span>MCR</span></div>
   </header>
@@ -507,29 +514,73 @@ const I = {
 
 /* ---------- reference data ---------- */
 const TYPES = [
-  {id: "pizza", l: "Pizza", c: "--t-pizza"},
-  {id: "sandwich", l: "Sandwiches", c: "--t-sandwich"},
-  {id: "brunch", l: "Brunch & café", c: "--t-brunch"},
-  {id: "burger", l: "Burgers", c: "--t-burger"},
-  {id: "chicken", l: "Chicken", c: "--t-chicken"},
-  {id: "english", l: "English", c: "--t-english"},
-  {id: "italian", l: "Italian", c: "--t-italian"},
-  {id: "greek", l: "Greek", c: "--t-greek"},
-  {id: "mexican", l: "Mexican", c: "--t-mexican"},
-  {id: "caribbean", l: "Caribbean", c: "--t-caribbean"},
-  {id: "african", l: "African", c: "--t-african"},
-  {id: "asian", l: "Asian", c: "--t-asian"},
-  {id: "thai", l: "Thai", c: "--t-thai"},
-  {id: "sushi", l: "Sushi", c: "--t-sushi"},
-  {id: "noodles", l: "Noodles", c: "--t-noodles"},
-  {id: "plates", l: "Small plates", c: "--t-plates"},
-  {id: "fine", l: "Fine dining", c: "--t-fine"},
-  {id: "takeaway", l: "Takeaway", c: "--t-takeaway"},
-  {id: "bakery", l: "Bakery", c: "--t-bakery"},
-  {id: "pub", l: "Pub & bar", c: "--t-pub"},
-  {id: "sweet", l: "Sweet treats", c: "--t-sweet"},
-  {id: "other", l: "Other", c: "--t-other"}
+  {id: "pizza", l: "Pizza", e: "🍕", c: "--t-pizza"},
+  {id: "sandwich", l: "Sandwiches", e: "🥪", c: "--t-sandwich"},
+  {id: "brunch", l: "Brunch & café", e: "☕", c: "--t-brunch"},
+  {id: "burger", l: "Burgers", e: "🍔", c: "--t-burger"},
+  {id: "chicken", l: "Chicken", e: "🍗", c: "--t-chicken"},
+  {id: "english", l: "English", e: "🥧", c: "--t-english"},
+  {id: "italian", l: "Italian", e: "🍝", c: "--t-italian"},
+  {id: "greek", l: "Greek", e: "🫒", c: "--t-greek"},
+  {id: "mexican", l: "Mexican", e: "🌮", c: "--t-mexican"},
+  {id: "caribbean", l: "Caribbean", e: "🌴", c: "--t-caribbean"},
+  {id: "african", l: "African", e: "🍲", c: "--t-african"},
+  {id: "asian", l: "Asian", e: "🥢", c: "--t-asian"},
+  {id: "thai", l: "Thai", e: "🍛", c: "--t-thai"},
+  {id: "sushi", l: "Sushi", e: "🍣", c: "--t-sushi"},
+  {id: "noodles", l: "Noodles", e: "🍜", c: "--t-noodles"},
+  {id: "plates", l: "Small plates", e: "🥘", c: "--t-plates"},
+  {id: "fine", l: "Fine dining", e: "🥂", c: "--t-fine"},
+  {id: "takeaway", l: "Takeaway", e: "🥡", c: "--t-takeaway"},
+  {id: "bakery", l: "Bakery", e: "🥐", c: "--t-bakery"},
+  {id: "pub", l: "Pub & bar", e: "🍺", c: "--t-pub"},
+  {id: "sweet", l: "Sweet treats", e: "🧁", c: "--t-sweet"},
+  {id: "other", l: "Other", e: "🍴", c: "--t-other"}
 ];
+const typeName = t => `${t.e} ${t.l}`;
+
+/* ---------- the Bite Club pin: a pizza slice shaped like a map pin ---------- */
+const PIN = (() => {
+  const cx = 50, cy = 46, R = 38, f = n => String(Math.round(n * 100) / 100);
+  const whole = "M50 114C40 98 12 74 12 46A38 38 0 0 1 88 46C88 74 60 98 50 114Z";
+  /* A bite: a circle centred just outside the crust, top right, with a scalloped edge */
+  const bitten = (r, dist, deg) => {
+    const ang = deg * Math.PI / 180, D = [cx + dist * Math.cos(ang), cy + dist * Math.sin(ang)];
+    const a = (R * R - r * r + dist * dist) / (2 * dist), h = Math.sqrt(R * R - a * a);
+    const u = [Math.cos(ang), Math.sin(ang)], v = [-u[1], u[0]], M = [cx + a * u[0], cy + a * u[1]];
+    const P1 = [M[0] + h * v[0], M[1] + h * v[1]], P2 = [M[0] - h * v[0], M[1] - h * v[1]];
+    const angC = p => Math.atan2(p[1] - cy, p[0] - cx), angD = p => Math.atan2(p[1] - D[1], p[0] - D[0]);
+    const [B1, B2] = angC(P1) < angC(P2) ? [P1, P2] : [P2, P1];
+    const wrap = x => { while (x <= -Math.PI) x += 2 * Math.PI; while (x > Math.PI) x -= 2 * Math.PI; return x; };
+    const t1 = angD(B1), toC = Math.atan2(cy - D[1], cx - D[0]);
+    let span = wrap(angD(B2) - t1);
+    if (Math.abs(wrap(t1 + span / 2 - toC)) > Math.PI / 2) span += span > 0 ? -2 * Math.PI : 2 * Math.PI;
+    const pts = [0, 1, 2, 3].map(i => i === 0 ? B1 : i === 3 ? B2 : [D[0] + r * Math.cos(t1 + span * i / 3), D[1] + r * Math.sin(t1 + span * i / 3)]);
+    let bite = "";
+    for (let i = 1; i < 4; i++) { const rr = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]) * 0.56; bite += `A${f(rr)} ${f(rr)} 0 0 0 ${f(pts[i][0])} ${f(pts[i][1])}`; }
+    return `M50 114C40 98 12 74 12 46A38 38 0 0 1 ${f(B1[0])} ${f(B1[1])}${bite}A38 38 0 0 1 88 46C88 74 60 98 50 114Z`;
+  };
+  return {whole, bitten: bitten(21, 48, -40), bittenMap: bitten(25, 49, -38)};
+})();
+/* Illustration colours stay the same in light and dark, like a logo */
+const PIN_COL = {cheese: "#F6BE45", crust: "#C8742B", crustLine: "#9A5420", pep: "#D63A27", pepDot: "#8E2418", leaf: "#2B784A", ink: "#1C2230"};
+let pinSeq = 0;
+/* o: bitten, edge (CSS colour, var() allowed), w (outline width), approx (dashed), detail ("full" for the logo), shadow (CSS colour), tilt (degrees, leans on its tip) */
+function pinParts(o = {}) {
+  const full = o.detail === "full", id = "bcp" + (++pinSeq), d = o.bitten ? (full ? PIN.bitten : PIN.bittenMap) : PIN.whole;
+  const w = o.w || 6, edge = o.edge || PIN_COL.ink, pad = w / 2 + 1, H = o.shadow ? 126 : 114, tilt = o.tilt || 0, px = pad + (tilt ? 12 : 0);
+  const tops = full
+    ? `<circle cx="37" cy="60" r="11" fill="${PIN_COL.pep}" stroke="${PIN_COL.ink}" stroke-width="4"/><circle cx="34" cy="57" r="1.8" fill="${PIN_COL.pepDot}"/><circle cx="40.5" cy="61" r="1.8" fill="${PIN_COL.pepDot}"/><circle cx="35" cy="64.5" r="1.6" fill="${PIN_COL.pepDot}"/>`
+      + `<path d="M55 79C55 68 63 62 71 61C71 70 64 78 55 79Z" fill="${PIN_COL.leaf}" stroke="${PIN_COL.ink}" stroke-width="3.2" stroke-linejoin="round"/><path d="M57 77L68 64" stroke="${PIN_COL.ink}" stroke-width="1.6" stroke-linecap="round"/>`
+      + `<circle cx="59" cy="49" r="3.2" fill="${PIN_COL.ink}"/><circle cx="31" cy="80" r="3" fill="${PIN_COL.ink}"/><circle cx="49" cy="94" r="3.2" fill="${PIN_COL.ink}"/>`
+    : `<circle cx="38" cy="62" r="10" fill="${PIN_COL.pep}" stroke="${PIN_COL.ink}" stroke-width="3.5"/><path d="M55 80C55 70 61 65 68 64C68 72 62 79 55 80Z" fill="${PIN_COL.leaf}" stroke="${PIN_COL.ink}" stroke-width="3.5" stroke-linejoin="round"/><circle cx="48" cy="95" r="3.6" fill="${PIN_COL.ink}"/>`;
+  const inner = (o.shadow ? `<ellipse cx="50" cy="121" rx="27" ry="5" style="fill:${o.shadow}"/>` : "")
+    + `<g${tilt ? ` transform="rotate(${tilt} 50 114)"` : ""}><defs><clipPath id="${id}"><path d="${d}"/></clipPath></defs><path d="${d}" fill="${PIN_COL.cheese}"/>`
+    + `<g clip-path="url(#${id})"><path d="M17 46A33 33 0 0 1 83 46" fill="none" stroke="${PIN_COL.crust}" stroke-width="13" stroke-linecap="round"/>${full ? `<path d="M23.5 46A26.5 26.5 0 0 1 76.5 46" fill="none" stroke="${PIN_COL.crustLine}" stroke-width="2" stroke-linecap="round"/>` : ""}${tops}</g>`
+    + `<path d="${d}" fill="none" stroke-width="${w}" stroke-linejoin="round" style="stroke:${edge}"${o.approx ? ` stroke-dasharray="${w * 1.6} ${w}"` : ""}/></g>`;
+  return {vb: `${-px} ${-pad} ${100 + px * 2} ${H + pad * 2}`, inner, aspect: (H + pad * 2) / (100 + px * 2), tipY: (114 + pad) / (H + pad * 2)};
+}
+const pinSvg = (o = {}, attrs = "") => { const p = pinParts(o); return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${p.vb}" ${attrs} aria-hidden="true" focusable="false">${p.inner}</svg>`; };
 const TYPE = Object.fromEntries(TYPES.map(t => [t.id, t]));
 
 /* Projection: km from a north-west origin. x grows east, y grows south. */
@@ -833,10 +884,8 @@ function pinPoint(p) {
   return {x: X(a.lng) + Math.cos(ang) * rad, y: Y(a.lat) + Math.sin(ang) * rad};
 }
 function pinSVG(p, r) {
-  const mark = p.been
-    ? `<path d="M${f3(-r * .45)} ${f3(r * .02)} L${f3(-r * .1)} ${f3(r * .38)} L${f3(r * .5)} ${f3(-r * .36)}" class="pin-tick" stroke-width="${f3(r * .3)}"/>`
-    : `<circle r="${f3(r * .33)}" class="pin-hole"/>`;
-  return `<g class="pin${p.sel ? " sel" : ""}" data-pin="${esc(p.id)}" transform="translate(${f3(p.x)} ${f3(p.y)})" tabindex="0" role="button" aria-label="${esc(p.label)}"><circle r="${f3(r * 2.1)}" class="pin-hit"/><circle r="${f3(r * 1.55)}" class="pin-ring"/><circle r="${f3(r)}" class="pin-dot" style="fill:var(${p.color})"/>${mark}</g>`;
+  const pp = pinParts({bitten: p.been, edge: `var(${p.color})`, w: 10}), h = r * 3.8, w = h / pp.aspect;
+  return `<g class="pin${p.sel ? " sel" : ""}" data-pin="${esc(p.id)}" transform="translate(${f3(p.x)} ${f3(p.y)})" tabindex="0" role="button" aria-label="${esc(p.label)}"><circle cy="${f3(-h * .56)}" r="${f3(h * .55)}" class="pin-hit"/><g class="pin-body"><svg x="${f3(-w / 2)}" y="${f3(-h * pp.tipY)}" width="${f3(w)}" height="${f3(h)}" viewBox="${pp.vb}" overflow="visible">${pp.inner}</svg></g></g>`;
 }
 function mapSVG(frame, pins, mini) {
   const F = FRAMES[frame], C = frame === "centre", centre = FRAMES.centre;
@@ -873,20 +922,21 @@ function sortPlaces(list) {
     return (b.createdAt || 0) - (a.createdAt || 0);
   });
 }
+const legend = style => `<p class="legend"${style ? ` style="${style}"` : ""}><span><i class="lg">${pinSvg({edge: "var(--ink)", w: 10})}</i>To try</span><span><i class="lg">${pinSvg({bitten: true, edge: "var(--ink)", w: 10})}</i>Been (bitten)</span></p>`;
 function placeCard(p) {
   const t = TYPE[p.type] || TYPE.other, been = p.status === "been", ig = igHref(p.instagram);
   const meta = [fmtDate(p.visitedOn), AGAIN[p.again]].filter(Boolean).join(" · ");
   const rated = ratingsFor(p.id);
   return `<article class="place-card" style="--tc:var(${t.c})">
     <div class="pc-main">
-      <p class="pc-kicker"><span class="dot"></span>${esc(t.l)}<span aria-hidden="true">·</span>${esc(areaName(p.area))}${p.price ? `<span aria-hidden="true">·</span>${priceTag(p.price)}` : ""}</p>
+      <p class="pc-kicker"><span class="k-emoji" aria-hidden="true">${t.e}</span>${esc(t.l)}<span aria-hidden="true">·</span>${esc(areaName(p.area))}${p.price ? `<span aria-hidden="true">·</span>${priceTag(p.price)}` : ""}</p>
       <h3 class="pc-name">${esc(p.name)}</h3>
       ${p.notes ? `<p class="pc-notes">${esc(p.notes)}</p>` : ""}
       ${been && (p.verdict || meta) ? `<p class="pc-verdict">${p.verdict ? `“${esc(p.verdict)}”` : ""}${meta ? `<span class="mono">${esc(meta)}</span>` : ""}</p>` : ""}
       ${rated.length ? `<div class="pc-rated">${rated.slice(0, 3).map(r => `<button type="button" class="rated-row" data-act="edit-${r.kind}" data-id="${esc(r.x.id)}"><span>${r.kind === "pizza" ? "Pizza" : "Sandwich"}${r.x[RATE[r.kind].nameKey] ? ` · ${esc(r.x[RATE[r.kind].nameKey])}` : ""}</span><b>${fmtScore(r.score)}</b></button>`).join("")}${rated.length > 3 ? `<p class="hint">+${rated.length - 3} more rated here</p>` : ""}</div>` : ""}
       <p class="pc-rate">Rate here: <button type="button" class="linkish" data-act="rate-here" data-kind="pizza" data-id="${esc(p.id)}">Pizza</button> · <button type="button" class="linkish" data-act="rate-here" data-kind="sandwich" data-id="${esc(p.id)}">Sandwich</button></p>
     </div>
-    ${been ? stamp(p.rating) : ""}
+    ${been ? stamp(p.rating) : `<div class="pin-badge" aria-hidden="true">${pinSvg({edge: "var(--tc)", w: 9})}<small>To try</small></div>`}
     <div class="pc-actions">
       <a class="chip-link" href="${esc(mapsHref(p))}" target="_blank" rel="noopener">${I.pin}Maps</a>
       ${ig ? `<a class="chip-link" href="${esc(ig)}" target="_blank" rel="noopener">${I.link}Instagram</a>` : ""}
@@ -919,7 +969,7 @@ function hitView() {
         <div class="seg" role="group" aria-label="Status">${segBtn("status", "wish", "To try", S.hf.status)}${segBtn("status", "been", "Been", S.hf.status)}${segBtn("status", "all", "All", S.hf.status)}</div>
         <div class="seg" role="group" aria-label="Show as">${segBtn("hit-mode", "list", "List", S.hitMode)}${segBtn("hit-mode", "map", "Map", S.hitMode)}</div>
       </div>
-      ${typesUsed.length > 1 ? `<div class="chips" role="group" aria-label="Type">${chip("type", "all", "All types", S.hf.type)}${typesUsed.map(t => chip("type", t.id, t.l, S.hf.type, t.c)).join("")}</div>` : ""}
+      ${typesUsed.length > 1 ? `<div class="chips" role="group" aria-label="Type">${chip("type", "all", "All types", S.hf.type)}${typesUsed.map(t => chip("type", t.id, typeName(t), S.hf.type, t.c)).join("")}</div>` : ""}
       ${pricesUsed.length ? `<div class="chips" role="group" aria-label="Price">${chip("price", "all", "Any price", S.hf.price)}${[1, 2, 3, 4].map(n => chip("price", String(n), pounds(n), S.hf.price)).join("")}</div>` : ""}
       <div class="filter-row"><input type="search" id="hit-q" placeholder="Search names and notes" value="${esc(S.hf.q)}" aria-label="Search the hit list" autocomplete="off"><select id="hit-area" aria-label="Area"><option value="all">All areas</option>${areasUsed.map(a => `<option value="${a.id}"${S.hf.area === a.id ? " selected" : ""}>${esc(a.n)}</option>`).join("")}</select></div>
     </div>` : ""}
@@ -984,7 +1034,7 @@ function googleMapView(list) {
       <button type="button" class="btn small" data-act="near-me">${I.pin}Near me</button>
     </div>
     <div class="map-box" style="--ar:.8">${googleReady() ? `<div id="gmap-slot" class="gmap-slot"></div>` : `<div class="map-loading">Loading Google Maps…</div>`}</div>
-    <p class="legend" style="margin-top:10px"><span><i class="lg hole"></i>To try</span><span><i class="lg tick">${I.check}</i>Been</span></p>
+    ${legend("margin-top:10px")}
     ${pins.some(x => x.approx) ? `<p class="map-note">Dashed pins are placed roughly by area. Edit the place and use “Find it on Google” to pin it exactly.</p>` : ""}
     ${noPin ? `<p class="map-note">${noPin} not on the map (area set to “Somewhere else” with no pin).</p>` : ""}
     <div class="map-card" id="map-card">${sel ? placeCard(sel) : `<p class="map-hint">${pins.length ? "Tap a pin to see the place." : "No places match these filters."}</p>`}</div>`;
@@ -1004,9 +1054,9 @@ function mountGoogleMap() {
 function pinNode(p, approx) {
   const t = TYPE[p.type] || TYPE.other, been = p.status === "been";
   const d = document.createElement("div");
-  d.className = "gpin" + (been ? " been" : "") + (approx ? " approx" : "");
+  d.className = "gpin";
   d.style.setProperty("--tc", `var(${t.c})`);
-  d.innerHTML = been ? I.check : "";
+  d.innerHTML = pinSvg({bitten: been, edge: "var(--tc)", w: 10, approx});
   d.setAttribute("role", "button"); d.setAttribute("aria-label", p.name);
   d.addEventListener("click", e => { e.stopPropagation(); G.lastPin = Date.now(); selectPin(p.id); });
   return d;
@@ -1143,7 +1193,7 @@ function updateLinkUI() {
     const t = TYPE[cur.type] || TYPE.other;
     const where = cur.area && cur.area !== "elsewhere" ? `${areaName(cur.area)} · ` : "";
     const status = linked ? (linked.status === "been" ? "On your Hit List, been" : "On your Hit List, to try") : "From Google, not on your Hit List yet";
-    box.innerHTML = `<span class="dot" style="--tc:var(${t.c})"></span><div><b>${esc(cur.name)}</b><span>${esc(where + status)}</span></div><button type="button" class="linkish" data-act="rf-unlink">Change</button>`;
+    box.innerHTML = `<span class="dot" style="--tc:var(${t.c})"></span><div><b>${t.e} ${esc(cur.name)}</b><span>${esc(where + status)}</span></div><button type="button" class="linkish" data-act="rf-unlink">Change</button>`;
     box.hidden = false; pick.hidden = true;
     $("#rf-place").value = cur.name;
     if (np) { tick.hidden = false; lbl.textContent = "Add it to the Hit List as been, with its map pin"; }
@@ -1208,7 +1258,7 @@ function drawnMapView(list) {
   const sel = list.find(p => p.id === S.sel);
   return `<div class="map-tools">
       <div class="seg small" role="group" aria-label="Map area">${segBtn("frame", "centre", "City centre", S.frame)}${segBtn("frame", "wide", "Wider Manchester", S.frame)}</div>
-      <p class="legend"><span><i class="lg hole"></i>To try</span><span><i class="lg tick">${I.check}</i>Been</span></p>
+      ${legend()}
     </div>
     <div class="map-box" style="--ar:${(F.w / F.h).toFixed(4)}">${mapSVG(S.frame, pins, false)}</div>
     ${S.frame === "centre" && outside ? `<button type="button" class="map-note" data-act="frame" data-v="wide">${outside} more further out. Show the wider map</button>` : ""}
@@ -1323,6 +1373,7 @@ function wrappedData(Y) {
     areas: tally(vs.map(v => v.p && v.p.area !== "elsewhere" ? v.p.area : "")),
     busiest: tally(vs.map(v => String(v.date).slice(5, 7)))[0],
     favStyle: tally(pz.map(x => x.style))[0],
+    cuisine: tally(vs.map(v => v.p ? v.p.type : ""))[0],
     priciest: withCost.slice().sort((a, b) => b.x.cost - a.x.cost)[0],
     value: withCost.filter(r => r.x.score != null).sort((a, b) => b.x.score / b.x.cost - a.x.score / a.x.cost)[0],
     goBack: beenY.filter(p => p.again === "yes").length,
@@ -1358,6 +1409,7 @@ function wrappedView() {
   const inC = d.pins.filter(p => inFrame(p, FRAMES.centre)), outC = d.pins.length - inC.length;
   const facts = [
     d.busiest && ["Busiest month", `${monthName(d.busiest[0])} · ${plural(d.busiest[1], "visit", "visits")}`],
+    d.cuisine && TYPE[d.cuisine[0]] && ["Favourite cuisine", `${typeName(TYPE[d.cuisine[0]])} · ${plural(d.cuisine[1], "visit", "visits")}`],
     d.favStyle && ["Go-to pizza style", `${styleLabel("pizza", d.favStyle[0])} · ${d.favStyle[1]} rated`],
     d.priciest && ["Priciest bite", `${d.priciest.x[RATE[d.priciest.kind].nameKey] || RATE[d.priciest.kind].noun} at ${placeLabel(d.priciest.x)} · ${fmtMoney(d.priciest.x.cost)}`],
     d.value && d.value !== d.priciest && ["Best value", `${d.value.x[RATE[d.value.kind].nameKey] || RATE[d.value.kind].noun} · ${fmtScore(d.value.x.score)}/10 for ${fmtMoney(d.value.x.cost)}`],
@@ -1423,6 +1475,15 @@ function wrapText(g, text, maxW, maxLines) {
 }
 const loadImage = src => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; });
 const iconImage = (name, color) => loadImage("data:image/svg+xml;charset=utf-8," + encodeURIComponent(I[name].replace("<svg ", '<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" ').replace(/currentColor/g, color)));
+async function drawLogo(g, x, y, h, edge, shadow) {
+  const pp = pinParts({bitten: true, detail: "full", w: 6, edge, shadow, tilt: -7}), w = h / pp.aspect;
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${Math.round(w * 2)}" height="${Math.round(h * 2)}" viewBox="${pp.vb}">${pp.inner}</svg>`;
+  try {
+    const img = await loadImage("data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg));
+    g.drawImage(img, x, y, w, h);
+  } catch (e) {}
+  return w;
+}
 function drawWordmark(g, x, y, size) {
   g.save(); g.translate(x, y); g.rotate(-2.5 * Math.PI / 180);
   g.font = `400 ${size}px ${FD}`; g.textAlign = "left"; g.textBaseline = "alphabetic";
@@ -1455,8 +1516,9 @@ async function drawRatingCard(kind, x) {
   const R = RATE[kind], W = 1080, H = 1920, cv = document.createElement("canvas"); cv.width = W; cv.height = H;
   const g = cv.getContext("2d"); g.textBaseline = "alphabetic";
   tiles(g, W, H, CC.bg, CC.tile);
-  drawWordmark(g, 80, 190, 124);
-  g.font = `500 28px ${FMONO}`; g.fillStyle = CC.soft; spacedText(g, "LUKE & GILL'S FOOD DIARIES", 86, 252, 3);
+  const lw = await drawLogo(g, 62, 66, 156, CC.ink, CC.ink), wx = 62 + lw + 14;
+  drawWordmark(g, wx, 188, 112);
+  g.font = `500 26px ${FMONO}`; g.fillStyle = CC.soft; spacedText(g, "LUKE & GILL'S FOOD DIARIES", wx + 6, 246, 3);
   // sticker
   g.save(); g.translate(W - 150, 172); g.rotate(11 * Math.PI / 180);
   g.fillStyle = CC.ink; g.beginPath(); g.arc(6, 6, 92, 0, Math.PI * 2); g.fill();
@@ -1524,7 +1586,8 @@ async function drawWrappedCard(Y) {
   const d = wrappedData(Y), W = 1080, H = 1920, cv = document.createElement("canvas"); cv.width = W; cv.height = H;
   const g = cv.getContext("2d"); g.textBaseline = "alphabetic";
   tiles(g, W, H, CC.ink, CC.night);
-  drawWordmark(g, 80, 190, 110);
+  const lw = await drawLogo(g, 66, 74, 136, CC.surface, "rgba(0,0,0,.45)");
+  drawWordmark(g, 66 + lw + 14, 190, 100);
   g.font = `400 150px ${FD}`; g.fillStyle = CC.mustard; g.fillText("Wrapped", 80, 372);
   g.save(); g.translate(W - 150, 250); g.rotate(8 * Math.PI / 180);
   g.fillStyle = CC.tomato; g.beginPath(); g.arc(0, 0, 86, 0, Math.PI * 2); g.fill();
@@ -1631,7 +1694,7 @@ function openPlaceForm(existing) {
   const body = `<form id="placeForm" class="form" novalidate>
     ${googleOn() ? `<div class="field" id="pf-search-field"><label for="pf-gq">Find it on Google</label><div class="g-row"><input id="pf-gq" type="search" enterkeyhint="search" placeholder="Name and area, e.g. pizza Ancoats" autocomplete="off"><button type="button" class="btn small" data-act="g-search">Search</button></div><div id="pf-gresults" class="g-results"></div><p class="hint" id="pf-search-hint">Pick a match to fill in the name, pin, Google link, area and price.</p></div>` : ""}
     <div class="field"><label for="pf-name">Name</label><input id="pf-name" type="text" value="${esc(p.name)}" placeholder="e.g. That sourdough place on Oldham St" autocomplete="off"></div>
-    <fieldset class="field"><legend>Type</legend><div class="chips wrap">${TYPES.map(t => radioChip("ptype", t.id, t.l, typeSel === t.id, t.c)).join("")}</div></fieldset>
+    <fieldset class="field"><legend>Type</legend><div class="chips wrap">${TYPES.map(t => radioChip("ptype", t.id, typeName(t), typeSel === t.id, t.c)).join("")}</div></fieldset>
     <fieldset class="field"><legend>Price point</legend><div class="chips wrap">${radioChip("pprice", "", "Not sure", !p.price)}${[1, 2, 3, 4].map(n => radioChip("pprice", String(n), pounds(n), p.price === n)).join("")}</div><p class="hint">£ is cheap eats, ££££ is a proper splurge.</p></fieldset>
     <div class="field"><label for="pf-area">Area</label><select id="pf-area">${areaOptions(areaSel)}</select></div>
     <div class="field"><label for="pf-google">Google Maps link</label><input id="pf-google" type="url" inputmode="url" value="${esc(p.google)}" placeholder="Paste the share link" autocomplete="off" autocapitalize="off"><p class="hint">Full links that include coordinates pin the exact spot.</p></div>
@@ -1689,7 +1752,7 @@ function renderMiniGoogle(box) {
     let map, marker;
     try {
       map = new G.Map(el, mapOpts({center: pos, zoom: pin ? 17 : 15}));
-      const dot = document.createElement("div"); dot.className = "gpin sel"; dot.style.setProperty("--tc", colour);
+      const dot = document.createElement("div"); dot.className = "gpin sel"; dot.style.setProperty("--tc", colour); dot.innerHTML = pinSvg({edge: "var(--tc)", w: 10});
       marker = new G.Marker({map, position: pos, content: dot, gmpDraggable: true, title: "Pin"});
       const setPin = ll => { const v = llNum(ll); c.pin = {lat: v.lat, lng: v.lng, source: "manual"}; updatePinStatus(); };
       map.addListener("click", e => { if (e.latLng) setPin(e.latLng); });
@@ -1890,7 +1953,7 @@ function filterNote() {
   return bits.join(", ");
 }
 function placeLines(p, i, rated) {
-  const t = (TYPE[p.type] || TYPE.other).l;
+  const t = typeName(TYPE[p.type] || TYPE.other);
   const head = `${i ? i + ". " : ""}${p.name} (${[areaName(p.area), t, pounds(p.price)].filter(Boolean).join(", ")})${rated && typeof p.rating === "number" ? ` – ${fmtScore(p.rating)}/10` : ""}`;
   const out = [head];
   if (rated && p.verdict) out.push(`   “${p.verdict}”`);
@@ -2218,7 +2281,7 @@ function prepareImport(rows) {
   }
   return out;
 }
-const importTags = r => [r.status === "been" ? `Been${r.rating != null ? ` ${fmtScore(r.rating)}/10` : ""}` : r.status === "wish" ? "To try" : "", r.type ? (TYPE[r.type] || {}).l : "", pounds(r.price), r.area ? areaName(r.area) : ""].filter(Boolean).join(" · ");
+const importTags = r => [r.status === "been" ? `Been${r.rating != null ? ` ${fmtScore(r.rating)}/10` : ""}` : r.status === "wish" ? "To try" : "", r.type && TYPE[r.type] ? typeName(TYPE[r.type]) : "", pounds(r.price), r.area ? areaName(r.area) : ""].filter(Boolean).join(" · ");
 const TEMPLATE_HEAD = ["Name", "To Try / Been", "Type", "Price Point", "Google Maps link", "Area", "Notes", "Rating", "Visited"];
 function openImport() {
   openSheet("Import from Google Maps", `<div class="form pb">
@@ -2495,6 +2558,7 @@ window.addEventListener("hashchange", () => setTab(location.hash.slice(1)));
 
 /* ---------- start ---------- */
 (async function start() {
+  $("#logo").innerHTML = pinSvg({bitten: true, detail: "full", w: 6, edge: "var(--logo-edge)", shadow: "var(--logo-shadow)", tilt: -7});
   const h = location.hash.slice(1);
   if (TABS.includes(h)) S.tab = h; else { const t = prefs.get("tab"); if (TABS.includes(t)) S.tab = t; }
   const hm = prefs.get("hitMode"); if (hm === "map" || hm === "list") S.hitMode = hm;
