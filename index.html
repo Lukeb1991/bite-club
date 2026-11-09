@@ -177,6 +177,14 @@ input:focus, select:focus, textarea:focus{outline:none; border-color:var(--ink);
 .chip-link svg{width:16px; height:16px}
 .btn-tick{display:inline-flex; align-items:center; gap:6px; background:var(--basil); color:var(--on-basil); border:0; font:700 13.5px/1 var(--font-body); padding:9px 14px; border-radius:999px; cursor:pointer; min-height:36px}
 .btn-tick svg{width:16px; height:16px}
+.btn-again{background:var(--surface-2); color:var(--ink); box-shadow:inset 0 0 0 1.5px var(--line)}
+.pc-visits{margin:6px 0 0; display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 10px; font-size:13px}
+.pc-visits b{font-weight:700}
+.pc-visits span{font:500 12.5px var(--font-mono); color:var(--ink-soft)}
+.visit-list{list-style:none; margin:0; padding:0; display:grid; gap:6px}
+.visit-list li{display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:12px; background:var(--surface-2); font-size:14px}
+.visit-list li span{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--ink-soft)}
+.visit-list li b{font:500 13px var(--font-mono); color:var(--ink)}
 
 .stamp{--s:66px; flex:none; width:var(--s); height:var(--s); border-radius:50%; display:grid; place-content:center; text-align:center; color:var(--tomato); border:2.5px solid var(--tomato); box-shadow:inset 0 0 0 3px var(--surface), inset 0 0 0 4.5px var(--tomato); transform:rotate(-9deg); align-self:start}
 .stamp b{font:400 calc(var(--s) * .37)/1 var(--font-display); display:block; font-variant-numeric:tabular-nums}
@@ -402,7 +410,21 @@ input[type=range]:focus-visible{outline:3px solid var(--mustard); outline-offset
 .wr-bars li span:first-child{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .wr-bars li:first-child .b-t i{background:var(--tomato)}
 .wr-bars b{font:500 13px var(--font-mono); text-align:right}
-.static-map{pointer-events:none; box-shadow:none}
+/* food passport: perforated postage stamps edged in the cuisine colour */
+.stp-grid{list-style:none; margin:4px 0 0; padding:0; display:grid; grid-template-columns:repeat(auto-fill, minmax(98px, 1fr)); gap:16px 12px}
+.stp{transform:rotate(var(--rot, 0deg)); filter:drop-shadow(0 2px 0 rgb(0 0 0 / .14)); min-width:0}
+.stp-paper{--r:4px; background:var(--c); padding:calc(var(--r) * 1.5 + 3px); height:100%;
+  -webkit-mask:radial-gradient(var(--r), #0000 97%, #000) round calc(-1.5 * var(--r)) calc(-1.5 * var(--r)) / calc(3 * var(--r)) calc(3 * var(--r)), linear-gradient(#000 0 0) no-repeat 50% / calc(100% - 3 * var(--r)) calc(100% - 3 * var(--r));
+          mask:radial-gradient(var(--r), #0000 97%, #000) round calc(-1.5 * var(--r)) calc(-1.5 * var(--r)) / calc(3 * var(--r)) calc(3 * var(--r)), linear-gradient(#000 0 0) no-repeat 50% / calc(100% - 3 * var(--r)) calc(100% - 3 * var(--r))}
+.stp-in{background:var(--surface); height:100%; min-height:112px; box-sizing:border-box; padding:8px 8px 9px; display:grid; grid-template-columns:minmax(0, 1fr) auto; grid-template-areas:"e pm" "n n" "m m"; grid-template-rows:auto 1fr auto; align-items:start; gap:4px 4px; text-align:left}
+.stp-e{grid-area:e; font-size:28px; line-height:1.1}
+.stp-n{grid-area:n; align-self:end; font:700 13px/1.2 var(--font-body); overflow-wrap:anywhere; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; max-width:100%}
+.stp-m{grid-area:m; display:flex; flex-wrap:wrap; align-items:baseline; gap:0 8px; font:500 10.5px/1.25 var(--font-mono); color:var(--ink-soft); letter-spacing:.02em}
+.stp-rk{grid-area:pm; width:31px; height:31px; border-radius:50%; border:1.5px solid currentColor; color:var(--ink-soft); display:grid; place-content:center; text-align:center; font:700 13px/1 var(--font-body); transform:rotate(-12deg)}
+.stp-rk i{font:500 7.5px/1 var(--font-mono); font-style:normal; text-transform:uppercase; letter-spacing:.04em; display:block; margin-bottom:1px}
+.stp-rk.podium{color:var(--ink)}
+.stp-rk.gold{background:var(--mustard); color:var(--on-mustard); border-color:var(--on-mustard)}
+.stp-s{font:800 15px var(--font-body); color:var(--ink); letter-spacing:0}
 .wr-facts{margin:0; display:grid}
 .wr-facts div{display:flex; justify-content:space-between; align-items:baseline; gap:12px; padding:10px 0; border-top:1.5px dashed var(--line)}
 .wr-facts div:first-child{border-top:0; padding-top:0}
@@ -509,7 +531,8 @@ const I = {
   share: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3.5M7.5 8 12 3.5 16.5 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 11.5V20h13v-8.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
   download: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5V15M7.5 10.5 12 15l4.5-4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 19.5h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
   trophy: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5a5 5 0 0 1-10 0z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M7 6H4.5a2.5 2.5 0 0 0 2.6 3.6M17 6h2.5a2.5 2.5 0 0 1-2.6 3.6M12 14v4M8 20.5h8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
-  upload: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3.5M7.5 8 12 3.5 16.5 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 19.5h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`
+  upload: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3.5M7.5 8 12 3.5 16.5 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 19.5h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`,
+  again: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.5 12a7.5 7.5 0 1 1-2.2-5.3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M19.8 3.8v4.6h-4.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`
 };
 
 /* ---------- reference data ---------- */
@@ -905,6 +928,25 @@ function mapSVG(frame, pins, mini) {
   return `<svg class="map-svg" viewBox="${F.x} ${F.y} ${F.w} ${F.h}" preserveAspectRatio="xMidYMid meet" role="group" aria-label="${C ? "City centre map" : "Wider Manchester map"}">${mapBase(frame)}${box}${out}</svg>`;
 }
 
+/* ---------- visits ----------
+   A ticked-off place keeps a list of visits {date, rating, verdict}. The newest visit sets the
+   place's rating, visitedOn and verdict, so everything that reads those keeps working.
+   Places ticked off before visits existed count as one visit built from those fields. */
+const byDate = (a, b) => String(a.date || "").localeCompare(String(b.date || ""));
+function visitsOf(p) {
+  if (!p || p.status !== "been") return [];
+  if (Array.isArray(p.visits) && p.visits.length) return p.visits.slice().sort(byDate);
+  return [{date: p.visitedOn || "", rating: typeof p.rating === "number" ? p.rating : null, verdict: p.verdict || ""}];
+}
+function withVisits(p, list) {
+  const vs = list.map(v => ({date: v.date || "", rating: typeof v.rating === "number" ? v.rating : null, verdict: v.verdict || ""})).sort(byDate);
+  const last = vs[vs.length - 1], said = vs.filter(v => v.verdict).pop();
+  if (!last) return {...p, visits: []};
+  return {...p, visits: vs, rating: last.rating != null ? last.rating : p.rating, visitedOn: last.date, verdict: said ? said.verdict : ""};
+}
+const scoreTrail = vs => (vs.length > 5 ? "… → " : "") + vs.slice(-5).map(v => fmtScore(v.rating)).join(" → ");
+const priceChips = (name, cur, hint) => `<fieldset class="field"><legend>Price point</legend><div class="chips wrap">${radioChip(name, "", "Not sure", !cur)}${[1, 2, 3, 4].map(n => radioChip(name, String(n), pounds(n), cur === n)).join("")}</div>${hint ? `<p class="hint">${hint}</p>` : ""}</fieldset>`;
+
 /* ---------- hit list ---------- */
 function placesFiltered(statusOverride) {
   const {type, area, price, q} = S.hf, status = statusOverride || S.hf.status, qq = q.trim().toLowerCase();
@@ -925,7 +967,8 @@ function sortPlaces(list) {
 const legend = style => `<p class="legend"${style ? ` style="${style}"` : ""}><span><i class="lg">${pinSvg({edge: "var(--ink)", w: 10})}</i>To try</span><span><i class="lg">${pinSvg({bitten: true, edge: "var(--ink)", w: 10})}</i>Been (bitten)</span></p>`;
 function placeCard(p) {
   const t = TYPE[p.type] || TYPE.other, been = p.status === "been", ig = igHref(p.instagram);
-  const meta = [fmtDate(p.visitedOn), AGAIN[p.again]].filter(Boolean).join(" · ");
+  const vs = been ? visitsOf(p) : [];
+  const meta = [vs.length > 1 && p.visitedOn ? "Last visit " + fmtDate(p.visitedOn) : fmtDate(p.visitedOn), AGAIN[p.again]].filter(Boolean).join(" · ");
   const rated = ratingsFor(p.id);
   return `<article class="place-card" style="--tc:var(${t.c})">
     <div class="pc-main">
@@ -933,6 +976,7 @@ function placeCard(p) {
       <h3 class="pc-name">${esc(p.name)}</h3>
       ${p.notes ? `<p class="pc-notes">${esc(p.notes)}</p>` : ""}
       ${been && (p.verdict || meta) ? `<p class="pc-verdict">${p.verdict ? `“${esc(p.verdict)}”` : ""}${meta ? `<span class="mono">${esc(meta)}</span>` : ""}</p>` : ""}
+      ${vs.length > 1 ? `<p class="pc-visits"><b>${vs.length} visits</b><span aria-label="Scores over time">${esc(scoreTrail(vs))}</span></p>` : ""}
       ${rated.length ? `<div class="pc-rated">${rated.slice(0, 3).map(r => `<button type="button" class="rated-row" data-act="edit-${r.kind}" data-id="${esc(r.x.id)}"><span>${r.kind === "pizza" ? "Pizza" : "Sandwich"}${r.x[RATE[r.kind].nameKey] ? ` · ${esc(r.x[RATE[r.kind].nameKey])}` : ""}</span><b>${fmtScore(r.score)}</b></button>`).join("")}${rated.length > 3 ? `<p class="hint">+${rated.length - 3} more rated here</p>` : ""}</div>` : ""}
       <p class="pc-rate">Rate here: <button type="button" class="linkish" data-act="rate-here" data-kind="pizza" data-id="${esc(p.id)}">Pizza</button> · <button type="button" class="linkish" data-act="rate-here" data-kind="sandwich" data-id="${esc(p.id)}">Sandwich</button></p>
     </div>
@@ -941,7 +985,7 @@ function placeCard(p) {
       <a class="chip-link" href="${esc(mapsHref(p))}" target="_blank" rel="noopener">${I.pin}Maps</a>
       ${ig ? `<a class="chip-link" href="${esc(ig)}" target="_blank" rel="noopener">${I.link}Instagram</a>` : ""}
       <span class="grow"></span>
-      ${!been ? `<button type="button" class="btn-tick" data-act="tick" data-id="${esc(p.id)}">${I.check}Tick off</button>` : ""}
+      ${!been ? `<button type="button" class="btn-tick" data-act="tick" data-id="${esc(p.id)}">${I.check}Tick off</button>` : `<button type="button" class="btn-tick btn-again" data-act="revisit" data-id="${esc(p.id)}">${I.again}Been again</button>`}
       <button type="button" class="icon-btn" data-act="share-one" data-kind="place" data-id="${esc(p.id)}" aria-label="Share ${esc(p.name)}">${I.share}</button>
       <button type="button" class="icon-btn" data-act="edit-place" data-id="${esc(p.id)}" aria-label="Edit ${esc(p.name)}">${I.edit}</button>
     </div>
@@ -1346,7 +1390,7 @@ const monthName = m => new Date(2000, +m - 1, 1).toLocaleDateString("en-GB", {mo
 const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 function wrappedYears() {
   const ys = new Set();
-  S.places.forEach(p => { if (p.status === "been" && p.visitedOn) ys.add(String(p.visitedOn).slice(0, 4)); });
+  S.places.forEach(p => visitsOf(p).forEach(v => { if (v.date) ys.add(String(v.date).slice(0, 4)); }));
   [...S.pizzas, ...S.sandwiches].forEach(x => { if (x.date) ys.add(String(x.date).slice(0, 4)); });
   return [...ys].filter(y => /^\d{4}$/.test(y)).sort().reverse();
 }
@@ -1354,17 +1398,31 @@ function wrappedData(Y) {
   const inY = d => String(d || "").startsWith(Y + "-");
   const pz = scored("pizza").filter(x => inY(x.date)), sw = scored("sandwich").filter(x => inY(x.date));
   const rated = [...pz.map(x => ({kind: "pizza", x})), ...sw.map(x => ({kind: "sandwich", x}))];
-  const beenY = S.places.filter(p => p.status === "been" && inY(p.visitedOn));
+  // "Ticked off" this year means the first visit was this year; every logged visit counts towards the totals
+  const beenY = S.places.filter(p => { const f = visitsOf(p)[0]; return f && inY(f.date); });
   const visits = new Map();
-  const addVisit = (p, name, date) => { const pk = p ? p.id : "n:" + norm(name); const key = pk + "|" + date; if (!visits.has(key)) visits.set(key, {pk, p, date}); };
-  beenY.forEach(p => addVisit(p, p.name, p.visitedOn));
-  rated.forEach(({x}) => addVisit(linkedPlace(x), x.place, x.date));
+  const addVisit = (p, name, date, kind, rating) => {
+    const pk = p ? p.id : "n:" + norm(name), key = pk + "|" + date, had = visits.get(key);
+    if (!had) visits.set(key, {pk, p, date, name: p ? p.name : name, type: p ? p.type : kind, rating: typeof rating === "number" ? rating : null});
+    else if (had.rating == null && typeof rating === "number") had.rating = rating;
+  };
+  S.places.forEach(p => visitsOf(p).forEach(v => { if (inY(v.date)) addVisit(p, p.name, v.date, "", v.rating); }));
+  rated.forEach(({kind, x}) => addVisit(linkedPlace(x), x.place, x.date, kind));
   const vs = [...visits.values()];
+  // Leaderboard: each place's latest overall score from this year, or the average of what you rated there
+  const scoresAt = new Map();
+  rated.forEach(({x}) => { if (x.score == null) return; const lp = linkedPlace(x), pk = lp ? lp.id : "n:" + norm(x.place); if (!scoresAt.has(pk)) scoresAt.set(pk, []); scoresAt.get(pk).push(x.score); });
+  const placeMap = new Map();
+  vs.slice().sort(byDate).forEach(v => {
+    let s = placeMap.get(v.pk);
+    if (!s) { s = {pk: v.pk, name: v.name || "Somewhere", type: TYPE[v.type] ? v.type : "other", count: 0, own: null}; placeMap.set(v.pk, s); }
+    s.count++; if (v.rating != null) s.own = v.rating;
+  });
+  const yearPlaces = [...placeMap.values()].map(s => ({...s, score: s.own != null ? s.own : mean(scoresAt.get(s.pk) || [])}));
+  const board = yearPlaces.filter(s => s.score != null).sort((a, b) => (b.score - a.score) || (b.count - a.count) || a.name.localeCompare(b.name));
   const costs = rated.map(r => r.x.cost).filter(n => typeof n === "number");
   const tally = arr => { const o = {}; arr.forEach(k => { if (k) o[k] = (o[k] || 0) + 1; }); return Object.entries(o).sort((a, b) => b[1] - a[1]); };
   const withCost = rated.filter(r => typeof r.x.cost === "number" && r.x.cost > 0);
-  const pins = new Map();
-  vs.forEach(v => { if (v.p && !pins.has(v.p.id)) { const pt = pinPoint(v.p); if (pt) pins.set(v.p.id, {id: v.p.id, x: pt.x, y: pt.y, color: (TYPE[v.p.type] || TYPE.other).c, been: true, sel: false, label: v.p.name}); } });
   return {
     Y, pz, sw, beenY, visits: vs.length, places: new Set(vs.map(v => v.pk)).size,
     spent: costs.reduce((s, n) => s + n, 0), costCount: costs.length,
@@ -1378,7 +1436,7 @@ function wrappedData(Y) {
     value: withCost.filter(r => r.x.score != null).sort((a, b) => b.x.score / b.x.cost - a.x.score / a.x.cost)[0],
     goBack: beenY.filter(p => p.again === "yes").length,
     stillToTry: S.places.filter(p => p.status !== "been").length,
-    pins: [...pins.values()]
+    board
   };
 }
 function wrappedBest(label, x, kind) {
@@ -1406,7 +1464,19 @@ function wrappedView() {
   if (!d.visits) return head + yearChips + `<div class="empty">${I.trophy}<h3>Nothing logged in ${Y} yet</h3><p>Tick places off the Hit List and rate some pizza and sandwiches. Your year builds up here as you go.</p></div>`;
   const tile = (label, val, sub) => `<div class="wr-tile"><span>${label}</span><b>${val}</b>${sub ? `<small>${sub}</small>` : ""}</div>`;
   const top = d.areas[0], maxA = top ? top[1] : 1;
-  const inC = d.pins.filter(p => inFrame(p, FRAMES.centre)), outC = d.pins.length - inC.length;
+  const BOARD_SIZE = 9, board = d.board.slice(0, BOARD_SIZE);
+  const tilt = s => { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) | 0; return [-2.5, -1.2, 0, 1.2, 2.5][Math.abs(h) % 5]; };
+  const tenth = n => Math.round(n * 10);
+  const stampHtml = (s, i) => {
+    const t = TYPE[s.type] || TYPE.other, rank = board.findIndex(b => tenth(b.score) === tenth(s.score)) + 1;
+    const tied = board.filter(b => tenth(b.score) === tenth(s.score)).length > 1;
+    return `<li class="stp" style="--c:var(${t.c});--rot:${tilt(s.pk)}deg"><div class="stp-paper"><div class="stp-in">
+      <span class="stp-e" aria-hidden="true">${t.e}</span>
+      <span class="stp-rk${rank === 1 ? " gold" : rank <= 3 ? " podium" : ""}" aria-label="${tied ? "Joint " : ""}number ${rank}"><i>${tied ? "=" : "No."}</i>${rank}</span>
+      <b class="stp-n">${esc(s.name)}</b>
+      <small class="stp-m"><span><b class="stp-s">${fmtScore(s.score)}</b>/10</span>${s.count > 1 ? `<span>${s.count} visits</span>` : ""}</small>
+    </div></div></li>`;
+  };
   const facts = [
     d.busiest && ["Busiest month", `${monthName(d.busiest[0])} · ${plural(d.busiest[1], "visit", "visits")}`],
     d.cuisine && TYPE[d.cuisine[0]] && ["Favourite cuisine", `${typeName(TYPE[d.cuisine[0]])} · ${plural(d.cuisine[1], "visit", "visits")}`],
@@ -1431,13 +1501,12 @@ function wrappedView() {
     </div>
     ${wrappedBest(`Best pizza of ${Y}`, d.bestPizza, "pizza")}
     ${wrappedBest(`Best sandwich of ${Y}`, d.bestSandwich, "sandwich")}
+    <section class="wr-panel"><p class="eyebrow">The leaderboard</p><h3 class="wr-h">Highest rated</h3>
+      ${board.length ? `<p class="hint" style="margin:0">${board.length === d.places ? `Every place you went to in ${Y}, best first.` : `Your top ${board.length} of the ${d.places} places you went to in ${Y}.`} Places you went back to use their latest score.</p>
+      <ol class="stp-grid">${board.map(stampHtml).join("")}</ol>` : `<p class="hint" style="margin:0">Give places a score when you tick them off, or rate a pizza or sandwich, and your top spots line up here.</p>`}
+    </section>
     ${top ? `<section class="wr-panel"><p class="eyebrow">Most-visited area</p><h3 class="wr-h">${esc(areaName(top[0]))}</h3>
       <ul class="wr-bars">${d.areas.slice(0, 5).map(([a, n]) => `<li><span>${esc(areaName(a))}</span><span class="b-t"><i style="width:${(n / maxA * 100).toFixed(0)}%"></i></span><b>${n}</b></li>`).join("")}</ul></section>` : ""}
-    <section class="wr-panel"><p class="eyebrow">Everywhere you went</p><h3 class="wr-h">${d.pins.length ? plural(d.pins.length, "spot", "spots") + " on the map" : "No pins yet"}</h3>
-      ${!d.pins.length ? `<p class="hint">Link ratings to Hit List places and they'll show up here.</p>` : ""}
-      ${outC ? `<div class="map-box static-map" style="--ar:${(FRAMES.wide.w / FRAMES.wide.h).toFixed(4)}">${mapSVG("wide", d.pins, false)}</div>` : ""}
-      ${inC.length ? `${outC ? `<p class="hint">In town</p>` : ""}<div class="map-box static-map" style="--ar:${(FRAMES.centre.w / FRAMES.centre.h).toFixed(4)}">${mapSVG("centre", d.pins, false)}</div>` : ""}
-    </section>
     <section class="wr-panel"><p class="eyebrow">The small print</p><dl class="wr-facts">${facts.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join("")}</dl></section>`;
 }
 
@@ -1690,29 +1759,36 @@ function openPlaceForm(existing) {
   const typeSel = p.type || (S.hf.type !== "all" ? S.hf.type : "pizza");
   const areaSel = p.area || (S.hf.area !== "all" ? S.hf.area : "nq");
   const been = p.status === "been";
-  const r = typeof p.rating === "number" ? p.rating : 7;
+  const vs = visitsOf(p), lastV = vs[vs.length - 1] || {}, earlier = vs.slice(0, -1);
+  const r = typeof lastV.rating === "number" ? lastV.rating : typeof p.rating === "number" ? p.rating : 7;
   const body = `<form id="placeForm" class="form" novalidate>
     ${googleOn() ? `<div class="field" id="pf-search-field"><label for="pf-gq">Find it on Google</label><div class="g-row"><input id="pf-gq" type="search" enterkeyhint="search" placeholder="Name and area, e.g. pizza Ancoats" autocomplete="off"><button type="button" class="btn small" data-act="g-search">Search</button></div><div id="pf-gresults" class="g-results"></div><p class="hint" id="pf-search-hint">Pick a match to fill in the name, pin, Google link, area and price.</p></div>` : ""}
     <div class="field"><label for="pf-name">Name</label><input id="pf-name" type="text" value="${esc(p.name)}" placeholder="e.g. That sourdough place on Oldham St" autocomplete="off"></div>
     <fieldset class="field"><legend>Type</legend><div class="chips wrap">${TYPES.map(t => radioChip("ptype", t.id, typeName(t), typeSel === t.id, t.c)).join("")}</div></fieldset>
-    <fieldset class="field"><legend>Price point</legend><div class="chips wrap">${radioChip("pprice", "", "Not sure", !p.price)}${[1, 2, 3, 4].map(n => radioChip("pprice", String(n), pounds(n), p.price === n)).join("")}</div><p class="hint">£ is cheap eats, ££££ is a proper splurge.</p></fieldset>
+    ${priceChips("pprice", p.price, "£ is cheap eats, ££££ is a proper splurge.")}
     <div class="field"><label for="pf-area">Area</label><select id="pf-area">${areaOptions(areaSel)}</select></div>
     <div class="field"><label for="pf-google">Google Maps link</label><input id="pf-google" type="url" inputmode="url" value="${esc(p.google)}" placeholder="Paste the share link" autocomplete="off" autocapitalize="off"><p class="hint">Full links that include coordinates pin the exact spot.</p></div>
     <div class="field"><label for="pf-insta">Instagram</label><input id="pf-insta" type="text" value="${esc(p.instagram)}" placeholder="@handle or link" autocomplete="off" autocapitalize="off"></div>
     <div class="field"><label for="pf-notes">Notes</label><textarea id="pf-notes" rows="2" placeholder="What to order, who recommended it">${esc(p.notes)}</textarea></div>
     <div class="field"><span class="label">Map pin</span><div class="pin-row"><p class="hint" id="pf-pin-status"></p><button type="button" class="btn small" data-act="pin-toggle" aria-expanded="false">Adjust pin</button></div><div id="pf-minimap" hidden></div></div>
-    ${been ? `<div class="field"><span class="label">Our verdict</span>${slider("vf-rating", {k: "rating", l: "Rating", h: "Out of 10, for the whole visit"}, r)}</div>
-      <div class="two-col"><div class="field"><label for="vf-date">Visited on</label><input id="vf-date" type="date" value="${esc(p.visitedOn || "")}"></div></div>
-      <div class="field"><label for="vf-verdict">One-line verdict</label><input id="vf-verdict" type="text" value="${esc(p.verdict)}" placeholder="e.g. Best crust in Ancoats" autocomplete="off"></div>
+    ${been ? `<div class="field"><span class="label">${earlier.length ? "Latest visit" : "Our verdict"}</span>${slider("vf-rating", {k: "rating", l: "Rating", h: "Out of 10, for the whole visit"}, r)}</div>
+      <div class="two-col"><div class="field"><label for="vf-date">Visited on</label><input id="vf-date" type="date" value="${esc(lastV.date || p.visitedOn || "")}"></div></div>
+      <div class="field"><label for="vf-verdict">One-line verdict</label><input id="vf-verdict" type="text" value="${esc(earlier.length ? lastV.verdict : p.verdict)}" placeholder="e.g. Best crust in Ancoats" autocomplete="off"></div>
+      ${earlier.length ? `<div class="field"><span class="label">Earlier visits</span><ul class="visit-list" id="vf-earlier"></ul><p class="hint">Remove one if it was logged by mistake.</p></div>` : ""}
       ${againChips(p.again)}
       <label class="check"><input type="checkbox" id="vf-untick"> Move it back to the to-try list</label>` : ""}
     <p class="form-error" id="form-error" role="alert" hidden></p>
     ${existing ? deleteRow() : ""}
     <div class="sheet-foot">${been ? footScore(r) : ""}<span class="grow"></span><button type="button" class="btn" data-act="close">Cancel</button><button type="submit" class="btn primary">${existing ? "Save" : "Add to list"}</button></div>
   </form>`;
-  openSheet(existing ? "Edit place" : "Add a place", body, {kind: "place", existing, pin: fixed ? {lat: p.lat, lng: p.lng, source: p.pinSource || "manual"} : null, frame: "centre", address: p.address || ""});
+  openSheet(existing ? "Edit place" : "Add a place", body, {kind: "place", existing, pin: fixed ? {lat: p.lat, lng: p.lng, source: p.pinSource || "manual"} : null, frame: "centre", address: p.address || "", earlier});
+  renderEarlier();
   updatePinStatus();
   if (googleOn()) loadGoogle();
+}
+function renderEarlier() {
+  const ul = $("#vf-earlier"); if (!ul || !ctx || !ctx.earlier) return;
+  ul.innerHTML = ctx.earlier.length ? ctx.earlier.map((v, i) => `<li><b>${fmtScore(v.rating)}/10</b><span>${esc([v.date ? fmtDate(v.date) : "No date", v.verdict ? `“${v.verdict}”` : ""].filter(Boolean).join(" · "))}</span><button type="button" class="linkish" data-act="visit-del" data-v="${i}" aria-label="Remove the visit on ${esc(v.date ? fmtDate(v.date) : "no date")}">Remove</button></li>`).join("") : `<li><span>None left. Saving keeps just the latest visit.</span></li>`;
 }
 function formPin() {
   if (!ctx || ctx.kind !== "place") return null;
@@ -1767,18 +1843,22 @@ function renderMiniGoogle(box) {
 }
 
 /* tick off */
-function openTick(p) {
-  const r = 7;
+function openTick(p, again) {
+  const past = again ? visitsOf(p) : [], last = past[past.length - 1];
+  const r = last && typeof last.rating === "number" ? last.rating : 7;
+  const so = past.length ? `${past.length === 1 ? "Last time" : "So far"}: ${scoreTrail(past)}${last.date ? ` (last went ${fmtDate(last.date)})` : ""}.` : "";
   const body = `<form id="tickForm" class="form" novalidate>
     <p class="pc-name" style="margin:0">${esc(p.name)}</p>
-    ${slider("tf-rating", {k: "rating", l: "Our rating", h: "Out of 10, for the whole visit"}, r)}
+    ${again ? `<p class="hint" style="margin:0">This is visit ${past.length + 1}. ${esc(so)} Your new score becomes its score on the list.</p>` : ""}
+    ${slider("tf-rating", {k: "rating", l: again ? "This time" : "Our rating", h: "Out of 10, for the whole visit"}, r)}
     <div class="two-col"><div class="field"><label for="tf-date">Visited on</label><input id="tf-date" type="date" value="${today()}"></div></div>
-    <div class="field"><label for="tf-verdict">One-line verdict</label><input id="tf-verdict" type="text" placeholder="e.g. Worth the queue" autocomplete="off"></div>
-    ${againChips("")}
+    ${priceChips("tprice", p.price, again ? "Change it if prices have moved since last time." : "£ is cheap eats, ££££ is a proper splurge.")}
+    <div class="field"><label for="tf-verdict">One-line verdict</label><input id="tf-verdict" type="text" placeholder="${again ? "e.g. Even better second time" : "e.g. Worth the queue"}" autocomplete="off"></div>
+    ${againChips(again ? p.again : "")}
     <p class="form-error" id="form-error" role="alert" hidden></p>
-    <div class="sheet-foot">${footScore(r)}<span class="grow"></span><button type="button" class="btn" data-act="close">Cancel</button><button type="submit" class="btn primary">${I.check}Tick it off</button></div>
+    <div class="sheet-foot">${footScore(r)}<span class="grow"></span><button type="button" class="btn" data-act="close">Cancel</button><button type="submit" class="btn primary">${again ? `${I.again}Log visit` : `${I.check}Tick it off`}</button></div>
   </form>`;
-  openSheet("Tick it off", body, {kind: "tick", existing: p});
+  openSheet(again ? "Been again" : "Tick it off", body, {kind: "tick", existing: p, again: !!again});
 }
 
 /* rating forms */
@@ -1847,7 +1927,11 @@ async function submitPlace() {
   if (pin) { doc.lat = +pin.lat.toFixed(6); doc.lng = +pin.lng.toFixed(6); doc.pinSource = pin.source; }
   if (doc.status === "been") {
     if ($("#vf-untick") && $("#vf-untick").checked) doc.status = "wish";
-    else { doc.rating = +$("#vf-rating").value; doc.visitedOn = $("#vf-date").value || ""; doc.verdict = $("#vf-verdict").value.trim(); doc.again = radioVal("again"); }
+    else {
+      const latest = {date: $("#vf-date").value || "", rating: +$("#vf-rating").value, verdict: $("#vf-verdict").value.trim()};
+      Object.assign(doc, withVisits(doc, [...(ctx.earlier || []), latest]));
+      doc.again = radioVal("again");
+    }
   }
   busy(true);
   const ok = await guarded(() => saveEntry("places", doc));
@@ -1855,11 +1939,18 @@ async function submitPlace() {
   if (ok) { closeSheet(); toast(ex ? "Saved" : "Added to the hit list"); }
 }
 async function submitTick() {
-  const doc = {...ctx.existing, status: "been", rating: +$("#tf-rating").value, visitedOn: $("#tf-date").value || today(), verdict: $("#tf-verdict").value.trim(), again: radioVal("again"), updatedAt: Date.now()};
-  busy(true, "Ticking…");
+  const p = ctx.existing, again = ctx.again;
+  const v = {date: $("#tf-date").value || today(), rating: +$("#tf-rating").value, verdict: $("#tf-verdict").value.trim()};
+  const past = again ? visitsOf(p) : [], prev = past[past.length - 1];
+  const doc = {...withVisits({...p, status: "been"}, [...past, v]), price: +radioVal("tprice") || null, again: radioVal("again"), updatedAt: Date.now()};
+  busy(true, again ? "Saving…" : "Ticking…");
   const ok = await guarded(() => saveEntry("places", doc));
   busy(false);
-  if (ok) { closeSheet(); toast(`Ticked off: ${fmtScore(doc.rating)}/10, ${word(doc.rating)}`); }
+  if (!ok) return;
+  closeSheet();
+  if (!again) return toast(`Ticked off: ${fmtScore(v.rating)}/10, ${word(v.rating)}`);
+  const was = prev && typeof prev.rating === "number" ? prev.rating : null;
+  toast(`Visit ${past.length + 1} logged: ${fmtScore(v.rating)}/10${was == null ? "" : v.rating > was ? `, up from ${fmtScore(was)}` : v.rating < was ? `, down from ${fmtScore(was)}` : ", same as last time"}`);
 }
 function shrinkImage(file) {
   return new Promise(resolve => {
@@ -1954,7 +2045,7 @@ function filterNote() {
 }
 function placeLines(p, i, rated) {
   const t = typeName(TYPE[p.type] || TYPE.other);
-  const head = `${i ? i + ". " : ""}${p.name} (${[areaName(p.area), t, pounds(p.price)].filter(Boolean).join(", ")})${rated && typeof p.rating === "number" ? ` – ${fmtScore(p.rating)}/10` : ""}`;
+  const head = `${i ? i + ". " : ""}${p.name} (${[areaName(p.area), t, pounds(p.price)].filter(Boolean).join(", ")})${rated && typeof p.rating === "number" ? ` – ${fmtScore(p.rating)}/10` : ""}${rated && visitsOf(p).length > 1 ? `, ${visitsOf(p).length} visits` : ""}`;
   const out = [head];
   if (rated && p.verdict) out.push(`   “${p.verdict}”`);
   if (!rated && p.notes) out.push(`   ${p.notes}`);
@@ -2041,9 +2132,10 @@ function csv(rows) {
 }
 function csvFor(tab) {
   if (tab === "hitlist") {
-    return csv([["Name", "Type", "Area", "Price point", "Status", "Rating", "Verdict", "Visited", "Go again", "Google Maps", "Instagram", "Notes"],
-      ...sortPlaces(S.places).map(p => [p.name, (TYPE[p.type] || TYPE.other).l, areaName(p.area), pounds(p.price), p.status === "been" ? "Been" : "To try",
-        typeof p.rating === "number" ? p.rating : "", p.verdict || "", p.visitedOn || "", AGAIN[p.again] || "", p.google || "", p.instagram || "", p.notes || ""])]);
+    return csv([["Name", "Type", "Area", "Price point", "Status", "Rating", "Verdict", "Visited", "Visits", "Score history", "Go again", "Google Maps", "Instagram", "Notes"],
+      ...sortPlaces(S.places).map(p => { const vs = visitsOf(p); return [p.name, (TYPE[p.type] || TYPE.other).l, areaName(p.area), pounds(p.price), p.status === "been" ? "Been" : "To try",
+        typeof p.rating === "number" ? p.rating : "", p.verdict || "", p.visitedOn || "", vs.length || "", vs.length > 1 ? vs.map(v => `${v.date || "?"}: ${fmtScore(v.rating)}`).join("; ") : "",
+        AGAIN[p.again] || "", p.google || "", p.instagram || "", p.notes || ""]; })]);
   }
   const kind = TAB_KIND[tab], R = RATE[kind];
   const pieVisit = kind === "pizza" ? ["Pie only", "The visit"] : [];
@@ -2384,6 +2476,13 @@ async function runImport() {
     if (doc.status === "been") {
       if (r.rating != null) doc.rating = r.rating;
       if (r.visited) doc.visitedOn = r.visited;
+      // Places with logged revisits: the sheet's rating and date update the latest visit
+      if (Array.isArray(doc.visits) && doc.visits.length && (r.rating != null || r.visited)) {
+        const vs = visitsOf(doc), last = {...vs[vs.length - 1]};
+        if (r.rating != null) last.rating = r.rating;
+        if (r.visited) last.date = r.visited;
+        Object.assign(doc, withVisits(doc, [...vs.slice(0, -1), last]));
+      }
     }
     if (lat != null && lng != null) { doc.lat = +(+lat).toFixed(6); doc.lng = +(+lng).toFixed(6); doc.pinSource = exLL ? ex.pinSource || "google" : "google"; } else noPin++;
     try {
@@ -2487,6 +2586,8 @@ document.addEventListener("click", e => {
     case "add": if (S.tab === "hitlist") openPlaceForm(null); else openRateForm(kind, null); break;
     case "edit-place": { const p = findItem("places", id); if (p) openPlaceForm(p); break; }
     case "tick": { const p = findItem("places", id); if (p) openTick(p); break; }
+    case "revisit": { const p = findItem("places", id); if (p) openTick(p, true); break; }
+    case "visit-del": if (ctx && ctx.earlier) { ctx.earlier.splice(+v, 1); renderEarlier(); } break;
     case "edit-sandwich": { const x = findItem("sandwiches", id); if (x) openRateForm("sandwich", x); break; }
     case "edit-pizza": { const x = findItem("pizzas", id); if (x) openRateForm("pizza", x); break; }
     case "share": openShare(); break;
